@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniConnect API test</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #response {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 50px;
+            text-align: left;
+        }
+        .input-group {
+            margin: 10px 0;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        textarea {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>UniConnect API Test</h1>
+    
+    <div class="input-group">
+        <label for="apiUrl">API URL:</label>
+        <input type="text" id="apiUrl" value="http://127.0.0.1:8000/api/lecturer/register/">
+    </div>
+    
+    <div class="input-group">
+        <label for="apiParams">URL Parameters (JSON):</label>
+        <input type="text" id="apiParams" value=''>
+    </div>
+    
+    <div class="input-group">
+        <label for="payload">Request Payload (JSON):</label>
+        <textarea id="payload">{
+    "email": "ethanlxz@gmail.com",
+    "name": "test",
+    "password": "test",
+    "age": "10",
+    "contact_num": "10"
+}</textarea>
+    </div>
+    
+    <button id="postButton">Send POST Request</button>
+    <button id="getButton">Send GET Request</button>
+    
+    <div id="response">
+        <p>API response will appear here...</p>
+    </div>
+
+    <script>
+
+        async function makeRequest(apiUrl, params = {}, payload = null, method = 'GET') {
+
+
+            const config = {
+                method: method.toLowerCase(),
+                url:  apiUrl,
+                params: method.toUpperCase() === 'GET' ? params : {},
+                data: method.toUpperCase() === 'POST' ? payload : null,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            const response = await axios(config);
+            return response.data;
+        }
+
+        // DOM manipulation functions
+
+        function showSuccess(data) {
+            document.getElementById('response').innerHTML = 
+                '<p><strong>Success!</strong></p>' +
+                '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        }
+
+        function showError(message) {
+            document.getElementById('response').innerHTML = 
+                '<p><strong>Error:</strong></p>' +
+                '<pre>' + message + '</pre>';
+        }
+
+        // Event handlers
+        document.getElementById('postButton').addEventListener('click', async function() {
+            try {
+                
+                const apiUrl = document.getElementById('apiUrl').value;
+                const params = JSON.parse(document.getElementById('apiParams').value || '{}');
+                const payload = JSON.parse(document.getElementById('payload').value || '{}');
+                
+                const responseData = await makeRequest(apiUrl, params, payload, 'POST');
+                showSuccess(responseData);
+            } catch (e) {
+                showError(e.message);
+            }
+        });
+
+        document.getElementById('getButton').addEventListener('click', async function() {
+            try {
+                
+                const apiUrl = document.getElementById('apiUrl').value;
+                const params = JSON.parse(document.getElementById('apiParams').value || '{}');
+                
+                const responseData = await makeRequest(apiUrl, params, null, 'GET');
+                showSuccess(responseData);
+            } catch (e) {
+                showError(e.message);
+            }
+        });
+    </script>
+</body>
+</html>

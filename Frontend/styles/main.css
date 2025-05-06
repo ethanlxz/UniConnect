@@ -1,0 +1,225 @@
+/* styles/main.css */
+
+/* ========== Color Variable========== */
+:root {
+    --primary-blue: #2C3E50;    /* Title color */
+    --text-dark: #333333;       /* button color */
+    --text-light: #d1d1d1;      /* text color */
+    --border-gray: #e0e0e0;     /* border and line color */
+    --background-gray: #f8f9fa; /* background color*/
+    --error-red: #e74c3c;       /*notice for wrong */
+  }
+  
+  /* ========== The Whole Page ========== */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  .toastify {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+}
+
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background: var(--background-gray);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    line-height: 1.6;
+  }
+  
+  /* ========== All Container ========== */
+  .container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 400px;   
+    text-align: center;
+  }
+  
+  /* register and login container */
+  .container.narrow {
+    padding: 2rem;
+  }
+  
+  /* ==========Title ========== */
+  .logo {
+    color: var(--primary-blue);
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.05em;
+  }
+  
+  .page-title {
+    font-size: 1.8rem;
+    color: var(--text-dark);
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+  
+  .subtitle {
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    margin-bottom: 2.5rem;
+  }
+  
+  /* ========== form ======== */
+  .auth-form {
+    margin: 1.5rem 0;
+  }
+  
+  .input-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+  }
+  
+  input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--border-gray);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+  }
+  
+  /* ========== button ========== */
+  .btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  
+  .btn.full-width {
+    width: 100%;
+    display: block;
+  }
+  
+  /* Primary but */
+  .btn.primary {
+    background: var(--text-light );
+    color: rgb(0, 0, 0);
+  }
+  
+  .btn.primary:hover {
+    transform: translateY(-1px);
+  }
+  
+  /*Secondary But */
+  .btn.secondary {
+    border-color: var(--text-light);
+    color: black;
+    background: transparent;
+  }
+  
+  .btn.secondary:hover {
+    background: rgba(82, 82, 82, 0.05);
+  }
+  
+  /*  */
+  .divider {
+    border-top: 2px solid var(--border-gray);
+    margin: 2rem 0;
+    position: relative;
+  }
+  
+  /* link format */
+  .auth-links {
+    margin-top: 1.5rem;
+  }
+  
+  .auth-links a {
+    display: block;
+    color: var(--secondary-blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin: 0.5rem 0;
+    transition: opacity 0.3s;
+  }
+  
+  .auth-links a:hover {
+    opacity: 0.8;
+  }
+  
+  /* ========== Role selector ========== */
+  .role-selector {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .role-card {
+    padding: 1.8rem;
+    border: 2px solid var(--border-gray);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: var(--text-dark);
+  }
+  
+  .role-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--secondary-blue);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.1);
+  }
+  
+  .role-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  /* ========== OTP Verification========== */
+  .otp-input {
+    letter-spacing: 0.5em;
+    font-size: 1.5rem;
+    padding: 12px 0;
+    text-align: center;
+  }
+  
+  .resend-link {
+    margin: 1.5rem 0;
+  }
+  
+  .resend-link a {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    transition: color 0.3s;
+  }
+  
+  .resend-link a:hover {
+    color: var(--secondary-blue);
+  }
+  
+  /* ==========  responsive ========== */
+  @media (max-width: 480px) {
+    .container {
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+  
+    .logo {
+      font-size: 2rem;
+    }
+  
+    .page-title {
+      font-size: 1.5rem;
+    }
+  }
