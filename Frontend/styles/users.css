@@ -1,0 +1,229 @@
+:root {
+    --primary-blue: #2C3E50;
+    --secondary-blue: #3498DB;
+    --accent-gray: #95A5A6;
+    --background: #F8F9FA;
+    --text-dark: #2C3E50;
+    --text-light: #7F8C8D;
+}
+
+.toastify {
+    font-family: 'Outfit', sans-serif;
+    font-size: 14px;
+}
+
+/* horizontal navigation bar */
+.main-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgb(219, 219, 219);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.nav-brand h1 {
+    color: var(--primary-blue);
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Progress bar */
+.nav-progress {
+    display: flex;
+    gap: 2rem;
+}
+
+.progress-step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #ECF0F1;
+    position: relative;
+}
+.step-icon {
+    width: 100%;  
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  
+}
+
+.progress-step.active::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+  
+}
+
+/* register form*/
+.registration-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.form-step {
+    display: none;
+}
+.form-step.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+ .gender-icons {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      margin-top: 5px;
+    }
+
+.gender-icons img {
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+    }
+
+input {
+    width: 100%;
+    padding: 12px 20px;
+    border: 2px solid #ECF0F1;
+    border-radius: 8px;
+    font-size: 1rem;
+}
+
+.phone-input {
+    display: flex;
+    gap: 1rem;
+}
+.country-code {
+    width: 80px;
+    padding: 12px;
+    border: 2px solid #ECF0F1;
+    border-radius: 8px;
+}
+
+.primary-btn {
+    background: var( --accent-gray);
+    color: white;
+    padding: 12px 40px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.primary-btn:hover{
+    background: var(--secondary-blue);
+}
+
+
+/* Vertical Navigation Bar*/
+.side-nav {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 240px;
+    background: rgb(156, 156, 156);
+    padding: 2rem;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.05);
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    margin: 0.5rem 0;
+}
+.menu-item.active {
+    background: var(--background);
+    color: var(--secondary-blue);
+
+}
+
+.email-verify {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+#emailInput {
+    flex: 1;
+    min-width: 200px;
+}
+
+.secondary-btn {
+    background: var(--secondary-blue);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.secondary-btn:disabled {
+    background: var(--accent-gray);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.otp-field {
+    margin-top: 1rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/*OTP verification*/
+.otp-container {
+    max-width: 400px;
+    margin: 5rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.otp-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 2rem 0;
+}
+
+.otp-input {
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    font-size: 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    
+}
+
+.resend-link {
+    color: #3498DB;
+    cursor: pointer;
+    margin-top: 1rem;
+    display: inline-block;
+}
+
+.timer {
+    color: #95a5a6;
+    margin-left: 10px;
+}
+
