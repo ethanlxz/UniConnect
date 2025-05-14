@@ -1,5 +1,4 @@
 
-
 async function makeRequest(apiUrl, params = {}, payload = null, method = 'GET') {
 	const config = {
 		method: method.toLowerCase(),
