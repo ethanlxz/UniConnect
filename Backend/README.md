@@ -1,112 +1,103 @@
-Hi, Welcome to the Uniconnect's Backend Manual
 
-=============
-api/otp/send
-=============
+=📡 UniConnect Backend API Documentation=
 
-Payload :
+🔢 OTP Endpoints
+1. Send OTP
+Endpoint: POST /api/otp/send
+Payload:
+
+json
 {
-	"email" : ""
+  "email": "user@example.com"
 }
+Response:
 
-generates a otp and send to the email specified in the payload, otp is viable within 10 minutes after called
+Generates an OTP and sends it to the email (valid for 10 minutes).
 
+2. Resend OTP
+Endpoint: POST /api/otp/resend
+Payload:
 
-=============
-api/otp/resend
-=============
-
-Payload :
+json
 {
-	"email" : ""
+  "email": "user@example.com"
 }
+Response:
 
-regenerates a new otp, deletes the old otp and send to the email specified in the payload
+Regenerates a new OTP (invalidates the old one) and sends it.
 
+3. Verify OTP
+Endpoint: POST /api/otp/verify
+Payload:
 
-=============
-api/otp/verify
-=============
-
-Payload :
+json
 {
-	"email" : "",
-	"code": ""
+  "email": "user@example.com",
+  "code": "123456"
 }
+Response:
 
-verify the otp code, if otp code is older than 10 minutes, it won't work
+Validates the OTP (fails if older than 10 minutes).
 
+🎓 Student Endpoints
+1. Register Student
+Endpoint: POST /api/student/register
+Payload:
 
-====================
-api/student/register
-====================
-
-Payload :
+json
 {
-	"id" : "",
-	"username": "",
-	"email" : "",
-	"name": "",
-	"password" : "",
-	"contact_num": ""
+  "id": "STU001",
+  "username": "student1",
+  "email": "student@example.com",
+  "name": "John Doe",
+  "password": "securepassword123",
+  "contact_num": "+1234567890"
 }
+2. Student Login
+Endpoint: POST /api/student/login
+Payload:
 
-Allow creation of new student with student id, username, email, full name, password and contact numbers
-
-
-====================
-api/lecturer/register
-====================
-
-Payload :
+json
 {
-	"id" : "",
-	"username": "",
-	"email" : "",
-	"name": "",
-	"password" : "",
-	"contact_num": ""
+  "username": "student1",
+  "password": "securepassword123"
 }
+Success Response:
 
-Allow creation of new lecturer with lecturer id, username, email, full name, password and contact numbers
-
-
-==================
-api/student/login
-==================
-
-Payload :
+json
 {
-	"username": "",
-	"password" : ""
+  "message": "Login successful",
+  "refresh": "eyJhbGci...",
+  "access": "eyJhbGci..."
 }
+👨‍🏫 Lecturer Endpoints
+1. Register Lecturer
+Endpoint: POST /api/lecturer/register
+Payload:
 
-Verify credentials (username and password) to authenticate and grant access to registered students.
-
-On success (example):
+json
 {
-    "message": "Login successful",
-    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NzMxNjgyMywiaWF0IjoxNzQ3MjMwNDIzLCJqdGkiOiJjOTE3YjM1N2YyYWI0MmY2YWJhODk2NDU3MjU5NThiNyIsInVzZXJfaWQiOjF9.iAmKzs8ZqgNwgDrlFwNG39JWLroc0MTS5taz7j1KVFQ",
-    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MjMyMjIzLCJpYXQiOjE3NDcyMzA0MjMsImp0aSI6ImFmZGRkOTFiODY3ZTQ0OWQ4NzcyNGI2N2ViMzNjYjQ3IiwidXNlcl9pZCI6MX0.9pT1LWpOKWF9j1V7JO9V3uPt7iFkfe3RZXAZIFzdTx4"
+  "id": "LEC001",
+  "username": "lecturer1",
+  "email": "lecturer@example.com",
+  "name": "Dr. Smith",
+  "password": "securepassword123",
+  "contact_num": "+9876543210"
 }
+2. Lecturer Login
+Endpoint: POST /api/lecturer/login
+Payload:
 
-
-==================
-api/lecturer/login
-==================
-
-Payload :
+json
 {
-	"username": "",
-	"password" : ""
+  "username": "lecturer1",
+  "password": "securepassword123"
 }
+Success Response:
 
-Verify credentials (username and password) to authenticate and grant access to registered lecturers.
-
-On success (example) :
-
+json
 {
-    "message": "Login successful",
-    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NzMxNjgyMywiaWF0IjoxNzQ3MjMwNDIzLCJqdGkiOiJjOTE3YjM1N2YyYWI0MmY2YWJhODk2NDU3MjU5NThiNyIsInVzZXJfaWQiOjF9.iAmKzs8ZqgNwgDrlFwNG39JWLroc0MTS5taz7j1KVFQ",
-    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MjMyMjIzLCJpYXQiOjE3NDcyMzA0MjMsImp0aSI6ImFmZGRkOTFiODY3ZTQ0OWQ4NzcyNGI2N2ViMzNjYjQ3IiwidXNlcl9pZCI6MX0.9pT1LWpOKWF9j1V7JO9V3uPt7iFkfe3RZXAZIFzdTx4"
+  "message": "Login successful",
+  "refresh": "eyJhbGci...",
+  "access": "eyJhbGci..."
 }
