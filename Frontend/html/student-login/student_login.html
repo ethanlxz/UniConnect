@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/main.css">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+    }
+    .toastify {
+      font-family: 'Outfit', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div class="container narrow">
+    <h1 class="logo">UniConnect.</h1>
+    <h2 class="page-title">Login</h2>
+
+    <form class="auth-form">
+      <input type="text" id="username" placeholder="Username" required>  
+      <input type="password" id="password" placeholder="Password" required>
+      <div class="divider"></div>
+      <button type="submit" class="btn primary full-width">LOGIN</button>
+    </form>
+
+    <div class="auth-links">
+      <a href="forgot-password.html">Forgot password?</a>
+      <a href="select-role.html">Not registered yet? Sign in</a>
+    </div>
+  </div>
+
+  <script>
+    document.querySelector('.auth-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();  // Use 'email' variable for username
+      const password = document.getElementById('password').value.trim();
+
+      if (!username|| !password) {
+        Toastify({
+          text: "Please enter both username and password.",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          style: {
+            fontFamily: "'Outfit', sans-serif"
+          }
+        }).showToast();
+        return;
+      }
+
+      fetch("http://127.0.0.1:8000/api/student/login/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Invalid credentials");
+        }
+        return response.json();
+      })
+      .then(data => {
+        Toastify({
+          text: "Login successful!",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "green",
+          style: {
+            fontFamily: "'Outfit', sans-serif"
+          }
+        }).showToast();
+
+        localStorage.setItem('auth_token', data.token);
+        window.location.href = 'student_dashboard.html';
+      })
+      .catch(error => {
+        Toastify({
+          text: error.message,
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          backgroundColor: "red",
+          style: {
+            fontFamily: "'Outfit', sans-serif"
+          }
+        }).showToast();
+      });
+    });
+  </script>
+</body>
+</html>
