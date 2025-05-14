@@ -1,5 +1,5 @@
 
-#📡 UniConnect Backend API Documentation
+# 📡 UniConnect Backend API Documentation
 
 🔢 OTP Endpoints
 1. Send OTP
