@@ -83,6 +83,13 @@ Payload :
 
 Verify credentials (username and password) to authenticate and grant access to registered students.
 
+On success (example):
+{
+    "message": "Login successful",
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NzMxNjgyMywiaWF0IjoxNzQ3MjMwNDIzLCJqdGkiOiJjOTE3YjM1N2YyYWI0MmY2YWJhODk2NDU3MjU5NThiNyIsInVzZXJfaWQiOjF9.iAmKzs8ZqgNwgDrlFwNG39JWLroc0MTS5taz7j1KVFQ",
+    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MjMyMjIzLCJpYXQiOjE3NDcyMzA0MjMsImp0aSI6ImFmZGRkOTFiODY3ZTQ0OWQ4NzcyNGI2N2ViMzNjYjQ3IiwidXNlcl9pZCI6MX0.9pT1LWpOKWF9j1V7JO9V3uPt7iFkfe3RZXAZIFzdTx4"
+}
+
 
 ==================
 api/lecturer/login
@@ -95,3 +102,11 @@ Payload :
 }
 
 Verify credentials (username and password) to authenticate and grant access to registered lecturers.
+
+On success (example) :
+
+{
+    "message": "Login successful",
+    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTc0NzMxNjgyMywiaWF0IjoxNzQ3MjMwNDIzLCJqdGkiOiJjOTE3YjM1N2YyYWI0MmY2YWJhODk2NDU3MjU5NThiNyIsInVzZXJfaWQiOjF9.iAmKzs8ZqgNwgDrlFwNG39JWLroc0MTS5taz7j1KVFQ",
+    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzQ3MjMyMjIzLCJpYXQiOjE3NDcyMzA0MjMsImp0aSI6ImFmZGRkOTFiODY3ZTQ0OWQ4NzcyNGI2N2ViMzNjYjQ3IiwidXNlcl9pZCI6MX0.9pT1LWpOKWF9j1V7JO9V3uPt7iFkfe3RZXAZIFzdTx4"
+}
