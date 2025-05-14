@@ -6,10 +6,11 @@
 Endpoint: POST /api/otp/send
 Payload:
 
-json
+```json
 {
   "email": "user@example.com"
 }
+```
 Response:
 
 Generates an OTP and sends it to the email (valid for 10 minutes).
@@ -18,10 +19,12 @@ Generates an OTP and sends it to the email (valid for 10 minutes).
 Endpoint: POST /api/otp/resend
 Payload:
 
-json
+```json
 {
   "email": "user@example.com"
 }
+```
+
 Response:
 
 Regenerates a new OTP (invalidates the old one) and sends it.
@@ -30,11 +33,13 @@ Regenerates a new OTP (invalidates the old one) and sends it.
 Endpoint: POST /api/otp/verify
 Payload:
 
-json
+```json
 {
   "email": "user@example.com",
   "code": "123456"
 }
+```
+
 Response:
 
 Validates the OTP (fails if older than 10 minutes).
@@ -44,7 +49,7 @@ Validates the OTP (fails if older than 10 minutes).
 Endpoint: POST /api/student/register
 Payload:
 
-json
+```json
 {
   "id": "STU001",
   "username": "student1",
@@ -53,29 +58,37 @@ json
   "password": "securepassword123",
   "contact_num": "+1234567890"
 }
+```
+
+
 2. Student Login
 Endpoint: POST /api/student/login
 Payload:
 
-json
+```json
 {
   "username": "student1",
   "password": "securepassword123"
 }
+```
+
+
 Success Response:
 
-json
+```json
 {
   "message": "Login successful",
   "refresh": "eyJhbGci...",
   "access": "eyJhbGci..."
 }
+```
+
 👨‍🏫 Lecturer Endpoints
 1. Register Lecturer
 Endpoint: POST /api/lecturer/register
 Payload:
 
-json
+```json
 {
   "id": "LEC001",
   "username": "lecturer1",
@@ -84,20 +97,26 @@ json
   "password": "securepassword123",
   "contact_num": "+9876543210"
 }
+```
+
+
 2. Lecturer Login
 Endpoint: POST /api/lecturer/login
 Payload:
 
-json
+```json
 {
   "username": "lecturer1",
   "password": "securepassword123"
 }
+```
+
 Success Response:
 
-json
+```json
 {
   "message": "Login successful",
   "refresh": "eyJhbGci...",
   "access": "eyJhbGci..."
 }
+```
