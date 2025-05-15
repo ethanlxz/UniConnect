@@ -12,6 +12,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from .utils import generate_random_code
 
+# JWT Token
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 class StudentRegisterView(APIView):
     def post(self, request):
@@ -23,17 +26,28 @@ class StudentRegisterView(APIView):
 
 class StudentLoginView(APIView):
     def post(self, request):
-        email = request.data.get('email')
+        username = request.data.get('username')
         password = request.data.get('password')
 
         try:
-            student = StudentProfile.objects.get(email=email)
+            # Retrieve the student by username
+            student = StudentProfile.objects.get(username=username)
+
+            # Check the password
             if check_password(password, student.password):
-                return Response({"message": "Login successful"})
+                # Generate JWT tokens
+                refresh = RefreshToken.for_user(student)
+
+                return Response({
+                    "message": "Login successful",
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
+                }, status=status.HTTP_200_OK)
             else:
-                return Response({"error": "Invalid password"}, status=400)
+                return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
         except StudentProfile.DoesNotExist:
-            return Response({"error": "Student not found"}, status=404)
+            return Response({"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
+
         
 class LecturerRegisterView(APIView):
     def post(self, request):
@@ -45,17 +59,27 @@ class LecturerRegisterView(APIView):
 
 class LecturerLoginView(APIView):
     def post(self, request):
-        email = request.data.get('email')
+        username = request.data.get('username')
         password = request.data.get('password')
 
         try:
-            lecturer = LecturerProfile.objects.get(email=email)
+            # Retrieve the lecturer by username
+            lecturer = LecturerProfile.objects.get(username=username)
+
+            # Check the password
             if check_password(password, lecturer.password):
-                return Response({"message": "Login successful"})
+                # Generate JWT tokens
+                refresh = RefreshToken.for_user(lecturer)
+
+                return Response({
+                    "message": "Login successful",
+                    "refresh": str(refresh),
+                    "access": str(refresh.access_token),
+                }, status=status.HTTP_200_OK)
             else:
-                return Response({"error": "Invalid password"}, status=400)
+                return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
         except LecturerProfile.DoesNotExist:
-            return Response({"error": "Lecturer not found"}, status=404)
+            return Response({"error": "Lecturer not found"}, status=status.HTTP_404_NOT_FOUND)
 
 class SendOTPView(APIView):
     

@@ -1,40 +1,122 @@
-Hi, Welcome to the Uniconnect's Backend Manual
 
-=============
-api/otp/send
-=============
+# 📡 UniConnect Backend API Documentation
 
-Payload :
+🔢 OTP Endpoints
+1. Send OTP
+Endpoint: POST /api/otp/send
+Payload:
+
+```json
 {
-	"email" : ""
+  "email": "user@example.com"
 }
+```
+Response:
 
-generates a otp and send to the email specified in the payload, otp is viable within 10 minutes after called
+Generates an OTP and sends it to the email (valid for 10 minutes).
 
+2. Resend OTP
+Endpoint: POST /api/otp/resend
+Payload:
 
-=============
-api/otp/resend
-=============
-
-Payload :
+```json
 {
-	"email" : ""
+  "email": "user@example.com"
 }
+```
 
-regenerates a new otp, deletes the old otp and send to the email specified in the payload
+Response:
 
+Regenerates a new OTP (invalidates the old one) and sends it.
 
-=============
-api/otp/verify
-=============
+3. Verify OTP
+Endpoint: POST /api/otp/verify
+Payload:
 
-Payload :
+```json
 {
-	"email" : "",
-	"code": ""
+  "email": "user@example.com",
+  "code": "123456"
 }
+```
 
-verify the otp code, if otp code is older than 10 minutes, it won't work
+Response:
+
+Validates the OTP (fails if older than 10 minutes).
+
+🎓 Student Endpoints
+1. Register Student
+Endpoint: POST /api/student/register
+Payload:
+
+```json
+{
+  "id": "STU001",
+  "username": "student1",
+  "email": "student@example.com",
+  "name": "John Doe",
+  "password": "securepassword123",
+  "contact_num": "+1234567890"
+}
+```
 
 
+2. Student Login
+Endpoint: POST /api/student/login
+Payload:
 
+```json
+{
+  "username": "student1",
+  "password": "securepassword123"
+}
+```
+
+
+Success Response:
+
+```json
+{
+  "message": "Login successful",
+  "refresh": "eyJhbGci...",
+  "access": "eyJhbGci..."
+}
+```
+
+👨‍🏫 Lecturer Endpoints
+1. Register Lecturer
+Endpoint: POST /api/lecturer/register
+Payload:
+
+```json
+{
+  "id": "LEC001",
+  "username": "lecturer1",
+  "email": "lecturer@example.com",
+  "name": "Dr. Smith",
+  "password": "securepassword123",
+  "contact_num": "+9876543210"
+}
+```
+
+
+2. Lecturer Login
+Endpoint: POST /api/lecturer/login
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "password": "securepassword123"
+}
+```
+
+Success Response:
+
+```json
+{
+  "message": "Login successful",
+  "refresh": "eyJhbGci...",
+  "access": "eyJhbGci..."
+}
+```
