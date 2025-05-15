@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Registration</title>
+    <link rel="stylesheet" href="/Frontend/styles/users.css">
+    <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet">
+    <!-- Navigation Bar -->
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <h1>UniConnect.</h1>
+        </div>
+        <div class="nav-progress">
+            <div class="progress-step active">
+                <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+            </div>
+        </div>
+    </nav>
+</head>
+
+<body>
+    <div class="registration-container">
+      <div class="form-step active">
+    <h2>What is your name?</h2>
+    <div class="form-group">
+        <input type="text" id="fullName" placeholder="Full Name">
+    </div>
+
+    <h2>What is your Teaching course?</h2>
+    <div class="form-group">
+        <select name="course" id="course">
+            <option value="course1">CCP4124-Object Oriented Programming</option>
+            <option value="course2">CCP4213-Data Structure and Algorithm</option>
+            <option value="course3">CCP4223-Database Management System</option>
+            <option value="course4">CCP4224-Computer Networks</option>
+            <option value="course5">CIT4183 Introduction to Cloud Computing</option>
+            <option value="course6">CIT4184 Introduction to Cyber Security</option>
+        </select>
+    </div>
+
+    <h2>Contact Number</h2>
+    <div class="form-group phone-input">
+        <select class="country-code">
+            <option>+60</option>
+        </select>
+        <input type="tel" id="contact" placeholder="Contact Number">
+    </div>
+
+    <button class="primary-btn" id="nextBtn">Next</button>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+
+    document.getElementById('nextBtn').addEventListener('click', function() {
+      const fullName = document.getElementById('fullName').value;
+      const course = document.getElementById('course').value;
+      const contact = document.getElementById('contact').value;
+      const code = document.querySelector('.country-code').value;
+
+
+      if (!fullName || !course || !contact) {
+        Toastify({
+          text: "Please fill in all the fields before proceeding.",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          style: { background: "red" }
+        }).showToast();
+        return;
+      }
+
+  
+      sessionStorage.setItem('registrationData', JSON.stringify({
+        fullName,
+        course,
+        contact,
+        code
+      }));
+
+      // Redirect to password page
+      window.location.href = "teacher-password.html";
+    });
+
+  </script>
+</body>
+</html>

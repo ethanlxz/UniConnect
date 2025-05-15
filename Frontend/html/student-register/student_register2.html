@@ -39,6 +39,7 @@
 
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        
 <script>
     async function makeRequest(apiUrl, params = {}, payload = null, method = 'GET') {
         const config = {
@@ -54,10 +55,10 @@
         return response.data;
     }
 
-    function verifyOTP() {
+    async function verifyOTP() {
         const otp = document.getElementById('otpInput').value;
         const name = localStorage.getItem('student_name');
-        const course = localStorage.getItem('student_course');
+        const username = localStorage.getItem('student_username');  
         const email = localStorage.getItem('student_email');
         const password = localStorage.getItem('student_password');
         const age = localStorage.getItem('student_age');
@@ -65,6 +66,7 @@
 
         const apiUrl = "http://127.0.0.1:8000/api/student/register/";
         const payload = {
+            username: username,
             email: email,
             name: name,
             password: password,
@@ -72,35 +74,62 @@
             contact_num: contact,
             otp: otp
         };
-          window.location.href = 'student_dashboard.html';
 
-        makeRequest(apiUrl, {}, payload, 'POST')
-            .then(response => {
-                alert("Registration successful!");
-                localStorage.clear();
-                window.location.href = "/student-dashboard.html";
-            })
-            .catch(error => {
-                console.error("Registration failed:", error);
-                Toastify({
-                    text: "OTP or registration error.",
-                    duration: 3000,
-                    gravity: "top",
-                    position: "center",
-                    backgroundColor: "red",
-                    stopOnFocus: true
-                }).showToast();
-            });
+        try {
+            const response = await makeRequest(apiUrl, {}, payload, 'POST');
+            Toastify({
+                text: "Registration successful!",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "green",
+                stopOnFocus: true
+            }).showToast();
+
+            localStorage.clear();
+            window.location.href = "student_register3.html";
+
+        } catch (error) {
+            console.error("Registration failed:", error);
+            Toastify({
+                text: "OTP or registration error.",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "red",
+                stopOnFocus: true
+            }).showToast();
+        }
     }
 
-    function resendOTP() {
-        Toastify({
-            text: "Resend OTP function not implemented.",
-            duration: 3000,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "#555",
-        }).showToast();
+    async function resendOTP() {
+        const email = localStorage.getItem('student_email');
+        const apiUrl = "http://127.0.0.1:8000/api/student/resend-otp/";
+        const payload = {
+            email: email
+        };
+
+        try {
+            const response = await makeRequest(apiUrl, {}, payload, 'POST');
+            Toastify({
+                text: "OTP sent successfully!",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "green",
+                stopOnFocus: true
+            }).showToast();
+        } catch (error) {
+            console.error("Failed to resend OTP:", error);
+            Toastify({
+                text: "Failed to resend OTP.",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "red",
+                stopOnFocus: true
+            }).showToast();
+        }
     }
 </script>
 </body>
