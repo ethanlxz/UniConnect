@@ -7,6 +7,7 @@ class StudentProfile(models.Model):
     email = models.EmailField()
     password = models.CharField(max_length=50)
     contact_num = models.CharField(max_length=15, unique=True)
+    joined_class_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username
@@ -18,6 +19,7 @@ class LecturerProfile(models.Model):
     email = models.EmailField()
     password = models.CharField(max_length=50)
     contact_num = models.CharField(max_length=15, unique=True)
+    class_count = models.IntegerField(default=0)
 
     def __str__(self):
         return self.username

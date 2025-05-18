@@ -21,6 +21,11 @@ class CreateClassAPIView(APIView):
                 return Response({'detail': 'Lecturer not found.'}, status=404)
 
             class_instance = serializer.save(lecturer=lecturer)
+
+            # Increment lecturer's class count
+            lecturer.class_count += 1
+            lecturer.save()
+
             return Response({
                 "name": class_instance.name,
                 "code": class_instance.code
@@ -52,6 +57,10 @@ class JoinClassAPIView(APIView):
             return Response({'detail': 'You have already joined this class.'}, status=200)
 
         class_instance.students.add(student)
+
+        # Increment student join count
+        student.joined_class_count += 1
+        student.save()
 
         return Response({'detail': f"{student.name} successfully joined class '{class_instance.name}'."}, status=200)
     
