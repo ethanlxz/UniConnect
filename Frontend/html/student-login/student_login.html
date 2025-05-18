@@ -38,7 +38,7 @@
     document.querySelector('.auth-form').addEventListener('submit', function (e) {
       e.preventDefault();
 
-      const username = document.getElementById('username').value.trim();  // Use 'email' variable for username
+      const username = document.getElementById('username').value.trim();  
       const password = document.getElementById('password').value.trim();
 
       if (!username|| !password) {
@@ -84,7 +84,7 @@
         }).showToast();
 
         localStorage.setItem('auth_token', data.token);
-        window.location.href = 'student_dashboard.html';
+        window.location.href = '/Frontend/html/student_dashboard.html';
       })
       .catch(error => {
         Toastify({
