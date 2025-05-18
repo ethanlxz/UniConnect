@@ -4,6 +4,7 @@ from api.models import LecturerProfile, StudentProfile
 
 # Create your models here.
 class Class(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     code = models.CharField(max_length=6, unique=True, blank=True)
     lecturer = models.ForeignKey(LecturerProfile, on_delete=models.CASCADE, related_name='classes')
