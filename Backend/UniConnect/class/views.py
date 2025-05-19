@@ -11,7 +11,7 @@ class CreateClassAPIView(APIView):
     def post(self, request):
         serializer = ClassCreateSerializer(data=request.data)
         if serializer.is_valid():
-            lecturer_username = request.headers.get('X-Lecturer-Username')
+            lecturer_username = request.data.get('username')
             if not lecturer_username:
                 return Response({'detail': 'Lecturer username header is required.'}, status=400)
 
@@ -40,7 +40,7 @@ class JoinClassAPIView(APIView):
         except Class.DoesNotExist:
             return Response({'detail': 'Invalid class code.'}, status=404)
 
-        student_username = request.headers.get('X-Student-Username')
+        student_username = request.data.get('username')
         if not student_username:
             return Response({'detail': 'Student username is required.'}, status=400)
 
@@ -60,7 +60,7 @@ class EditClassAPIView(APIView):
     def put(self, request):
         class_code = request.data.get('code')
         new_name = request.data.get('name')
-        lecturer_username = request.headers.get('X-Lecturer-Username')
+        lecturer_username = request.data.get('username')
 
         if not class_code or not new_name:
             return Response({'detail': 'Class code and new name are required.'}, status=400)
@@ -86,7 +86,7 @@ class EditClassAPIView(APIView):
 class DeleteClassAPIView(APIView):
     def delete(self, request):
         class_code = request.data.get('code')
-        lecturer_username = request.headers.get('X-Lecturer-Username')
+        lecturer_username = request.data.get('username')
 
         if not class_code:
             return Response({'detail': 'Class code is required.'}, status=400)
@@ -111,7 +111,7 @@ class RemoveStudentAPIView(APIView):
     def post(self, request):
         class_code = request.data.get('code')
         student_username = request.data.get('student_username')
-        lecturer_username = request.headers.get('X-Lecturer-Username')
+        lecturer_username = request.data.get('username')
 
         if not class_code or not student_username:
             return Response({'detail': 'Class code and student username are required.'}, status=400)
