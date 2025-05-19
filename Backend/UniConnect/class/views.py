@@ -139,3 +139,34 @@ class RemoveStudentAPIView(APIView):
 
         class_instance.students.remove(student)
         return Response({'detail': 'Student removed successfully.'}, status=200)
+    
+class LecturerClassListAPIView(APIView):
+    def post(self, request):
+        lecturer_username = request.data.get('username')
+        if not lecturer_username:
+            return Response({'detail': 'Lecturer username is required.'}, status=400)
+
+        try:
+            lecturer = LecturerProfile.objects.get(username=lecturer_username)
+        except LecturerProfile.DoesNotExist:
+            return Response({'detail': 'Lecturer not found.'}, status=404)
+
+        classes = Class.objects.filter(lecturer=lecturer)
+        data = [{"id": c.class_id, "name": c.name, "code": c.code} for c in classes]
+        return Response(data, status=200)
+
+
+class StudentClassListAPIView(APIView):
+    def post(self, request):
+        student_username = request.data.get('username')
+        if not student_username:
+            return Response({'detail': 'Student username is required.'}, status=400)
+
+        try:
+            student = StudentProfile.objects.get(username=student_username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Student not found.'}, status=404)
+
+        classes = student.joined_classes.all()
+        data = [{"id": c.class_id, "name": c.name, "code": c.code} for c in classes]
+        return Response(data, status=200)
