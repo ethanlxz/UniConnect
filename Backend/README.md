@@ -120,3 +120,166 @@ Success Response:
   "access": "eyJhbGci..."
 }
 ```
+
+Class
+1. Create Class
+Endpoint: POST /class/create/
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "name": "ClassName1"
+}
+```
+
+Success Response:
+
+```json
+{
+    "name": "ClassName1",
+    "code": "ClassCode1"
+}
+```
+
+2. Join Class
+Endpoint: POST /class/join/
+Payload:
+
+```json
+{
+  "username": "student1",
+  "code": "ClassCode1"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "student1 successfully joined class 'ClassName1'."
+}
+```
+
+3. Edit Class
+Endpoint: PUT /class/edit/
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "code": "ClassCode1",
+  "name": "ClassName2"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Class name updated successfully."
+}
+```
+
+4. Delete Class
+Endpoint: DELETE /class/delete/
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "code": "ClassCode1"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Class deleted successfully."
+}
+```
+
+5. Remove Student from Class
+Endpoint: POST /class/removeStudent/
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "code": "ClassCode1",
+  "student_username": "student1"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Student removed successfully."
+}
+```
+
+6. LecturerClassList
+Endpoint: POST /class/lecturer/classes/
+Payload:
+
+```json
+{
+  "username": "lecturer1"
+}
+```
+
+Success Response:
+
+```json
+[
+    {
+        "id": 1,
+        "name": "ClassName1",
+        "code": "ClassCode1"
+    },
+    {
+        "id": 5,
+        "name": "ClassName2",
+        "code": "ClassCode2"
+    },
+    {
+        "id": 7,
+        "name": "ClassName3",
+        "code": "ClassCode3"
+    }
+]
+```
+
+7. StudentClassList
+Endpoint: POST /class/student/classes/
+Payload:
+
+```json
+{
+  "username": "student1"
+}
+```
+
+Success Response:
+
+```json
+[
+    {
+        "id": 1,
+        "name": "ClassName1",
+        "code": "ClassCode1"
+    },
+    {
+        "id": 5,
+        "name": "ClassName2",
+        "code": "ClassCode2"
+    },
+    {
+        "id": 7,
+        "name": "ClassName3",
+        "code": "ClassCode3"
+    }
+]
+```
