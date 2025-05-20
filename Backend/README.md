@@ -129,7 +129,8 @@ Payload:
 ```json
 {
   "username": "lecturer1",
-  "name": "ClassName1"
+  "name": "ClassName1",
+  "max_students": 60
 }
 ```
 
@@ -138,7 +139,8 @@ Success Response:
 ```json
 {
     "name": "ClassName1",
-    "code": "ClassCode1"
+    "code": "ClassCode1",
+    "max_students": 60
 }
 ```
 

@@ -24,7 +24,8 @@ class CreateClassAPIView(APIView):
 
             return Response({
                 "name": class_instance.name,
-                "code": class_instance.code
+                "code": class_instance.code,
+                "max_students": class_instance.max_students,
             }, status=201)
 
         return Response(serializer.errors, status=400)
@@ -48,6 +49,9 @@ class JoinClassAPIView(APIView):
             student = StudentProfile.objects.get(username=student_username)
         except StudentProfile.DoesNotExist:
             return Response({'detail': 'Student profile not found.'}, status=404)
+        
+        if class_instance.students.count() >= class_instance.max_students:
+            return Response({'detail': 'Class is full.'}, status=400)
 
         if class_instance.students.filter(id=student.id).exists():
             return Response({'detail': 'You have already joined this class.'}, status=200)
@@ -169,4 +173,42 @@ class StudentClassListAPIView(APIView):
 
         classes = student.joined_classes.all()
         data = [{"id": c.class_id, "name": c.name, "code": c.code} for c in classes]
+        return Response(data, status=200)
+
+class ClassDetailAPIView(APIView):
+    def get(self, request):
+        class_id = request.query_params.get('class_id')
+        if not class_id:
+            return Response({'detail': 'Class ID is required as a query parameter.'}, status=400)
+
+        try:
+            class_instance = Class.objects.get(class_id=class_id)
+        except Class.DoesNotExist:
+            return Response({'detail': 'Class not found.'}, status=404)
+
+        data = {
+            'class_id': class_instance.class_id,
+            'name': class_instance.name,
+            'code': class_instance.code,
+            'max_students': class_instance.max_students,
+            'current_student_count': class_instance.current_student_count(),
+            'lecturer': {
+                'id': class_instance.lecturer.id,
+                'username': class_instance.lecturer.username,
+                'name': class_instance.lecturer.name,
+                'email': class_instance.lecturer.email,
+                'contact_num': class_instance.lecturer.contact_num
+            },
+            'students': [
+                {
+                    'id': s.id,
+                    'username': s.username,
+                    'name': s.name,
+                    'email': s.email,
+                    'contact_num': s.contact_num
+                }
+                for s in class_instance.students.all()
+            ]
+        }
+
         return Response(data, status=200)

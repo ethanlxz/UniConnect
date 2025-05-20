@@ -9,6 +9,10 @@ class Class(models.Model):
     code = models.CharField(max_length=6, unique=True, blank=True)
     lecturer = models.ForeignKey(LecturerProfile, on_delete=models.CASCADE, related_name='classes')
     students = models.ManyToManyField(StudentProfile, blank=True, related_name='joined_classes')
+    max_students = models.PositiveIntegerField()
+
+    def current_student_count(self):
+        return self.students.count()
 
     def save(self, *args, **kwargs):
         if not self.code:
