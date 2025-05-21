@@ -285,3 +285,41 @@ Success Response:
     }
 ]
 ```
+
+8. Class Detail
+Endpoint: GET /class/detail/?class_id=8
+
+Success Response:
+
+```json
+{
+    "class_id": 8,
+    "name": "ClassName1",
+    "code": "ClassCode1",
+    "max_students": 60,
+    "current_student_count": 2,
+    "lecturer": {
+        "id": 2,
+        "username": "Lecturer1",
+        "name": "LecturerName1",
+        "email": "Lecturer1@gmail.com",
+        "contact_num": "01267895"
+    },
+    "students": [
+        {
+            "id": 2,
+            "username": "Student1",
+            "name": "StudentName1",
+            "email": "Student1@gamil.com",
+            "contact_num": "01234567"
+        },
+        {
+            "id": 3,
+            "username": "Student2",
+            "name": "StudentName2",
+            "email": "Student2@gmail.com",
+            "contact_num": "01289765"
+        }
+    ]
+}
+```
