@@ -27,6 +27,12 @@
         <input type="text" id="fullName" placeholder="Full Name">
       </div>
 
+    <div class="form-step active">
+      <h2>Set Your Username</h2>
+      <div class="form-group">
+        <input type="text" id="username" placeholder="username">
+      </div>
+
       <div class="form-group">
         <h2>Your Birthday?</h2>
         <input type="date" id="birthDate" />
@@ -67,16 +73,16 @@
 
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script>
-
-    document.getElementById('nextBtn').addEventListener('click', function() {
+  document.getElementById('nextBtn').addEventListener('click', function() {
       const fullName = document.getElementById('fullName').value;
+      const username =document.getElementById('username').value;
       const date = document.getElementById('birthDate').value;
       const genderInput = document.querySelector('input[name="gender"]:checked');
       const gender = genderInput ? genderInput.value : '';
       const course = document.getElementById('course').value;
       const contact = document.getElementById('contact').value;
 
-      if (!fullName || !date || !gender || !course || !contact) {
+      if (!fullName ||!username|| !date || !gender || !course || !contact) {
         Toastify({
           text: "Please fill in all the fields before proceeding.",
           duration: 3000,
@@ -90,6 +96,7 @@
   
       sessionStorage.setItem('registrationData', JSON.stringify({
         fullName,
+        username,
         date,
         gender,
         course,
@@ -109,6 +116,7 @@
         img.style.border = '2px solid blue';
       });
     });
+  
   </script>
 </body>
 </html>

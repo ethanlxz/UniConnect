@@ -67,7 +67,7 @@
       })
       .then(response => {
         if (!response.ok) {
-          throw new Error("Invalid credentials");
+          throw new Error("Your Username or Password is incorrect");
         }
         return response.json();
       })

@@ -37,10 +37,43 @@
         </div>
       </div>
     </nav>
-
     <div class="content-area">
-      <div class="welcome-text">Welcome back, Ethan Law</div>
+  <div class="welcome-text" id="welcomeText"></div>
+</div>
+
+    
     </div>
   </div>
 </body>
+
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const welcomeText = document.getElementById("welcomeText");
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/student/login/', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+         
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const student = await response.json();
+
+      if (student.fullName) {
+        welcomeText.textContent = `Welcome back, ${student.fullName}`;
+      } else {
+        welcomeText.textContent = `Welcome back!`;
+      }
+    } catch (error) {
+      console.error('Fetch error:', error);
+      welcomeText.textContent = 'Welcome back!';
+    }
+  });
+</script>
+
 </html>
