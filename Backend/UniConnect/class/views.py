@@ -11,7 +11,7 @@ class CreateClassAPIView(APIView):
     def post(self, request):
         serializer = ClassCreateSerializer(data=request.data)
         if serializer.is_valid():
-            lecturer_username = request.headers.get('X-Lecturer-Username')
+            lecturer_username = request.data.get('username')
             if not lecturer_username:
                 return Response({'detail': 'Lecturer username header is required.'}, status=400)
 
@@ -21,9 +21,11 @@ class CreateClassAPIView(APIView):
                 return Response({'detail': 'Lecturer not found.'}, status=404)
 
             class_instance = serializer.save(lecturer=lecturer)
+
             return Response({
                 "name": class_instance.name,
-                "code": class_instance.code
+                "code": class_instance.code,
+                "max_students": class_instance.max_students,
             }, status=201)
 
         return Response(serializer.errors, status=400)
@@ -39,7 +41,7 @@ class JoinClassAPIView(APIView):
         except Class.DoesNotExist:
             return Response({'detail': 'Invalid class code.'}, status=404)
 
-        student_username = request.headers.get('X-Student-Username')
+        student_username = request.data.get('username')
         if not student_username:
             return Response({'detail': 'Student username is required.'}, status=400)
 
@@ -47,6 +49,9 @@ class JoinClassAPIView(APIView):
             student = StudentProfile.objects.get(username=student_username)
         except StudentProfile.DoesNotExist:
             return Response({'detail': 'Student profile not found.'}, status=404)
+        
+        if class_instance.students.count() >= class_instance.max_students:
+            return Response({'detail': 'Class is full.'}, status=400)
 
         if class_instance.students.filter(id=student.id).exists():
             return Response({'detail': 'You have already joined this class.'}, status=200)
@@ -59,7 +64,7 @@ class EditClassAPIView(APIView):
     def put(self, request):
         class_code = request.data.get('code')
         new_name = request.data.get('name')
-        lecturer_username = request.headers.get('X-Lecturer-Username')
+        lecturer_username = request.data.get('username')
 
         if not class_code or not new_name:
             return Response({'detail': 'Class code and new name are required.'}, status=400)
@@ -85,7 +90,7 @@ class EditClassAPIView(APIView):
 class DeleteClassAPIView(APIView):
     def delete(self, request):
         class_code = request.data.get('code')
-        lecturer_username = request.headers.get('X-Lecturer-Username')
+        lecturer_username = request.data.get('username')
 
         if not class_code:
             return Response({'detail': 'Class code is required.'}, status=400)
@@ -110,7 +115,7 @@ class RemoveStudentAPIView(APIView):
     def post(self, request):
         class_code = request.data.get('code')
         student_username = request.data.get('student_username')
-        lecturer_username = request.headers.get('X-Lecturer-Username')
+        lecturer_username = request.data.get('username')
 
         if not class_code or not student_username:
             return Response({'detail': 'Class code and student username are required.'}, status=400)
@@ -138,3 +143,72 @@ class RemoveStudentAPIView(APIView):
 
         class_instance.students.remove(student)
         return Response({'detail': 'Student removed successfully.'}, status=200)
+    
+class LecturerClassListAPIView(APIView):
+    def post(self, request):
+        lecturer_username = request.data.get('username')
+        if not lecturer_username:
+            return Response({'detail': 'Lecturer username is required.'}, status=400)
+
+        try:
+            lecturer = LecturerProfile.objects.get(username=lecturer_username)
+        except LecturerProfile.DoesNotExist:
+            return Response({'detail': 'Lecturer not found.'}, status=404)
+
+        classes = Class.objects.filter(lecturer=lecturer)
+        data = [{"id": c.class_id, "name": c.name, "code": c.code} for c in classes]
+        return Response(data, status=200)
+
+
+class StudentClassListAPIView(APIView):
+    def post(self, request):
+        student_username = request.data.get('username')
+        if not student_username:
+            return Response({'detail': 'Student username is required.'}, status=400)
+
+        try:
+            student = StudentProfile.objects.get(username=student_username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Student not found.'}, status=404)
+
+        classes = student.joined_classes.all()
+        data = [{"id": c.class_id, "name": c.name, "code": c.code} for c in classes]
+        return Response(data, status=200)
+
+class ClassDetailAPIView(APIView):
+    def get(self, request):
+        class_id = request.query_params.get('class_id')
+        if not class_id:
+            return Response({'detail': 'Class ID is required as a query parameter.'}, status=400)
+
+        try:
+            class_instance = Class.objects.get(class_id=class_id)
+        except Class.DoesNotExist:
+            return Response({'detail': 'Class not found.'}, status=404)
+
+        data = {
+            'class_id': class_instance.class_id,
+            'name': class_instance.name,
+            'code': class_instance.code,
+            'max_students': class_instance.max_students,
+            'current_student_count': class_instance.current_student_count(),
+            'lecturer': {
+                'id': class_instance.lecturer.id,
+                'username': class_instance.lecturer.username,
+                'name': class_instance.lecturer.name,
+                'email': class_instance.lecturer.email,
+                'contact_num': class_instance.lecturer.contact_num
+            },
+            'students': [
+                {
+                    'id': s.id,
+                    'username': s.username,
+                    'name': s.name,
+                    'email': s.email,
+                    'contact_num': s.contact_num
+                }
+                for s in class_instance.students.all()
+            ]
+        }
+
+        return Response(data, status=200)

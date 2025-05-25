@@ -205,3 +205,47 @@ class ResendOTPView(APIView):
 
         # Call the instance method to resend the OTP
         return self.resendOTP(email)
+    
+class StudentProfileView(APIView):
+    def get(self, request):
+        username = request.query_params.get('username')
+        if not username:
+            return Response({'detail': 'Username is required as a query parameter.'}, status=400)
+
+        try:
+            student = StudentProfile.objects.get(username=username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Student not found.'}, status=404)
+
+        data = {
+            'id': student.id,
+            'username': student.username,
+            'name': student.name,
+            'email': student.email,
+            'contact_num': student.contact_num,
+        }
+
+        return Response(data, status=200)
+    
+class LecturerProfileView(APIView):
+    def get(self, request):
+        username = request.query_params.get('username')
+        if not username:
+            return Response({'detail': 'Username is required as a query parameter.'}, status=400)
+
+        try:
+            lecturer = LecturerProfile.objects.get(username=username)
+        except LecturerProfile.DoesNotExist:
+            return Response({'detail': 'Lecturer not found.'}, status=404)
+
+        data = {
+            'id': lecturer.id,
+            'username': lecturer.username,
+            'name': lecturer.name,
+            'email': lecturer.email,
+            'contact_num': lecturer.contact_num,
+        }
+
+        return Response(data, status=200)
+
+
