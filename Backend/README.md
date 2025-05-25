@@ -45,7 +45,24 @@ Response:
 Validates the OTP (fails if older than 10 minutes).
 
 🎓 Student Endpoints
-1. Register Student
+1. Student Profile
+Endpoint: GET /api/student/profile?username=student1
+Payload:
+
+Success Response:
+
+```json
+{
+  "id": "STU001",
+  "username": "student1",
+  "email": "student@example.com",
+  "name": "John Doe",
+  "password": "securepassword123",
+  "contact_num": "+1234567890"
+}
+```
+
+2. Register Student
 Endpoint: POST /api/student/register
 Payload:
 
@@ -61,7 +78,7 @@ Payload:
 ```
 
 
-2. Student Login
+3. Student Login
 Endpoint: POST /api/student/login
 Payload:
 
@@ -84,7 +101,24 @@ Success Response:
 ```
 
 👨‍🏫 Lecturer Endpoints
-1. Register Lecturer
+1. Lecturer Profile
+Endpoint: GET /api/lecturer/profile?username=lecturer1
+Payload:
+
+Success Response:
+
+```json
+{
+  "id": "LEC001",
+  "username": "lecturer1",
+  "email": "lecturer@example.com",
+  "name": "Dr. Smith",
+  "password": "securepassword123",
+  "contact_num": "+9876543210"
+}
+```
+
+2. Register Lecturer
 Endpoint: POST /api/lecturer/register
 Payload:
 
@@ -100,7 +134,7 @@ Payload:
 ```
 
 
-2. Lecturer Login
+3. Lecturer Login
 Endpoint: POST /api/lecturer/login
 Payload:
 
