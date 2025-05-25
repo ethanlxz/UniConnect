@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Registration</title>
+    <link rel="stylesheet" href="/Frontend/styles/users.css">
+    <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <h1>UniConnect.</h1>
+        </div>
+        <div class="nav-progress">
+            <div class="progress-step active">
+                <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+            </div>
+           
+        </div>
+    </nav>
+
+    <!--Main Content -->
+    <div class="container">
+        <!-- OTP Verification Page -->
+        <div class="auth-card" id="otpPage">
+            <h2>OTP Verification</h2>
+          <div class="form-group otp-inputs" style="display: flex; gap: 10px; justify-content: center;">
+            <input type="text" maxlength="1" class="otp-box" />
+            <input type="text" maxlength="1" class="otp-box" />
+            <input type="text" maxlength="1" class="otp-box" />
+            <input type="text" maxlength="1" class="otp-box" />
+            <input type="text" maxlength="1" class="otp-box" />
+            <input type="text" maxlength="1" class="otp-box" />
+        </div>
+<div class="form-group">
+  <button class="btn btn-primary" onclick="verifyOTP()">Verify</button>
+  <a href="#" id="resendLink" onclick="resendOTP()" style="margin-left: 1rem; pointer-events: none; color: gray;">Resend OTP (60s)</a>
+</div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+        
+<script>
+    let countdown = 60;
+    let timer;
+
+    window.onload = function () {
+        setupOTPInputs();
+        startCountdown();
+    };
+
+    function setupOTPInputs() {
+        const inputs = document.querySelectorAll(".otp-box");
+        inputs.forEach((input, index) => {
+            input.addEventListener("input", () => {
+                if (input.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener("keydown", (e) => {
+                if (e.key === "Backspace" && !input.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    }
+
+    function startCountdown() {
+        const link = document.getElementById("resendLink");
+        link.style.pointerEvents = "none";
+        link.style.color = "gray";
+        countdown = 60;
+        link.innerText = `Resend OTP (${countdown}s)`;
+
+        timer = setInterval(() => {
+            countdown--;
+            link.innerText = `Resend OTP (${countdown}s)`;
+            if (countdown <= 0) {
+                clearInterval(timer);
+                link.innerText = "Resend OTP";
+                link.style.pointerEvents = "auto";
+                link.style.color = "#007BFF";
+            }
+        }, 1000);
+    }
+
+    async function resendOTP() {
+        if (countdown > 0) return;
+
+        const email = localStorage.getItem('student_email');
+        const apiUrl = "http://127.0.0.1:8000/api/otp/resend";
+        const payload = { email: email };
+
+        try {
+            await makeRequest(apiUrl, {}, payload, 'POST');
+            Toastify({
+                text: "OTP resent successfully!",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "green",
+                stopOnFocus: true
+            }).showToast();
+            startCountdown();
+        } catch (error) {
+            console.error("Failed to resend OTP:", error);
+            Toastify({
+                text: "Failed to resend OTP.",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "red",
+                stopOnFocus: true
+            }).showToast();
+        }
+    }
+
+    async function verifyOTP() {
+        const inputs = document.querySelectorAll(".otp-box");
+        const otp = Array.from(inputs).map(input => input.value).join("");
+
+        if (otp.length !== 6) {
+            alert("Please enter the complete 6-digit OTP.");
+            return;
+        }
+
+        const name = localStorage.getItem('student_name');
+        const username = localStorage.getItem('student_username');
+        const email = localStorage.getItem('student_email');
+        const password = localStorage.getItem('student_password');
+        const age = localStorage.getItem('student_age');
+        const contact = localStorage.getItem('student_contact');
+
+        const apiUrl = "http://127.0.0.1:8000/api/otp/verify";
+        const payload = {
+               email: localStorage.getItem('student_email'),
+               code: otp
+        };
+
+        try {
+            await makeRequest(apiUrl, {}, payload, 'POST');
+            Toastify({
+                text: "Registration successful!",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "green",
+                stopOnFocus: true
+            }).showToast();
+            localStorage.clear();
+            window.location.href = "student_register3.html";
+        } catch (error) {
+            console.error("Registration failed:", error);
+            Toastify({
+                text: "OTP or registration error.",
+                duration: 3000,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "red",
+                stopOnFocus: true
+            }).showToast();
+        }
+    }
+
+    async function makeRequest(apiUrl, params = {}, payload = null, method = 'GET') {
+        const config = {
+            method: method.toLowerCase(),
+            url: apiUrl,
+            params: method.toUpperCase() === 'GET' ? params : {},
+            data: method.toUpperCase() === 'POST' ? payload : null,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        const response = await axios(config);
+        return response.data;
+    }
+</script>
+</body>
+</html>
