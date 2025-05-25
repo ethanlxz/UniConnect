@@ -67,31 +67,31 @@
     
       localStorage.setItem('student_email', email);
       
-      // 触发后端发送OTP接口
-      axios.post('http://127.0.0.1:8000/api/otp/send', { email })
-        .then(response => {
-        Toastify({
-          text: "OTP sent successfully!",
-          duration: 3000,
-          gravity: "top",
-          position: "center",
-          backgroundColor: "green",
-          stopOnFocus: true
-        }).showToast();
-      })
-        .catch(error => {
-          console.error(error);
-          Toastify({
-            text: "Failed to send OTP. Please try again later.",
-            duration: 3000,
-            gravity: "top",
-            position: "center",
-            backgroundColor: "red",
-            stopOnFocus: true
-          }).showToast();
-        });
-    
-      window.location.href = 'student_register2.html';
+     
+    axios.post('http://127.0.0.1:8000/api/otp/send', { email })
+  .then(response => {
+    Toastify({
+      text: "OTP sent successfully!",
+      duration: 3000,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "green",
+      stopOnFocus: true
+    }).showToast();
+
+    window.location.href = 'student_register2.html';
+  })
+  .catch(error => {
+    console.error(error);
+    Toastify({
+      text: "Failed to send OTP. Please try again later.",
+      duration: 3000,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red",
+      stopOnFocus: true
+    }).showToast();
+  });
     });
     </script>
 </body>

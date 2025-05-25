@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Student Home - UniConnect</title>
   <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
@@ -16,7 +17,7 @@
       <img src="../image/classes.png" alt="Classes Icon" />
       <div>Classes</div>
     </div>
-     <div class="nav-item">
+    <div class="nav-item">
       <img src="../image/userprofile.png" alt="Profile Icon" />
       <div>Profile</div>
     </div>
@@ -43,10 +44,10 @@
         <button class="create" id="createBtn">CREATE CLASS</button>
       </div>
 
-   
+
       <div id="classGrid"></div>
 
-    
+
       <div id="modal" class="modal">
         <div class="modal-content">
           <span id="closeModal" class="close">&times;</span>
@@ -59,7 +60,7 @@
   </div>
 
   <script>
-   
+
     const modal = document.getElementById("modal");
     const createBtn = document.getElementById("createBtn");
     const closeModalBtn = document.getElementById("closeModal");
@@ -67,21 +68,21 @@
     const classGrid = document.getElementById("classGrid");
 
     createBtn.addEventListener("click", () => {
-      modal.classList.add("show");; 
+      modal.classList.add("show");;
     });
 
     closeModalBtn.addEventListener("click", () => {
       modal.classList.remove("show");
     });
 
-    
+
     window.addEventListener("click", (e) => {
       if (e.target === modal) {
-        modal.classList.remove("show"); 
+        modal.classList.remove("show");
       }
     });
 
-  
+
     submitBtn.addEventListener("click", () => {
       const name = document.getElementById("courseName").value.trim();
 
@@ -100,14 +101,14 @@
           return res.json();
         })
         .then((newClass) => {
-             modal.classList.remove("show");
+          modal.classList.remove("show");
           document.getElementById("courseName").value = "";
           loadClasses();
         })
         .catch((err) => alert(err.message));
     });
 
-   
+
     document.getElementById("search-input").addEventListener("input", function () {
       const searchTerm = this.value.toLowerCase();
       const cards = document.querySelectorAll(".class-card");
@@ -117,7 +118,7 @@
       });
     });
 
-   
+
     function sortCourses() {
       const cards = Array.from(classGrid.children);
       cards.sort((a, b) => {
@@ -129,20 +130,26 @@
       cards.forEach((card) => classGrid.appendChild(card));
     }
 
-    
+
+
     function loadClasses() {
       fetch("http://127.0.0.1:8000/api/classes/")
         .then((response) => response.json())
         .then((data) => {
-          classGrid.innerHTML = "";
+          classGrid.innerHTML
           data.forEach((cls) => {
+             let clsd = {
+            "code": "CS101",
+            "name": "Computer Science 101",
+            "id": 1
+          } = "";
             const card = document.createElement("div");
             card.className = "class-card";
-            card.style.display = "flex"; 
+            card.style.display = "flex";
             card.innerHTML = `
-              <div class="class-code">${cls.code}</div>
-              <div class="class-name">${cls.name}</div>
-              <button onclick="window.location.href='/groups/${cls.id}'">Groups</button>
+              <div class="class-code">${clsd.code}</div>
+              <div class="class-name">${clsd.name}</div>
+              <button onclick="window.location.href='/groups/${clsd.id}'">Groups</button>
             `;
             classGrid.appendChild(card);
           });
@@ -155,4 +162,5 @@
     loadClasses();
   </script>
 </body>
+
 </html>

@@ -24,7 +24,7 @@
     <div class="form-step active">
       <h2>What is your name?</h2>
       <div class="form-group">
-        <input type="text" id="fullName" placeholder="Full Name">
+        <input type="text" id="name" placeholder="name">
       </div>
 
     <div class="form-step active">
@@ -62,9 +62,13 @@
         </select>
       </div>
 
+        <div class="form-group">
+      <input type="email" id="email" placeholder="Email Address" />
+    </div>
+
       <div class="form-group">
         <label><h2>Contact Number?</h2></label>
-        <input type="text" id="contact" value="+60" />
+        <input type="text" id="contact_num" value="+60" />
       </div>
 
       <button class="primary-btn" id="nextBtn">Next</button>
@@ -72,51 +76,59 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <script>
-  document.getElementById('nextBtn').addEventListener('click', function() {
-      const fullName = document.getElementById('fullName').value;
-      const username =document.getElementById('username').value;
-      const date = document.getElementById('birthDate').value;
-      const genderInput = document.querySelector('input[name="gender"]:checked');
-      const gender = genderInput ? genderInput.value : '';
-      const course = document.getElementById('course').value;
-      const contact = document.getElementById('contact').value;
+ <script>
+  console.log('Email from session:', email);
 
-      if (!fullName ||!username|| !date || !gender || !course || !contact) {
-        Toastify({
-          text: "Please fill in all the fields before proceeding.",
-          duration: 3000,
-          gravity: "top",
-          position: "center",
-          style: { background: "red" }
-        }).showToast();
-        return;
-      }
+  window.onload = function () {
+    const email = sessionStorage.getItem('student_email') || '';
+    if (!email) {
+      alert('No email found in session. Please go back and enter your email.')}
+    document.getElementById('email').value = email;
+  };
 
-  
-      sessionStorage.setItem('registrationData', JSON.stringify({
-        fullName,
-        username,
-        date,
-        gender,
-        course,
-        contact
-      }));
+  document.getElementById('nextBtn').addEventListener('click', function () {
+    const fullName = document.getElementById('name').value;
+    const username = document.getElementById('username').value;
+    const genderInput = document.querySelector('input[name="gender"]:checked');
+    const contact = document.getElementById('contact_num').value;
 
-      // Redirect to password page
-      window.location.href = "student-password.html";
+    if (!fullName || !username || !genderInput || !contact) {
+      Toastify({
+        text: "Please fill in all the fields before proceeding.",
+        duration: 3000,
+        gravity: "top",
+        position: "center",
+        style: { background: "red" }
+      }).showToast();
+      return;
+    }
+
+    const email = document.getElementById('email').value;
+    const birthDate = document.getElementById('birthDate').value;
+    const gender = genderInput.value;
+    const course = document.getElementById('course').value;
+
+    sessionStorage.setItem('registrationData', JSON.stringify({
+      name: fullName,
+      username,
+      contact_num: contact,
+      email,
+      birthDate,
+      gender,
+      course
+    }));
+
+    // Redirect to password page
+    window.location.href = "student-password.html";
+  });
+
+  // Gender icon selection
+  document.querySelectorAll('.gender-icon').forEach(img => {
+    img.addEventListener('click', () => {
+      document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
+      img.previousElementSibling.checked = true;
+      document.querySelectorAll('.gender-icon').forEach(i => i.style.border = 'none');
+      img.style.border = '2px solid blue';
     });
-
-    // Gender icon selection
-    document.querySelectorAll('.gender-icon').forEach(img => {
-      img.addEventListener('click', () => {
-        document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
-        img.previousElementSibling.checked = true;
-        document.querySelectorAll('.gender-icon').forEach(i => i.style.border = 'none');
-        img.style.border = '2px solid blue';
-      });
-    });
-  
-  </script>
-</body>
-</html>
+  });
+</script>
