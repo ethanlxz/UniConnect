@@ -65,7 +65,7 @@
             return; 
         }
     
-      localStorage.setItem('lecturer_email', email);
+	  sessionStorage.setItem("lecturer_email", email);
       
         axios.post('http://127.0.0.1:8000/api/otp/send', { email })
         .then(response => {
