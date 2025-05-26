@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+ 
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="nav-item active">
+      <img src="../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </div>
+    <div class="nav-item">
+      <img src="../image/profile.png" alt="Profile Icon" />
+      <div>Profile</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+        </div>
+      </div>
+    </nav>
+
+    <div class="textContent">
+        <h2>My Profile</h2>
+    </div>
+
+    <div class='Container-Profile'>
+      <div class='profile'>
+        <div class='profile-pic'>
+          <img src="../image/profile.png" alt="Profile Picture">
+        </div>
+        <div class='profile-info'>
+          <div class='profile-name'>
+            <h2 id="teacherName"></h2>
+          </div>
+          <div class='profile-email'>
+            <h4 id="teacherEmail"></h4>
+          </div>
+          <div class='profile-contact_num'>
+            <h4 id="teacher_Contactnum"></h4>
+          </div>
+        </div>
+      </div>
+    </div>
+     <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+     <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+
+    <script>
+        documentaddEventListener('DOMContentLoaded', function() {
+            fetch('http://localhost:8080/teacher/profile', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                documentgetElementById('teacherName').innerText = data.name;
+                documentgetElementById('teacherEmail').innerText = data.email;
+                documentgetElementById('teacher_Contactnum').innerText = data.contact_num;
+            })
+            .catch(error => {
+                console.log(error);
+            })
+        })
+
+    </script>

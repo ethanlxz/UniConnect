@@ -89,3 +89,159 @@
     .create-btn:hover {
       background-color: #bbb;
     }
+
+  /*class.html*/
+
+
+    .container {
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .actions input[type="text"],
+    .actions button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .actions input[type="text"] {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .actions button.sort,
+    .actions button.create {
+      background-color: #2f2f2f;
+      color: white;
+      cursor: pointer;
+    }
+
+    #classes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .class-card {
+      background-color: #2f2f2f;
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 180px;
+      margin-left: 0.5cm;
+      margin-right: 0.5cm;
+      
+
+    }
+
+    .class-code {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .groups-btn {
+      margin-top: auto;
+      padding: 8px 12px;
+      background-color: white;
+      color: #2f2f2f;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+  .modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.modal.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+ 
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  
+  .modal-content input {
+    width: 100%;
+    padding: 8px 10px;
+    margin: 10px 0;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+
+  
+  .modal-content button {
+    background-color: #000000;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 4px;
+  }
+
+  .modal-content button:hover {
+    background-color: #45a049;
+  }
+
+
+  /*teacher_profile.html*/
+  .Container-Profile {
+    background: rgb(209, 209, 209);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 1000px;   
+    text-align: left;
+    margin-left: 2cm;
+    margin-right: 2cm;
+    height: 550px;
+  }
+
+
+
+  

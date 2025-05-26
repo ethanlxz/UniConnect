@@ -104,10 +104,13 @@
 
     const name = localStorage.getItem('lecturer_name');
     const username = localStorage.getItem('lecturer_username');  
-    const email = localStorage.getItem('lecturer_email');
     const password = localStorage.getItem('lecturer_password');
     const age = localStorage.getItem('lecturer_age');
     const contact = localStorage.getItem('lecturer_contact');
+
+
+	const email = sessionStorage.getItem("lecturer_email");
+	console.log(email);
 
     const apiUrl = "http://127.0.0.1:8000/api/otp/send";
     const payload = {
@@ -127,7 +130,7 @@
         }).showToast();
 
         localStorage.clear();
-        window.location.href = "../teacher_dashboard.html";
+        window.location.href = "./teacher-register3.html";
 
     } catch (error) {
         console.error("Registration failed:", error);
