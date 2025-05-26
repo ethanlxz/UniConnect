@@ -63,7 +63,7 @@ Success Response:
 ```
 
 2. Register Student
-Endpoint: POST /api/student/register
+Endpoint: POST /api/student/register/
 Payload:
 
 ```json
@@ -79,7 +79,7 @@ Payload:
 
 
 3. Student Login
-Endpoint: POST /api/student/login
+Endpoint: POST /api/student/login/
 Payload:
 
 ```json
@@ -119,7 +119,7 @@ Success Response:
 ```
 
 2. Register Lecturer
-Endpoint: POST /api/lecturer/register
+Endpoint: POST /api/lecturer/register/
 Payload:
 
 ```json
@@ -135,7 +135,7 @@ Payload:
 
 
 3. Lecturer Login
-Endpoint: POST /api/lecturer/login
+Endpoint: POST /api/lecturer/login/
 Payload:
 
 ```json
@@ -164,7 +164,9 @@ Payload:
 {
   "username": "lecturer1",
   "name": "ClassName1",
-  "max_students": 60
+  "max_students": 60,
+  "group": 10,
+  "max_group_members": 6
 }
 ```
 

@@ -26,6 +26,8 @@ class CreateClassAPIView(APIView):
                 "name": class_instance.name,
                 "code": class_instance.code,
                 "max_students": class_instance.max_students,
+                "group": class_instance.group,
+                "max_group_members": class_instance.max_group_members,
             }, status=201)
 
         return Response(serializer.errors, status=400)
