@@ -45,7 +45,24 @@ Response:
 Validates the OTP (fails if older than 10 minutes).
 
 🎓 Student Endpoints
-1. Register Student
+1. Student Profile
+Endpoint: GET /api/student/profile?username=student1
+Payload:
+
+Success Response:
+
+```json
+{
+  "id": "STU001",
+  "username": "student1",
+  "email": "student@example.com",
+  "name": "John Doe",
+  "password": "securepassword123",
+  "contact_num": "+1234567890"
+}
+```
+
+2. Register Student
 Endpoint: POST /api/student/register
 Payload:
 
@@ -61,7 +78,7 @@ Payload:
 ```
 
 
-2. Student Login
+3. Student Login
 Endpoint: POST /api/student/login
 Payload:
 
@@ -84,7 +101,24 @@ Success Response:
 ```
 
 👨‍🏫 Lecturer Endpoints
-1. Register Lecturer
+1. Lecturer Profile
+Endpoint: GET /api/lecturer/profile?username=lecturer1
+Payload:
+
+Success Response:
+
+```json
+{
+  "id": "LEC001",
+  "username": "lecturer1",
+  "email": "lecturer@example.com",
+  "name": "Dr. Smith",
+  "password": "securepassword123",
+  "contact_num": "+9876543210"
+}
+```
+
+2. Register Lecturer
 Endpoint: POST /api/lecturer/register
 Payload:
 
@@ -100,7 +134,7 @@ Payload:
 ```
 
 
-2. Lecturer Login
+3. Lecturer Login
 Endpoint: POST /api/lecturer/login
 Payload:
 
@@ -118,5 +152,208 @@ Success Response:
   "message": "Login successful",
   "refresh": "eyJhbGci...",
   "access": "eyJhbGci..."
+}
+```
+
+Class
+1. Create Class
+Endpoint: POST /class/create/
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "name": "ClassName1",
+  "max_students": 60
+}
+```
+
+Success Response:
+
+```json
+{
+    "name": "ClassName1",
+    "code": "ClassCode1",
+    "max_students": 60
+}
+```
+
+2. Join Class
+Endpoint: POST /class/join/
+Payload:
+
+```json
+{
+  "username": "student1",
+  "code": "ClassCode1"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "student1 successfully joined class 'ClassName1'."
+}
+```
+
+3. Edit Class
+Endpoint: PUT /class/edit/
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "code": "ClassCode1",
+  "name": "ClassName2"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Class name updated successfully."
+}
+```
+
+4. Delete Class
+Endpoint: DELETE /class/delete/
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "code": "ClassCode1"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Class deleted successfully."
+}
+```
+
+5. Remove Student from Class
+Endpoint: POST /class/removeStudent/
+Payload:
+
+```json
+{
+  "username": "lecturer1",
+  "code": "ClassCode1",
+  "student_username": "student1"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Student removed successfully."
+}
+```
+
+6. LecturerClassList
+Endpoint: POST /class/lecturer/classes/
+Payload:
+
+```json
+{
+  "username": "lecturer1"
+}
+```
+
+Success Response:
+
+```json
+[
+    {
+        "id": 1,
+        "name": "ClassName1",
+        "code": "ClassCode1"
+    },
+    {
+        "id": 5,
+        "name": "ClassName2",
+        "code": "ClassCode2"
+    },
+    {
+        "id": 7,
+        "name": "ClassName3",
+        "code": "ClassCode3"
+    }
+]
+```
+
+7. StudentClassList
+Endpoint: POST /class/student/classes/
+Payload:
+
+```json
+{
+  "username": "student1"
+}
+```
+
+Success Response:
+
+```json
+[
+    {
+        "id": 1,
+        "name": "ClassName1",
+        "code": "ClassCode1"
+    },
+    {
+        "id": 5,
+        "name": "ClassName2",
+        "code": "ClassCode2"
+    },
+    {
+        "id": 7,
+        "name": "ClassName3",
+        "code": "ClassCode3"
+    }
+]
+```
+
+8. Class Detail
+Endpoint: GET /class/detail/?class_id=8
+
+Success Response:
+
+```json
+{
+    "class_id": 8,
+    "name": "ClassName1",
+    "code": "ClassCode1",
+    "max_students": 60,
+    "current_student_count": 2,
+    "lecturer": {
+        "id": 2,
+        "username": "Lecturer1",
+        "name": "LecturerName1",
+        "email": "Lecturer1@gmail.com",
+        "contact_num": "01267895"
+    },
+    "students": [
+        {
+            "id": 2,
+            "username": "Student1",
+            "name": "StudentName1",
+            "email": "Student1@gamil.com",
+            "contact_num": "01234567"
+        },
+        {
+            "id": 3,
+            "username": "Student2",
+            "name": "StudentName2",
+            "email": "Student2@gmail.com",
+            "contact_num": "01289765"
+        }
+    ]
 }
 ```
