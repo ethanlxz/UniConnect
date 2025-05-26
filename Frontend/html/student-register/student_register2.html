@@ -123,17 +123,25 @@
     }
 
    async function verifyOTP() {
-    const inputs = document.querySelectorAll(".otp-box");
-    const otp = Array.from(inputs).map(input => input.value).join("");
+    const otpInputs = document.querySelectorAll('.otp-box'); 
+    let otp = '';
+    otpInputs.forEach(input => {
+        otp += input.value;
+    });
 
     if (otp.length !== 6) {
         alert("Please enter the complete 6-digit OTP.");
         return;
     }
 
-    const email = sessionStorage.getItem('student_email');
-    console.log("Email from sessionStorage:", email);
-    console.log("OTP code entered:", otp);
+    const name = localStorage.getItem('student_name');
+    const username = localStorage.getItem('student_username');  
+    const password = localStorage.getItem('student_password');
+    const age = localStorage.getItem('student_age');
+    const contact = localStorage.getItem('student_contact');
+
+    const email = sessionStorage.getItem("student_email");
+    console.log("Verifying OTP for:", email);
 
     const apiUrl = "http://127.0.0.1:8000/api/otp/verify";
     const payload = {
@@ -165,7 +173,6 @@
         }).showToast();
     }
 }
-
 
     async function makeRequest(apiUrl, params = {}, payload = null, method = 'GET') {
         const config = {

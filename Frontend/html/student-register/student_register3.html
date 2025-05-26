@@ -1,36 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration</title>
-    <link rel="stylesheet" href="/Frontend/styles/users.css">
-    <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet">
-</head>
-<nav class="main-nav">
-        <div class="nav-brand">
-            <h1>UniConnect.</h1>
-        </div>
-        <div class="nav-progress">
-            <div class="progress-step active">
-                <img src="/Frontend/image/profile.png" alt="Lock Icon" class="step-icon">
-            </div>
-        </div>
-    </nav>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Registration</title>
+  <link rel="stylesheet" href="/Frontend/styles/users.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet"/>
+  <style>
+    .gender-icon {
+      width: 80px;
+      height: 80px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 10px;
+      border: 2px solid transparent;
+    }
+    .gender-icon.selected {
+      border: 2px solid blue;
+    }
+  </style>
 </head>
 <body>
+  <!-- Navigation Bar -->
+  <nav class="main-nav">
+    <div class="nav-brand">
+      <h1>UniConnect.</h1>
+    </div>
+    <div class="nav-progress">
+      <div class="progress-step active">
+        <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+      </div>
+    </div>
+  </nav>
+
+  <!-- Registration Form -->
   <div class="registration-container">
     <div class="form-step active">
       <h2>What is your name?</h2>
       <div class="form-group">
-        <input type="text" id="name" placeholder="name">
+        <input type="text" id="name" placeholder="Name" />
       </div>
 
-    <div class="form-step active">
       <h2>Set Your Username</h2>
       <div class="form-group">
-        <input type="text" id="username" placeholder="username">
+        <input type="text" id="username" placeholder="Username" />
       </div>
 
       <div class="form-group">
@@ -42,12 +56,12 @@
         <label><h2>Gender?</h2></label>
         <div class="gender-icons">
           <label>
-            <input type="radio" name="gender" value="male" hidden>
-            <img src="https://cdn-icons-png.flaticon.com/512/126/126486.png" alt="Male" class="gender-icon" data-gender="male" />
+            <input type="radio" name="gender" value="male" hidden />
+            <img src="https://cdn-icons-png.flaticon.com/512/126/126486.png" alt="Male" class="gender-icon" />
           </label>
           <label>
-            <input type="radio" name="gender" value="female" hidden>
-            <img src="https://cdn-icons-png.flaticon.com/512/126/126485.png" alt="Female" class="gender-icon" data-gender="female" />
+            <input type="radio" name="gender" value="female" hidden />
+            <img src="https://cdn-icons-png.flaticon.com/512/126/126485.png" alt="Female" class="gender-icon" />
           </label>
         </div>
       </div>
@@ -55,16 +69,13 @@
       <div class="form-group">
         <label><h2>What is your course?</h2></label>
         <select id="course">
-          <option>Computer Science</option>
-          <option>Business</option>
-          <option>Design</option>
-          <option>Engineering</option>
+          <option value="">Select your course</option>
+          <option value="Computer Science">Computer Science</option>
+          <option value="Business">Business</option>
+          <option value="Design">Design</option>
+          <option value="Engineering">Engineering</option>
         </select>
       </div>
-
-        <div class="form-group">
-      <input type="email" id="email" placeholder="Email Address" />
-    </div>
 
       <div class="form-group">
         <label><h2>Contact Number?</h2></label>
@@ -76,59 +87,50 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
- <script>
-  console.log('Email from session:', email);
-
-  window.onload = function () {
-    const email = sessionStorage.getItem('student_email') || '';
-    if (!email) {
-      alert('No email found in session. Please go back and enter your email.')}
-    document.getElementById('email').value = email;
-  };
-
-  document.getElementById('nextBtn').addEventListener('click', function () {
-    const fullName = document.getElementById('name').value;
-    const username = document.getElementById('username').value;
-    const genderInput = document.querySelector('input[name="gender"]:checked');
-    const contact = document.getElementById('contact_num').value;
-
-    if (!fullName || !username || !genderInput || !contact) {
-      Toastify({
-        text: "Please fill in all the fields before proceeding.",
-        duration: 3000,
-        gravity: "top",
-        position: "center",
-        style: { background: "red" }
-      }).showToast();
-      return;
-    }
-
-    const email = document.getElementById('email').value;
-    const birthDate = document.getElementById('birthDate').value;
-    const gender = genderInput.value;
-    const course = document.getElementById('course').value;
-
-    sessionStorage.setItem('registrationData', JSON.stringify({
-      name: fullName,
-      username,
-      contact_num: contact,
-      email,
-      birthDate,
-      gender,
-      course
-    }));
-
-    // Redirect to password page
-    window.location.href = "student-password.html";
-  });
-
-  // Gender icon selection
-  document.querySelectorAll('.gender-icon').forEach(img => {
-    img.addEventListener('click', () => {
-      document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
-      img.previousElementSibling.checked = true;
-      document.querySelectorAll('.gender-icon').forEach(i => i.style.border = 'none');
-      img.style.border = '2px solid blue';
+  <script>
+    // Gender icon selection
+    document.querySelectorAll('.gender-icon').forEach(img => {
+      img.addEventListener('click', () => {
+        document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
+        document.querySelectorAll('.gender-icon').forEach(i => i.classList.remove('selected'));
+        img.previousElementSibling.checked = true;
+        img.classList.add('selected');
+      });
     });
-  });
-</script>
+
+    // Next button click
+    document.getElementById('nextBtn').addEventListener('click', function () {
+      const fullName = document.getElementById('name').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const birthDate = document.getElementById('birthDate').value;
+      const course = document.getElementById('course').value;
+      const contact = document.getElementById('contact_num').value.trim();
+      const genderInput = document.querySelector('input[name="gender"]:checked');
+
+      if (!fullName || !username ||  !birthDate || !course || !contact || !genderInput) {
+        Toastify({
+          text: "Please fill in all the fields before proceeding.",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          style: { background: "red" }
+        }).showToast();
+        return;
+      }
+
+      const gender = genderInput.value;
+
+      sessionStorage.setItem('registrationData', JSON.stringify({
+        name: fullName,
+        username,
+        birthDate,
+        course,
+        contact_num: contact,
+        gender
+      }));
+
+      window.location.href = "student-password.html";
+    });
+  </script>
+</body>
+</html>
