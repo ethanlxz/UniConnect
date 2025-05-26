@@ -6,12 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('class', '0002_alter_class_id'),
+        ('classing', '0002_alter_class_id'),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='class',
+            model_name='Class',
             old_name='id',
             new_name='class_id',
         ),

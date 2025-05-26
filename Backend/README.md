@@ -157,7 +157,7 @@ Success Response:
 
 Class
 1. Create Class
-Endpoint: POST /class/create/
+Endpoint: POST /classing/create/
 Payload:
 
 ```json
@@ -181,7 +181,7 @@ Success Response:
 ```
 
 2. Join Class
-Endpoint: POST /class/join/
+Endpoint: POST /classing/join/
 Payload:
 
 ```json
@@ -200,7 +200,7 @@ Success Response:
 ```
 
 3. Edit Class
-Endpoint: PUT /class/edit/
+Endpoint: PUT /classing/edit/
 Payload:
 
 ```json
@@ -220,7 +220,7 @@ Success Response:
 ```
 
 4. Delete Class
-Endpoint: DELETE /class/delete/
+Endpoint: DELETE /classing/delete/
 Payload:
 
 ```json
@@ -239,7 +239,7 @@ Success Response:
 ```
 
 5. Remove Student from Class
-Endpoint: POST /class/removeStudent/
+Endpoint: POST /classing/removeStudent/
 Payload:
 
 ```json
@@ -259,7 +259,7 @@ Success Response:
 ```
 
 6. LecturerClassList
-Endpoint: POST /class/lecturer/classes/
+Endpoint: POST /classing/lecturer/classes/
 Payload:
 
 ```json
@@ -291,7 +291,7 @@ Success Response:
 ```
 
 7. StudentClassList
-Endpoint: POST /class/student/classes/
+Endpoint: POST /classing/student/classes/
 Payload:
 
 ```json
@@ -323,7 +323,7 @@ Success Response:
 ```
 
 8. Class Detail
-Endpoint: GET /class/detail/?class_id=8
+Endpoint: GET /classing/detail/?class_id=8
 
 Success Response:
 

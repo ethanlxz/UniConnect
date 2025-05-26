@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=100)),
                 ('code', models.CharField(blank=True, max_length=6, unique=True)),
-                ('lecturer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='classes', to='api.lecturerprofile')),
+                ('lecturer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='classing', to='api.lecturerprofile')),
                 ('students', models.ManyToManyField(blank=True, related_name='joined_classes', to='api.studentprofile')),
             ],
         ),

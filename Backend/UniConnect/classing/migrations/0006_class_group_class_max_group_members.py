@@ -6,17 +6,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('class', '0005_alter_class_max_students'),
+        ('classing', '0005_alter_class_max_students'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='class',
+            model_name='Class',
             name='group',
             field=models.PositiveIntegerField(default=1),
         ),
         migrations.AddField(
-            model_name='class',
+            model_name='Class',
             name='max_group_members',
             field=models.PositiveIntegerField(default=1),
         ),

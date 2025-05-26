@@ -6,12 +6,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('class', '0001_initial'),
+        ('classing', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='class',
+            model_name='Class',
             name='id',
             field=models.AutoField(primary_key=True, serialize=False),
         ),

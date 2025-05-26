@@ -6,12 +6,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('class', '0003_rename_id_class_class_id'),
+        ('classing', '0003_rename_id_class_class_id'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='class',
+            model_name='Class',
             name='max_students',
             field=models.PositiveIntegerField(default=50),
         ),
