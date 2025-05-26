@@ -62,10 +62,10 @@
                 backgroundColor: "red",
                 stopOnFocus: true
             }).showToast();
-            return; 
+            return;
         }
     
-      localStorage.setItem('student_email', email);
+      sessionStorage.setItem("student_email", email);
       
      
     axios.post('http://127.0.0.1:8000/api/otp/send', { email })
