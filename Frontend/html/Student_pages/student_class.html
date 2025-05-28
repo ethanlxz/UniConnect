@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="nav-item active">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </div>
+    <div class="nav-item">
+      <img src="../../image/group icon.png" alt="Group Icon" />
+      <div>Group</div>
+    </div>
+    <div class="nav-item">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
+      <div>Profile</div>
+    </div>
+  </div>
+  
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h2>My Classes</h2>
+      <div class="actions">
+        <input type="text" id="search-input" placeholder="Search for a class" />
+        <button id="search-button">Search</button>
+        <button class="sort" onclick="sortCourses()">Sort by course name</button>
+        <button class="join" id="joinBtn">JOIN CLASS</button>
+
+      </div>
+
+
+      <div id="classGrid"></div>
+
+
+      <div id="joinModal" class="modal">
+  <div class="modal-content">
+    <span id="closeJoinModal" class="close">&times;</span>
+    <h3>Join Class</h3>
+    <input id="joinCode" placeholder="Enter Class Code" />
+    <button id="submitJoin">Join</button>
+  </div>
+</div>
+
+
+  <script>
+
+    const joinModal = document.getElementById("joinModal");
+const joinBtn = document.getElementById("joinBtn");
+const closeJoinModal = document.getElementById("closeJoinModal");
+const submitJoin = document.getElementById("submitJoin");
+
+joinBtn.addEventListener("click", () => {
+  joinModal.classList.add("show");
+});
+
+closeJoinModal.addEventListener("click", () => {
+  joinModal.classList.remove("show");
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === joinModal) {
+    joinModal.classList.remove("show");
+  }
+});
+
+submitJoin.addEventListener("click", () => {
+  const code = document.getElementById("joinCode").value.trim();
+  const username = "student1"; // 实际项目中动态获取
+
+  if (!code) {
+    alert("Please enter a class code.");
+    return;
+  }
+
+  fetch("http://127.0.0.1:8000/api/join/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, code }),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to join class");
+      return res.json();
+    })
+    .then((data) => {
+      alert(data.detail);
+      joinModal.classList.remove("show");
+      document.getElementById("joinCode").value = "";
+      loadClasses(); // 重新加载学生课程
+    })
+    .catch((err) => alert(err.message));
+});
+
+
+
+    document.getElementById("search-input").addEventListener("input", function () {
+      const searchTerm = this.value.toLowerCase();
+      const cards = document.querySelectorAll(".class-card");
+      cards.forEach((card) => {
+        const title = card.querySelector(".class-name").innerText.toLowerCase();
+        card.style.display = title.includes(searchTerm) ? "flex" : "none";
+      });
+    });
+
+
+    function sortCourses() {
+      const cards = Array.from(classGrid.children);
+      cards.sort((a, b) => {
+        const nameA = a.querySelector(".class-name").innerText.toUpperCase();
+        const nameB = b.querySelector(".class-name").innerText.toUpperCase();
+        return nameA.localeCompare(nameB);
+      });
+      classGrid.innerHTML = "";
+      cards.forEach((card) => classGrid.appendChild(card));
+    }
+
+
+
+    function loadClasses() {
+  const username = "student1"; // 实际应动态获取
+  fetch("http://127.0.0.1:8000/api/student/classes/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      classGrid.innerHTML = "";
+      data.forEach((cls) => {
+        const card = document.createElement("div");
+        card.className = "class-card";
+        card.style.display = "flex";
+        card.innerHTML = `
+          <div class="class-code">${cls.code}</div>
+          <div class="class-name">${cls.name}</div>
+          <button onclick="window.location.href='/groups/${cls.id}'">Groups</button>
+        `;
+        classGrid.appendChild(card);
+      });
+    })
+    .catch((error) => {
+      console.error("Failed to load student classes:", error);
+    });
+}
+
+
+
+    loadClasses();
+  </script>
+</body>
+
+</html>

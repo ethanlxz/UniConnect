@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Home - UniConnect</title>
+  <title>Teacher Home - UniConnect</title>
   <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
@@ -53,6 +53,7 @@
           <span id="closeModal" class="close">&times;</span>
           <h3>Create New Class</h3>
           <input id="courseName" placeholder="Course Name" />
+          <input id="max_students" placeholder="Max Students" />
           <button id="submitCreate">Submit</button>
         </div>
       </div>
@@ -84,29 +85,32 @@
 
 
     submitBtn.addEventListener("click", () => {
-      const name = document.getElementById("courseName").value.trim();
+  const name = document.getElementById("courseName").value.trim();
+  const maxStudents = parseInt(document.getElementById("max_students").value.trim());
+  const username = "lecturer1"; // 真实项目中动态获取
 
-      if (!code || !name) {
-        alert("Please fill both fields.");
-        return;
-      }
+  if (!name || isNaN(maxStudents)) {
+    alert("Please fill in both fields correctly.");
+    return;
+  }
 
-      fetch("http://127.0.0.1:8000/api/classes/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name }),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Failed to create class");
-          return res.json();
-        })
-        .then((newClass) => {
-          modal.classList.remove("show");
-          document.getElementById("courseName").value = "";
-          loadClasses();
-        })
-        .catch((err) => alert(err.message));
-    });
+  fetch("http://127.0.0.1:8000/api/class/create/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, max_students: maxStudents, username }),
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to create class");
+      return res.json();
+    })
+    .then((newClass) => {
+      modal.classList.remove("show");
+      document.getElementById("courseName").value = "";
+      document.getElementById("max_students").value = "";
+      loadClasses(); // 加载新列表
+    })
+    .catch((err) => alert(err.message));
+});
 
 
     document.getElementById("search-input").addEventListener("input", function () {
@@ -133,31 +137,28 @@
 
 
     function loadClasses() {
-      fetch("http://127.0.0.1:8000/api/classes/")
-        .then((response) => response.json())
-        .then((data) => {
-          classGrid.innerHTML
-          data.forEach((cls) => {
-             let clsd = {
-            "code": "CS101",
-            "name": "Computer Science 101",
-            "id": 1
-          } = "";
-            const card = document.createElement("div");
-            card.className = "class-card";
-            card.style.display = "flex";
-            card.innerHTML = `
-              <div class="class-code">${clsd.code}</div>
-              <div class="class-name">${clsd.name}</div>
-              <button onclick="window.location.href='/groups/${clsd.id}'">Groups</button>
-            `;
-            classGrid.appendChild(card);
-          });
-        })
-        .catch((error) => {
-          console.error("Failed to load classes:", error);
-        });
-    }
+  fetch("http://127.0.0.1:8000/api/class/lecturer/classes/")
+    .then((response) => response.json())
+    .then((data) => {
+      classGrid.innerHTML = ""; // 清空旧内容
+
+      data.forEach((cls) => {
+        const card = document.createElement("div");
+        card.className = "class-card";
+        card.style.display = "flex";
+        card.innerHTML = `
+          <div class="class-code">${cls.code || "No Code"}</div>
+          <div class="class-name">${cls.name}</div>
+          <button onclick="window.location.href='/groups/${cls.id}'">Groups</button>
+        `;
+        classGrid.appendChild(card);
+      });
+    })
+    .catch((error) => {
+      console.error("Failed to load classes:", error);
+    });
+}
+
 
     loadClasses();
   </script>
