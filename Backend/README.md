@@ -166,7 +166,7 @@ Payload:
   "name": "ClassName1",
   "max_students": 60,
   "group": 10,
-  "max_group_members": 6
+  "min_group_members": 6
 }
 ```
 
@@ -176,7 +176,9 @@ Success Response:
 {
     "name": "ClassName1",
     "code": "ClassCode1",
-    "max_students": 60
+    "max_students": 60,
+    "group": 10,
+    "min_group_members": 6
 }
 ```
 
@@ -355,6 +357,106 @@ Success Response:
             "name": "StudentName2",
             "email": "Student2@gmail.com",
             "contact_num": "01289765"
+        }
+    ]
+}
+```
+
+Grouping
+1. Send Request
+Endpoint: POST /grouping/send/
+Payload:
+
+```json
+{
+  "class_code": "CS101",
+  "sender_username": "alice123",
+  "receiver_username": "bob456"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Group request sent."
+}
+```
+
+2. Respond Request
+Endpoint: POST /grouping/respond/
+Payload:
+
+```json
+{
+  "request_id": 7,
+  "class_code": "CS101",
+  "current_username": "ysss",
+  "action": true
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Request accepted and group updated."
+}
+```
+
+```json
+{
+  "request_id": 7,
+  "class_code": "CS101",
+  "current_username": "ysss",
+  "action": false
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Request declined."
+}
+```
+
+3. Group List
+Endpoint: GET /grouping/list/?class_id=4
+Payload:
+
+Success Response:
+
+```json
+{
+    "class_code": "nMAU8t",
+    "class_name": "AI",
+    "min_group_members": 3,
+    "max_groups_allowed": 4,
+    "final_groups": [
+        {
+            "group_label": "Group 1",
+            "id": 4,
+            "members": [
+                "ethan",
+                "ys",
+                "sam"
+            ],
+            "member_count": 3,
+            "is_finalized": true
+        }
+    ],
+    "groups_forming": [
+        {
+            "group_label": "Forming Group 1",
+            "id": 5,
+            "members": [
+                "rael",
+                "susan",
+                null
+            ],
+            "member_count": 2,
+            "is_finalized": false
         }
     ]
 }

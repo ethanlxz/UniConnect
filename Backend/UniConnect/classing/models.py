@@ -11,7 +11,7 @@ class Class(models.Model):
     students = models.ManyToManyField(StudentProfile, blank=True, related_name='joined_classes')
     max_students = models.PositiveIntegerField()
     group = models.PositiveIntegerField(default=1)
-    max_group_members = models.PositiveIntegerField(default=1)
+    min_group_members = models.PositiveIntegerField(default=1)
 
     def current_student_count(self):
         return self.students.count()

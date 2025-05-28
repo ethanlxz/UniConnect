@@ -27,7 +27,7 @@ class CreateClassAPIView(APIView):
                 "code": class_instance.code,
                 "max_students": class_instance.max_students,
                 "group": class_instance.group,
-                "max_group_members": class_instance.max_group_members,
+                "min_group_members": class_instance.min_group_members,
             }, status=201)
 
         return Response(serializer.errors, status=400)
@@ -194,6 +194,8 @@ class ClassDetailAPIView(APIView):
             'code': class_instance.code,
             'max_students': class_instance.max_students,
             'current_student_count': class_instance.current_student_count(),
+            'group': class_instance.group,
+            'min_group_members': class_instance.min_group_members,
             'lecturer': {
                 'id': class_instance.lecturer.id,
                 'username': class_instance.lecturer.username,
