@@ -36,6 +36,7 @@
             <input type="text" maxlength="1" class="otp-box" />
             <input type="text" maxlength="1" class="otp-box" />
         </div>
+
 <div class="form-group">
   <button class="btn btn-primary" onclick="verifyOTP()">Verify</button>
   <a href="#" id="resendLink" onclick="resendOTP()" style="margin-left: 1rem; pointer-events: none; color: gray;">Resend OTP (60s)</a>
@@ -121,52 +122,57 @@
         }
     }
 
-    async function verifyOTP() {
-        const inputs = document.querySelectorAll(".otp-box");
-        const otp = Array.from(inputs).map(input => input.value).join("");
+   async function verifyOTP() {
+    const otpInputs = document.querySelectorAll('.otp-box'); 
+    let otp = '';
+    otpInputs.forEach(input => {
+        otp += input.value;
+    });
 
-        if (otp.length !== 6) {
-            alert("Please enter the complete 6-digit OTP.");
-            return;
-        }
-
-        const name = localStorage.getItem('student_name');
-        const username = localStorage.getItem('student_username');
-        const email = localStorage.getItem('student_email');
-        const password = localStorage.getItem('student_password');
-        const age = localStorage.getItem('student_age');
-        const contact = localStorage.getItem('student_contact');
-
-        const apiUrl = "http://127.0.0.1:8000/api/otp/verify";
-        const payload = {
-               email: localStorage.getItem('student_email'),
-               code: otp
-        };
-
-        try {
-            await makeRequest(apiUrl, {}, payload, 'POST');
-            Toastify({
-                text: "Registration successful!",
-                duration: 3000,
-                gravity: "top",
-                position: "center",
-                backgroundColor: "green",
-                stopOnFocus: true
-            }).showToast();
-            localStorage.clear();
-            window.location.href = "student_register3.html";
-        } catch (error) {
-            console.error("Registration failed:", error);
-            Toastify({
-                text: "OTP or registration error.",
-                duration: 3000,
-                gravity: "top",
-                position: "center",
-                backgroundColor: "red",
-                stopOnFocus: true
-            }).showToast();
-        }
+    if (otp.length !== 6) {
+        alert("Please enter the complete 6-digit OTP.");
+        return;
     }
+
+    const name = localStorage.getItem('student_name');
+    const username = localStorage.getItem('student_username');  
+    const password = localStorage.getItem('student_password');
+    const age = localStorage.getItem('student_age');
+    const contact = localStorage.getItem('student_contact');
+
+    const email = sessionStorage.getItem("student_email");
+    console.log("Verifying OTP for:", email);
+
+    const apiUrl = "http://127.0.0.1:8000/api/otp/verify";
+    const payload = {
+        email: email,
+        code: otp
+    };
+
+    try {
+        await makeRequest(apiUrl, {}, payload, 'POST');
+        Toastify({
+            text: "Registration successful!",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "green",
+            stopOnFocus: true
+        }).showToast();
+
+        window.location.href = "student_register3.html";
+    } catch (error) {
+        console.error("Registration failed:", error.response?.data);
+        Toastify({
+            text: "OTP or registration error.",
+            duration: 3000,
+            gravity: "top",
+            position: "center",
+            backgroundColor: "red",
+            stopOnFocus: true
+        }).showToast();
+    }
+}
 
     async function makeRequest(apiUrl, params = {}, payload = null, method = 'GET') {
         const config = {
