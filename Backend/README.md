@@ -63,7 +63,7 @@ Success Response:
 ```
 
 2. Register Student
-Endpoint: POST /api/student/register
+Endpoint: POST /api/student/register/
 Payload:
 
 ```json
@@ -79,7 +79,7 @@ Payload:
 
 
 3. Student Login
-Endpoint: POST /api/student/login
+Endpoint: POST /api/student/login/
 Payload:
 
 ```json
@@ -119,7 +119,7 @@ Success Response:
 ```
 
 2. Register Lecturer
-Endpoint: POST /api/lecturer/register
+Endpoint: POST /api/lecturer/register/
 Payload:
 
 ```json
@@ -135,7 +135,7 @@ Payload:
 
 
 3. Lecturer Login
-Endpoint: POST /api/lecturer/login
+Endpoint: POST /api/lecturer/login/
 Payload:
 
 ```json
@@ -157,14 +157,16 @@ Success Response:
 
 Class
 1. Create Class
-Endpoint: POST /class/create/
+Endpoint: POST /classing/create/
 Payload:
 
 ```json
 {
   "username": "lecturer1",
   "name": "ClassName1",
-  "max_students": 60
+  "max_students": 60,
+  "group": 10,
+  "min_group_members": 6
 }
 ```
 
@@ -174,12 +176,14 @@ Success Response:
 {
     "name": "ClassName1",
     "code": "ClassCode1",
-    "max_students": 60
+    "max_students": 60,
+    "group": 10,
+    "min_group_members": 6
 }
 ```
 
 2. Join Class
-Endpoint: POST /class/join/
+Endpoint: POST /classing/join/
 Payload:
 
 ```json
@@ -198,7 +202,7 @@ Success Response:
 ```
 
 3. Edit Class
-Endpoint: PUT /class/edit/
+Endpoint: PUT /classing/edit/
 Payload:
 
 ```json
@@ -218,7 +222,7 @@ Success Response:
 ```
 
 4. Delete Class
-Endpoint: DELETE /class/delete/
+Endpoint: DELETE /classing/delete/
 Payload:
 
 ```json
@@ -237,7 +241,7 @@ Success Response:
 ```
 
 5. Remove Student from Class
-Endpoint: POST /class/removeStudent/
+Endpoint: POST /classing/removeStudent/
 Payload:
 
 ```json
@@ -257,7 +261,7 @@ Success Response:
 ```
 
 6. LecturerClassList
-Endpoint: POST /class/lecturer/classes/
+Endpoint: POST /classing/lecturer/classes/
 Payload:
 
 ```json
@@ -289,7 +293,7 @@ Success Response:
 ```
 
 7. StudentClassList
-Endpoint: POST /class/student/classes/
+Endpoint: POST /classing/student/classes/
 Payload:
 
 ```json
@@ -321,7 +325,7 @@ Success Response:
 ```
 
 8. Class Detail
-Endpoint: GET /class/detail/?class_id=8
+Endpoint: GET /classing/detail/?class_id=8
 
 Success Response:
 
@@ -353,6 +357,106 @@ Success Response:
             "name": "StudentName2",
             "email": "Student2@gmail.com",
             "contact_num": "01289765"
+        }
+    ]
+}
+```
+
+Grouping
+1. Send Request
+Endpoint: POST /grouping/send/
+Payload:
+
+```json
+{
+  "class_code": "CS101",
+  "sender_username": "alice123",
+  "receiver_username": "bob456"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Group request sent."
+}
+```
+
+2. Respond Request
+Endpoint: POST /grouping/respond/
+Payload:
+
+```json
+{
+  "request_id": 7,
+  "class_code": "CS101",
+  "current_username": "ysss",
+  "action": true
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Request accepted and group updated."
+}
+```
+
+```json
+{
+  "request_id": 7,
+  "class_code": "CS101",
+  "current_username": "ysss",
+  "action": false
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Request declined."
+}
+```
+
+3. Group List
+Endpoint: GET /grouping/list/?class_id=4
+Payload:
+
+Success Response:
+
+```json
+{
+    "class_code": "nMAU8t",
+    "class_name": "AI",
+    "min_group_members": 3,
+    "max_groups_allowed": 4,
+    "final_groups": [
+        {
+            "group_label": "Group 1",
+            "id": 4,
+            "members": [
+                "ethan",
+                "ys",
+                "sam"
+            ],
+            "member_count": 3,
+            "is_finalized": true
+        }
+    ],
+    "groups_forming": [
+        {
+            "group_label": "Forming Group 1",
+            "id": 5,
+            "members": [
+                "rael",
+                "susan",
+                null
+            ],
+            "member_count": 2,
+            "is_finalized": false
         }
     ]
 }
