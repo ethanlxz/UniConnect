@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="nav-item active">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </div>
+    <div class="nav-item">
+      <img src="../../image/group icon.png" alt="Group Icon" />
+      <div>Group</div>
+    </div>
+    <div class="nav-item">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
+      <div>Profile</div>
+    </div>
+  </div>
+
+    <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+        </div>
+      </div>
+    </nav>
+<div class="main-header">
+    <h1>CPT4214 - FYP</h1>
+    <div>
+      <button class="button leave-btn" id="leave-class-btn">Leave Class</button>
+      <select class="button group-btn" id="group-request-select">
+        <option>Group Request</option>
+        <option>Pending</option>
+        <option>Accepted</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="controls">
+    <select id="sort-select">
+      <option value="name">Sort by Name</option>
+      <option value="age">Sort by Age</option>
+    </select>
+
+    <input type="text" id="search-input" placeholder="Search by name..." />
+  </div>
+
+    <div id="student-container" class="student-grid">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script src="/Frontend/scripts/class_members.js"></script>
+<script>
+    const students = [
+  {
+    name: "Law Yong Soon",
+    age: 19,
+    gender: "Male",
+    contactNum: "0123456789",
+    email: "YS@example.com",
+    bio: "I love Ethan",
+    skill: "Flutter",
+    image: "https://i.imgur.com/abc.png"
+  },
+  // 更多学生...
+];
+
+function renderStudents(data) {
+  const container = document.getElementById("student-container");
+  container.innerHTML = ""; // 清空旧内容
+  data.forEach(student => {
+    const card = document.createElement("div");
+    card.className = "student-card";
+    card.innerHTML = `
+      <img src="${student.image}" class="student-photo" />
+      <div>
+        <p><strong>Name:</strong> ${student.name}</p>
+        <p><strong>Age:</strong> ${student.age}</p>
+        <p><strong>Gender:</strong> ${student.gender}</p>
+        <p><strong>ContactNum:</strong> ${student.contactNum}</p>
+        <p><strong>Email:</strong> ${student.email}</p>
+        <p><strong>Bio:</strong> ${student.bio}</p>
+        <p><strong>Skill:</strong> ${student.skill}</p>
+        <button class="send-request-btn">Send Request</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+renderStudents(students); // 加载静态数据
+document.addEventListener("click", function (e) {
+  if (e.target.classList.contains("send-request-btn")) {
+    const name = e.target.closest(".student-card").querySelector("p").textContent;
+    alert(`Sent request to ${name}`);
+    // fetch('/api/group/request/', {...}) 可接入动态API
+  }
+});
+
+
+document.querySelector("#leave-class-btn").addEventListener("click", () => {
+  fetch("/api/class/leave/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ user_id: 123 }), // 传递用户id
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Leave failed");
+      alert("You have left the class");
+      // 重定向或刷新
+    })
+    .catch((err) => {
+      console.error(err);
+      alert("Error leaving class");
+    });
+});
+
+</script>

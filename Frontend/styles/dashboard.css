@@ -244,4 +244,169 @@
 
 
 
-  
+  /* Class Member*/
+   .main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .main-header h1 {
+      margin: 0;
+    }
+
+    .button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .leave-btn {
+      background-color: #ff7a7a;
+      color: white;
+    }
+
+    .group-btn {
+      background-color: black;
+      color: white;
+    }
+
+    .controls {
+      margin: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .controls select, .controls input {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      margin: 5px;
+    }
+
+    .student-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .student-card {
+      background: #2c2c2c;
+      color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      padding: 16px;
+      display: flex;
+      gap: 12px;
+    }
+
+    .student-photo {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .student-card p {
+      margin: 4px 0;
+      font-size: 14px;
+    }
+
+    .send-request-btn {
+      margin-top: 8px;
+      background-color: #1a4cd8;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    /*join class*/
+
+
+.container {
+  position: relative;
+}
+
+/* 主卡片样式 */
+.card {
+  background-color: #000;
+  color: white;
+  padding: 40px 30px;
+  border-radius: 16px;
+  text-align: center;
+  width: 400px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* 图标 */
+.icon img {
+  width: 80px;
+  height: 80px;
+  background-color: #d3d3d3;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+/* 标题 */
+.card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* 输入框 */
+.card input {
+  width: 80%;
+  padding: 12px;
+  margin-bottom: 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #d3d3d3;
+}
+
+/* 提交按钮 */
+.card button {
+  width: 80%;
+  padding: 12px;
+  background-color: #0033a0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.card button:hover {
+  background-color: #001f70;
+  cursor: pointer;
+}
+
+/* Back 按钮 */
+.back-button {
+  position: absolute;
+  bottom: -60px;
+  left: 0;
+  background-color: #ff6b6b;
+  color: white;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #e63946;
+  cursor: pointer;
+}
