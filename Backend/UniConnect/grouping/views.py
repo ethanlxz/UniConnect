@@ -154,3 +154,34 @@ class ListGroupsAPIView(APIView):
         }
 
         return Response(data, status=200)
+
+
+class MyGroupsAPIView(APIView):
+    def get(self, request):
+        username = request.query_params.get('username')
+
+        if not username:
+            return Response({'detail': 'Username is required as a query parameter.'}, status=400)
+
+        try:
+            student = StudentProfile.objects.get(username=username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Student not found.'}, status=404)
+
+        # Fetch groups where this student is a member
+        groups = Group.objects.filter(members=student)
+
+        group_data = []
+        for group in groups:
+            class_instance = group.class_instance
+            member_names = list(group.members.values_list('name', flat=True))
+
+            group_data.append({
+                'group_id': group.id,
+                'class_code': class_instance.code,
+                'class_name': class_instance.name,
+                'members': member_names,
+                'is_finalized': group.is_finalized,
+            })
+
+        return Response({'groups': group_data}, status=200)

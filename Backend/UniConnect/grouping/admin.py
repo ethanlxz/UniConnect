@@ -3,21 +3,21 @@ from .models import Group, GroupRequest
 
 # Register your models here.
 
-@admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('id', 'class_instance', 'is_finalized', 'member_count')
+    list_display = ('id', 'class_instance', 'get_members', 'is_finalized')
     list_filter = ('is_finalized', 'class_instance')
-    search_fields = ('class_instance__name',)
+    search_fields = ('class_instance__code', 'members__username')
     filter_horizontal = ('members',)
-    readonly_fields = ('member_count',)
 
-    def member_count(self, obj):
-        return obj.members.count()
-    member_count.short_description = 'Member Count'
+    def get_members(self, obj):
+        return ", ".join([member.username for member in obj.members.all()])
+    get_members.short_description = 'Members'
 
 
-@admin.register(GroupRequest)
 class GroupRequestAdmin(admin.ModelAdmin):
     list_display = ('id', 'sender', 'receiver', 'group')
-    search_fields = ('sender__user__username', 'receiver__user__username')
+    search_fields = ('sender__username', 'receiver__username')
     list_filter = ('group',)
+
+admin.site.register(Group, GroupAdmin)
+admin.site.register(GroupRequest, GroupRequestAdmin)

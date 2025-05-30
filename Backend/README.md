@@ -461,3 +461,37 @@ Success Response:
     ]
 }
 ```
+
+4. Student myGroups View
+Endpoint: GET /grouping/myGroups/?username=ysss
+Payload:
+
+Success Response:
+
+```json
+{
+    "groups": [
+        {
+            "group_id": 1,
+            "class_code": "IAcCYV",
+            "class_name": "Math",
+            "members": [
+                "ethan",
+                "ys"
+            ],
+            "is_finalized": false
+        },
+        {
+            "group_id": 4,
+            "class_code": "nMAU8t",
+            "class_name": "AI",
+            "members": [
+                "ethan",
+                "ys",
+                "sam"
+            ],
+            "is_finalized": true
+        }
+    ]
+}
+```
