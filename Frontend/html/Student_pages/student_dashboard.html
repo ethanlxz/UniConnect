@@ -51,7 +51,7 @@
     const welcomeText = document.getElementById("welcomeText");
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/student/profile?username=student1', {
+      const response = await fetch('http://127.0.0.1:8000/api/student/profile?username=${encodeURIComponent(username)}', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +65,7 @@
       const student = await response.json();
 
       if (student.name) {
-        welcomeText.textContent = `Welcome back, ${student.name}`;
+        welcomeText.textContent = `Welcome back, ${student.username}!`;
         Toastify({
           text: "Profile loaded successfully!",
           duration: 3000,

@@ -84,6 +84,7 @@
         }).showToast();
 
         localStorage.setItem('auth_token', data.token);
+         localStorage.setItem('username', username); 
         window.location.href = '/Frontend/html/student_dashboard.html';
       })
       .catch(error => {
