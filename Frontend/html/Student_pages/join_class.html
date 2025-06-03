@@ -10,52 +10,74 @@
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
+   <div class="sidebar">
     <div class="nav-item active">
+     <a href="student_class.html">
       <img src="../../image/classes.png" alt="Classes Icon" />
       <div>Classes</div>
+    </a>
     </div>
+  
     <div class="nav-item">
+      <a href="student_group.html">
       <img src="../../image/group icon.png" alt="Group Icon" />
       <div>Group</div>
+      </a>
     </div>
+
      <div class="nav-item">
+      <a href="student_profile.html">
       <img src="../../image/userprofile.png" alt="Profile Icon" />
       <div>Profile</div>
+      </a>  
     </div>
   </div>
 
   <div class="main-content">
     <nav class="main-nav">
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
-        </div>
-      </div>
+      <div class="nav-brand"><h1>UniConnect.</h1></div>
     </nav>
-    <div class="content-area">
-  <div class="welcome-text" id="welcomeText"></div>
-</div>
-</body>
- <div class="container">
-    <div class="card">
-      <div class="icon">
-        <img src="../../image/group icon.png" alt="group Icon/">
+
+    <div class="container">
+      <div class="card">
+        <div class="icon">
+          <img src="../../image/group icon.png" alt="Group Icon"/>
+        </div>
+        <h2>Join a class with a code</h2>
+        <input type="text" id="classCode" placeholder="Enter class code" />
+        <button id="addClassBtn">Add Class</button>
       </div>
-      <h2>Join a class with a code</h2>
-      <input type="text" id="classCode" placeholder="Enter class code" />
-      <button id="addClassBtn">Add Class</button>
+      <button class="back-button" onclick="history.back()">Back</button>
     </div>
-    <button class="back-button" onclick="history.back()">Back</button>
   </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    document.getElementById("addClassBtn").addEventListener("click", () => {
+      const code = document.getElementById("classCode").value.trim();
+      const username = localStorage.getItem("username");
+
+      if (!code) {
+        alert("Please enter a class code.");
+        return;
+      }
+
+      fetch("http://127.0.0.1:8000/classing/join/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, code }),
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to join class");
+        return res.json();
+      })
+      .then(data => {
+        alert(data.detail);
+        // 跳转到加入成功后的页面
+        window.location.href = "../Student_pages/student_class.html";
+      })
+      .catch(err => alert(err.message));
+    });
+  </script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-<script src="/Frontend/js/join_class.js"></script>
-<script>
-    document.getElementById
-</script>
+</html>

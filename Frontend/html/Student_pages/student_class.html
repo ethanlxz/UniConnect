@@ -11,19 +11,26 @@
 </head>
 
 <body>
-  <!-- Sidebar -->
   <div class="sidebar">
     <div class="nav-item active">
+     <a href="student_class.html">
       <img src="../../image/classes.png" alt="Classes Icon" />
       <div>Classes</div>
+    </a>
     </div>
+  
     <div class="nav-item">
+      <a href="student_group.html">
       <img src="../../image/group icon.png" alt="Group Icon" />
       <div>Group</div>
+      </a>
     </div>
-    <div class="nav-item">
+
+     <div class="nav-item">
+      <a href="student_profile.html">
       <img src="../../image/userprofile.png" alt="Profile Icon" />
       <div>Profile</div>
+      </a>  
     </div>
   </div>
   
@@ -46,7 +53,7 @@
         <input type="text" id="search-input" placeholder="Search for a class" />
         <button id="search-button">Search</button>
         <button class="sort" onclick="sortCourses()">Sort by course name</button>
-        <button class="join" id="joinBtn">JOIN CLASS</button>
+        <a href="../Student_pages/join_class.html" class="join" id="joinBtn" >Join</a>
 
       </div>
 
@@ -54,63 +61,21 @@
       <div id="classGrid"></div>
 
 
-      <div id="joinModal" class="modal">
-  <div class="modal-content">
-    <span id="closeJoinModal" class="close">&times;</span>
-    <h3>Join Class</h3>
-    <input id="joinCode" placeholder="Enter Class Code" />
-    <button id="submitJoin">Join</button>
+  
+   
   </div>
 </div>
 
 
   <script>
 
-    const joinModal = document.getElementById("joinModal");
+const joinModal = document.getElementById("joinModal");
 const joinBtn = document.getElementById("joinBtn");
 const closeJoinModal = document.getElementById("closeJoinModal");
 const submitJoin = document.getElementById("submitJoin");
+const username = localStorage.getItem("username");
+const classGrid = document.getElementById("classGrid");
 
-joinBtn.addEventListener("click", () => {
-  joinModal.classList.add("show");
-});
-
-closeJoinModal.addEventListener("click", () => {
-  joinModal.classList.remove("show");
-});
-
-window.addEventListener("click", (e) => {
-  if (e.target === joinModal) {
-    joinModal.classList.remove("show");
-  }
-});
-
-submitJoin.addEventListener("click", () => {
-  const code = document.getElementById("joinCode").value.trim();
-  const username = "student1"; // 实际项目中动态获取
-
-  if (!code) {
-    alert("Please enter a class code.");
-    return;
-  }
-
-  fetch("http://127.0.0.1:8000/api/join/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, code }),
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to join class");
-      return res.json();
-    })
-    .then((data) => {
-      alert(data.detail);
-      joinModal.classList.remove("show");
-      document.getElementById("joinCode").value = "";
-      loadClasses(); // 重新加载学生课程
-    })
-    .catch((err) => alert(err.message));
-});
 
 
 
@@ -138,11 +103,10 @@ submitJoin.addEventListener("click", () => {
 
 
     function loadClasses() {
-  const username = "student1"; // 实际应动态获取
-  fetch("http://127.0.0.1:8000/api/student/classes/", {
+  fetch("http://127.0.0.1:8000/classing/student/classes/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username }),
+    body: JSON.stringify({ username:username }),
   })
     .then((response) => response.json())
     .then((data) => {

@@ -11,19 +11,26 @@
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
+   <div class="sidebar">
     <div class="nav-item active">
+     <a href="student_class.html">
       <img src="../../image/classes.png" alt="Classes Icon" />
       <div>Classes</div>
+    </a>
     </div>
+  
     <div class="nav-item">
+      <a href="student_group.html">
       <img src="../../image/group icon.png" alt="Group Icon" />
       <div>Group</div>
+      </a>
     </div>
-    <div class="nav-item">
+
+     <div class="nav-item">
+      <a href="student_profile.html">
       <img src="../../image/userprofile.png" alt="Profile Icon" />
       <div>Profile</div>
+      </a>  
     </div>
   </div>
 
@@ -81,23 +88,22 @@
 
 function renderStudents(data) {
   const container = document.getElementById("student-container");
-  container.innerHTML = ""; // 清空旧内容
+  container.innerHTML = ""; 
   data.forEach(student => {
     const card = document.createElement("div");
     card.className = "student-card";
     card.innerHTML = `
-      <img src="${student.image}" class="student-photo" />
-      <div>
-        <p><strong>Name:</strong> ${student.name}</p>
-        <p><strong>Age:</strong> ${student.age}</p>
-        <p><strong>Gender:</strong> ${student.gender}</p>
-        <p><strong>ContactNum:</strong> ${student.contactNum}</p>
-        <p><strong>Email:</strong> ${student.email}</p>
-        <p><strong>Bio:</strong> ${student.bio}</p>
-        <p><strong>Skill:</strong> ${student.skill}</p>
-        <button class="send-request-btn">Send Request</button>
-      </div>
-    `;
+  <div class="profile-card" style="background-image: url('${student.image}')">
+    <div class="profile-overlay">
+      <h2>${student.name} <span>${student.age} years old</span></h2>
+      <p class="bio">${student.bio}</p>
+      <p class="student-location"><img src="/Frontend/image/location.png" class="icon" /> ${student.email}</p>
+      <button class="send-request-btn">Send Request</button>
+    </div>
+  </div>
+`;
+
+
     container.appendChild(card);
   });
 }
