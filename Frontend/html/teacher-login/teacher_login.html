@@ -84,7 +84,8 @@
         }).showToast();
 
         localStorage.setItem('auth_token', data.token);
-        window.location.href = '../teacher_dashboard.html';
+        localStorage.setItem('username', username); 
+        window.location.href = '../Teacher_pages/teacher_dashboard.html';
       })
       .catch(error => {
         Toastify({

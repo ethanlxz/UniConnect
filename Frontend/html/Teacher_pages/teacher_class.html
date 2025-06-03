@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Teacher Home - UniConnect</title>
   <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+ 
 </head>
-
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="nav-item active">
-      <img src="../image/classes.png" alt="Classes Icon" />
+  <div class="nav-item ">
+    <a href="teacher_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
       <div>Classes</div>
+    </a>
+
     </div>
     <div class="nav-item">
-      <img src="../image/userprofile.png" alt="Profile Icon" />
+      <img src="../../image/profile.png" alt="Profile Icon" />
       <div>Profile</div>
     </div>
   </div>
@@ -30,87 +32,26 @@
       </div>
       <div class="nav-progress">
         <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
         </div>
       </div>
     </nav>
-
+    
     <div class="container">
       <h2>My Classes</h2>
       <div class="actions">
         <input type="text" id="search-input" placeholder="Search for a class" />
         <button id="search-button">Search</button>
         <button class="sort" onclick="sortCourses()">Sort by course name</button>
-        <button class="create" id="createBtn">CREATE CLASS</button>
+        <a href="teacher_add_class.html" class="create-btn">Create class</a>
+
+        <div id="classGrid"></div>
       </div>
-
-
-      <div id="classGrid"></div>
-
-
-      <div id="modal" class="modal">
-        <div class="modal-content">
-          <span id="closeModal" class="close">&times;</span>
-          <h3>Create New Class</h3>
-          <input id="courseName" placeholder="Course Name" />
-          <input id="max_students" placeholder="Max Students" />
-          <button id="submitCreate">Submit</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <script>
 
-    const modal = document.getElementById("modal");
-    const createBtn = document.getElementById("createBtn");
-    const closeModalBtn = document.getElementById("closeModal");
-    const submitBtn = document.getElementById("submitCreate");
+    const username = localStorage.getItem("username");
     const classGrid = document.getElementById("classGrid");
-
-    createBtn.addEventListener("click", () => {
-      modal.classList.add("show");;
-    });
-
-    closeModalBtn.addEventListener("click", () => {
-      modal.classList.remove("show");
-    });
-
-
-    window.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.classList.remove("show");
-      }
-    });
-
-
-    submitBtn.addEventListener("click", () => {
-  const name = document.getElementById("courseName").value.trim();
-  const maxStudents = parseInt(document.getElementById("max_students").value.trim());
-  const username = "lecturer1"; // 真实项目中动态获取
-
-  if (!name || isNaN(maxStudents)) {
-    alert("Please fill in both fields correctly.");
-    return;
-  }
-
-  fetch("http://127.0.0.1:8000/api/class/create/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, max_students: maxStudents, username }),
-  })
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to create class");
-      return res.json();
-    })
-    .then((newClass) => {
-      modal.classList.remove("show");
-      document.getElementById("courseName").value = "";
-      document.getElementById("max_students").value = "";
-      loadClasses(); // 加载新列表
-    })
-    .catch((err) => alert(err.message));
-});
 
 
     document.getElementById("search-input").addEventListener("input", function () {
@@ -137,10 +78,25 @@
 
 
     function loadClasses() {
-  fetch("http://127.0.0.1:8000/api/class/lecturer/classes/")
-    .then((response) => response.json())
+  fetch("http://127.0.0.1:8000/classing/lecturer/classes/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({username:username }), })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    })
     .then((data) => {
-      classGrid.innerHTML = ""; // 清空旧内容
+      classGrid.innerHTML = ""; 
+
+      if (!Array.isArray(data)) {
+        console.error("Expected array but got:", data);
+        return;
+      }
 
       data.forEach((cls) => {
         const card = document.createElement("div");
@@ -159,8 +115,8 @@
     });
 }
 
+loadClasses();
 
-    loadClasses();
   </script>
 </body>
 

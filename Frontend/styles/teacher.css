@@ -1,0 +1,145 @@
+ * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      background-color: #e6e6e6;
+    }
+
+    /* Navigation Bar */
+    .main-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #eee;
+      padding: 10px 20px;
+    }
+
+    .nav-brand h1 {
+      font-size: 38px;
+      font-weight: bold;
+    }
+
+    .nav-progress .progress-step img.step-icon {
+      width: 35px;
+    }
+
+    
+    /* Sidebar */
+    .sidebar {
+      width: 100px;
+      background-color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+    }
+
+    .sidebar .nav-item {
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+      background-color: #ccc;
+      border-bottom: 4px solid #333;
+      cursor: pointer;
+    }
+
+    .sidebar .nav-item img {
+      width: 40px;
+      margin-bottom: 5px;
+    }
+
+    .sidebar .nav-item.active {
+      background-color: #aaa;
+    }
+
+
+.progress-step {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: #bdc3c7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-step.active {
+  background-color: #3498db;
+}
+
+.step-icon {
+  width: 20px;
+  height: 20px;
+}
+
+form {
+  max-width: 500px;
+  margin-top: 30px;
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #bdc3c7;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.group-setting-btn {
+  padding: 8px 15px;
+  margin-right: 10px;
+  background-color: #ecf0f1;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.group-setting-btn.selected {
+  background-color: #3498db;
+  color: white;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+#submit-btn,
+#back-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background-color: #3498db;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+#submit-btn:hover,
+#back-btn:hover {
+  background-color: #2980b9;
+}

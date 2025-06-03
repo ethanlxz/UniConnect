@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+ 
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+  <div class="nav-item ">
+    <a href="teacher_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </a>
+
+    </div>
+    <div class="nav-item">
+      <img src="../../image/profile.png" alt="Profile Icon" />
+      <div>Profile</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+        </div>
+      </div>
+    </nav>
+<body>
+  <div class="main-content center-content">
+    <h2>🎉 Class Created Successfully!</h2>
+    <p><strong>Class Name:</strong> <span id="class-name"></span></p>
+    <p><strong>Class Code:</strong> <span id="class-code"></span></p>
+
+    <div class="form-actions">
+      <button onclick="window.location.href='teacher_preview_class.html'">Preview Grouping</button>
+      <button onclick="window.location.href='teacher-dashboard.html'">Return to Dashboard</button>
+    </div>
+  </div>
+
+  <script>
+    const classData = JSON.parse(localStorage.getItem("lastCreatedClass"));
+    if (classData) {
+      document.getElementById("class-name").textContent = classData.name;
+      document.getElementById("class-code").textContent = classData.class_code || classData.id || "N/A";
+    }
+  </script>
+</body>
+</html>
