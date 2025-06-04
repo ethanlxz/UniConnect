@@ -84,7 +84,7 @@ class RespondToGroupRequestAPIView(APIView):
             group_request.delete()
             return Response({'detail': 'Request declined.'})
 
-        # Accepting logic below
+
         if Group.objects.filter(class_instance=class_instance, members=receiver, is_finalized=True).exists():
             return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
 
@@ -185,3 +185,42 @@ class MyGroupsAPIView(APIView):
             })
 
         return Response({'groups': group_data}, status=200)
+    
+class LeaveGroupAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        class_code = request.data.get('class_code')
+        group_id = request.data.get('group_id')
+
+        if not all([username, class_code, group_id]):
+            return Response({'detail': 'username, class_code, and group_id are required.'}, status=400)
+
+        try:
+            student = StudentProfile.objects.get(username=username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Student not found.'}, status=404)
+
+        try:
+            class_instance = Class.objects.get(code=class_code)
+        except Class.DoesNotExist:
+            return Response({'detail': 'Class not found.'}, status=404)
+
+        try:
+            group = Group.objects.get(id=group_id, class_instance=class_instance)
+        except Group.DoesNotExist:
+            return Response({'detail': 'Group not found in the specified class.'}, status=404)
+
+        if student not in group.members.all():
+            return Response({'detail': 'Student is not a member of this group.'}, status=400)
+
+        if group.is_finalized:
+            return Response({'detail': 'Cannot leave a finalized group.'}, status=400)
+
+        group.members.remove(student)
+
+        # Delete empty group
+        if group.members.count() == 0:
+            group.delete()
+            return Response({'detail': 'Student left and the group was deleted (no members left).'}, status=200)
+
+        return Response({'detail': 'Student successfully left the group.'}, status=200)

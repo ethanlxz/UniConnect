@@ -336,6 +336,8 @@ Success Response:
     "code": "ClassCode1",
     "max_students": 60,
     "current_student_count": 2,
+    "group": 4,
+    "min_group_members": 3,
     "lecturer": {
         "id": 2,
         "username": "Lecturer1",
@@ -359,6 +361,25 @@ Success Response:
             "contact_num": "01289765"
         }
     ]
+}
+```
+
+9. Leave Class
+Endpoint: POST /classing/leave/
+Payload:
+
+```json
+{
+  "code": "nMAU8t",
+  "username": "adammm"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Successfully left the class."
 }
 ```
 
@@ -493,5 +514,25 @@ Success Response:
             "is_finalized": true
         }
     ]
+}
+```
+
+5. Leave Group
+Endpoint: POST /grouping/leave/
+Payload:
+
+```json
+{
+  "username": "susannn",
+  "class_code": "nMAU8t",
+  "group_id": 6
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Student successfully left the group."
 }
 ```
