@@ -336,6 +336,8 @@ Success Response:
     "code": "ClassCode1",
     "max_students": 60,
     "current_student_count": 2,
+    "group": 4,
+    "min_group_members": 3,
     "lecturer": {
         "id": 2,
         "username": "Lecturer1",
