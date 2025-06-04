@@ -115,6 +115,10 @@ const classGrid = document.getElementById("classGrid");
         const card = document.createElement("div");
         card.className = "class-card";
         card.style.display = "flex";
+          card.addEventListener("click", function () {
+          window.location.href =`../Student_pages/class_members.html?username=${username}&class_id=${cls.id}`;
+        });
+
         card.innerHTML = `
           <div class="class-code">${cls.code}</div>
           <div class="class-name">${cls.name}</div>

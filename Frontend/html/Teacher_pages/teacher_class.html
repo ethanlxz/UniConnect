@@ -36,7 +36,6 @@
         </div>
       </div>
     </nav>
-    
     <div class="container">
       <h2>My Classes</h2>
       <div class="actions">
@@ -102,6 +101,9 @@
         const card = document.createElement("div");
         card.className = "class-card";
         card.style.display = "flex";
+          card.addEventListener("click", function () {
+          window.location.href =`../Teacher_pages/teacher_class_member.html?username=${username}&class_id=${cls.id}`;
+        });
         card.innerHTML = `
           <div class="class-code">${cls.code || "No Code"}</div>
           <div class="class-name">${cls.name}</div>
