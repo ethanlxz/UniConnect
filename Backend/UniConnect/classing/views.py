@@ -5,6 +5,7 @@ from .models import Class
 from .serializers import ClassCreateSerializer
 from api.models import LecturerProfile, StudentProfile
 from rest_framework import status
+from grouping.models import Group
 
 # Create your views here.
 class CreateClassAPIView(APIView):
@@ -216,3 +217,34 @@ class ClassDetailAPIView(APIView):
         }
 
         return Response(data, status=200)
+    
+class LeaveClassAPIView(APIView):
+    def post(self, request):
+        class_code = request.data.get('code')
+        student_username = request.data.get('username')
+
+        if not class_code or not student_username:
+            return Response({'detail': 'Class code and student username are required.'}, status=400)
+
+        try:
+            class_instance = Class.objects.get(code=class_code)
+        except Class.DoesNotExist:
+            return Response({'detail': 'Class not found.'}, status=404)
+
+        try:
+            student = StudentProfile.objects.get(username=student_username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Student not found.'}, status=404)
+
+        if student not in class_instance.students.all():
+            return Response({'detail': 'Student is not enrolled in this class.'}, status=400)
+        
+        try:
+            group = Group.objects.get(class_instance=class_instance, members=student)
+            group.members.remove(student)
+        except Group.DoesNotExist:
+            pass
+
+        class_instance.students.remove(student)
+
+        return Response({'detail': 'Successfully left the class.'}, status=200)

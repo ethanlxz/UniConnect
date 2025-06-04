@@ -362,6 +362,25 @@ Success Response:
 }
 ```
 
+9. Leave Class
+Endpoint: POST /classing/leave/
+Payload:
+
+```json
+{
+  "code": "nMAU8t",
+  "username": "adammm"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Successfully left the class."
+}
+```
+
 Grouping
 1. Send Request
 Endpoint: POST /grouping/send/
