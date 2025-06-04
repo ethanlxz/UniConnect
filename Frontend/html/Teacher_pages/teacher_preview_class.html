@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+ 
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+  <div class="nav-item ">
+    <a href="teacher_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </a>
+
+    </div>
+    <div class="nav-item">
+      <img src="../../image/profile.png" alt="Profile Icon" />
+      <div>Profile</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+        </div>
+      </div>
+    </nav>
+
+    <div id="group-preview" class="group-container"></div>
+
+    <div class="form-actions">
+  <button onclick="window.location.href='teacher_create_success.html'">NEXT</button>
+</div>
+
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("lastCreatedClass"));
+    const total = data.max_students;
+    const perGroup = data.group;
+    const container = document.getElementById("group-preview");
+
+    let groupNum = 1;
+    for (let i = 0; i < total; i += perGroup) {
+      const groupDiv = document.createElement("div");
+      groupDiv.className = "group-box";
+      groupDiv.innerHTML = `<h3>Group ${groupNum}</h3><ul>${
+        Array.from({ length: Math.min(perGroup, total - i) })
+          .map((_, idx) => `<li>Student ${i + idx + 1}</li>`)
+          .join("")
+      }</ul>`;
+      container.appendChild(groupDiv);
+      groupNum++;
+    }
+  </script>
+</body>
+</html>

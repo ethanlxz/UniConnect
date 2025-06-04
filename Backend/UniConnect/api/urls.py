@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path,include
 from .views import StudentRegisterView, StudentLoginView, LecturerRegisterView, LecturerLoginView, SendOTPView, VerifyOTPView, ResendOTPView, StudentProfileView, LecturerProfileView
 
 urlpatterns = [
@@ -11,4 +11,6 @@ urlpatterns = [
  	path('otp/resend',ResendOTPView.as_view(), name='resend_otp'),
     path('student/profile/', StudentProfileView.as_view(), name='student_profile'),
     path('lecturer/profile/', LecturerProfileView.as_view(), name='lecturer_profile'),
+  
+    
 ]

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="nav-item active">
+     <a href="student_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="student_group.html">
+      <img src="../../image/group icon.png" alt="Group Icon" />
+      <div>Group</div>
+      </a>
+    </div>
+
+     <div class="nav-item">
+      <a href="student_profile.html">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
+      <div>Profile</div>
+      </a>  
+    </div>
+  </div>
+  
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h2>My Classes</h2>
+      <div class="actions">
+        <input type="text" id="search-input" placeholder="Search for a class" />
+        <button id="search-button">Search</button>
+        <button class="sort" onclick="sortCourses()">Sort by course name</button>
+        <a href="../Student_pages/join_class.html" class="join" id="joinBtn" >Join</a>
+
+      </div>
+
+
+      <div id="classGrid"></div>
+
+
+  
+   
+  </div>
+</div>
+
+
+  <script>
+
+const joinModal = document.getElementById("joinModal");
+const joinBtn = document.getElementById("joinBtn");
+const closeJoinModal = document.getElementById("closeJoinModal");
+const submitJoin = document.getElementById("submitJoin");
+const username = localStorage.getItem("username");
+const classGrid = document.getElementById("classGrid");
+
+
+
+
+    document.getElementById("search-input").addEventListener("input", function () {
+      const searchTerm = this.value.toLowerCase();
+      const cards = document.querySelectorAll(".class-card");
+      cards.forEach((card) => {
+        const title = card.querySelector(".class-name").innerText.toLowerCase();
+        card.style.display = title.includes(searchTerm) ? "flex" : "none";
+      });
+    });
+
+
+    function sortCourses() {
+      const cards = Array.from(classGrid.children);
+      cards.sort((a, b) => {
+        const nameA = a.querySelector(".class-name").innerText.toUpperCase();
+        const nameB = b.querySelector(".class-name").innerText.toUpperCase();
+        return nameA.localeCompare(nameB);
+      });
+      classGrid.innerHTML = "";
+      cards.forEach((card) => classGrid.appendChild(card));
+    }
+
+
+
+    function loadClasses() {
+  fetch("http://127.0.0.1:8000/classing/student/classes/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username:username }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      classGrid.innerHTML = "";
+      data.forEach((cls) => {
+        const card = document.createElement("div");
+        card.className = "class-card";
+        card.style.display = "flex";
+          card.addEventListener("click", function () {
+          window.location.href =`../Student_pages/class_members.html?username=${username}&class_id=${cls.id}`;
+        });
+
+        card.innerHTML = `
+          <div class="class-code">${cls.code}</div>
+          <div class="class-name">${cls.name}</div>
+          <button onclick="window.location.href='/groups/${cls.id}'">Groups</button>
+        `;
+        classGrid.appendChild(card);
+      });
+    })
+    .catch((error) => {
+      console.error("Failed to load student classes:", error);
+    });
+}
+
+
+
+    loadClasses();
+  </script>
+</body>
+
+</html>

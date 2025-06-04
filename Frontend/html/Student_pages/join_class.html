@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+   <div class="sidebar">
+    <div class="nav-item active">
+     <a href="student_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="student_group.html">
+      <img src="../../image/group icon.png" alt="Group Icon" />
+      <div>Group</div>
+      </a>
+    </div>
+
+     <div class="nav-item">
+      <a href="student_profile.html">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
+      <div>Profile</div>
+      </a>  
+    </div>
+  </div>
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand"><h1>UniConnect.</h1></div>
+    </nav>
+
+    <div class="container">
+      <div class="card">
+        <div class="icon">
+          <img src="../../image/group icon.png" alt="Group Icon"/>
+        </div>
+        <h2>Join a class with a code</h2>
+        <input type="text" id="classCode" placeholder="Enter class code" />
+        <button id="addClassBtn">Add Class</button>
+      </div>
+      <button class="back-button" onclick="history.back()">Back</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+  <script>
+    document.getElementById("addClassBtn").addEventListener("click", () => {
+      const code = document.getElementById("classCode").value.trim();
+      const username = localStorage.getItem("username");
+
+      if (!code) {
+        alert("Please enter a class code.");
+        return;
+      }
+
+      fetch("http://127.0.0.1:8000/classing/join/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, code }),
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to join class");
+        return res.json();
+      })
+      .then(data => {
+        alert(data.detail);
+        // 跳转到加入成功后的页面
+        window.location.href = "../Student_pages/student_class.html";
+      })
+      .catch(err => alert(err.message));
+    });
+  </script>
+</body>
+</html>

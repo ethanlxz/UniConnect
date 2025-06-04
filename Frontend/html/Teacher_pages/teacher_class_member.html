@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" />
+  <title>Student Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+   <div class="sidebar">
+    <div class="nav-item active">
+     <a href="student_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="student_group.html">
+      <img src="../../image/group icon.png" alt="Group Icon" />
+      <div>Group</div>
+      </a>
+    </div>
+
+     <div class="nav-item">
+      <a href="student_profile.html">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
+      <div>Profile</div>
+      </a>  
+    </div>
+  </div>
+
+    <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+        </div>
+      </div>
+    </nav>
+<div class="main-header">
+    <h1>CPT4214 - FYP</h1>
+    <div>
+
+    </div>
+  </div>
+
+  <div class="controls">
+      <button id="class-details-btn" class="button small-btn">Class Details</button>
+    <select id="sort-select">
+      <option value="name">Sort by Name</option>
+      <option value="age">Sort by Age</option>
+    </select>
+
+    <input type="text" id="search-input" placeholder="Search by name..." />
+  </div>
+
+    <div id="student-container" class="student-grid">
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+
+  const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
+  const params = new URLSearchParams(window.location.search);
+  const classId = params.get("class_id");
+
+  if (!classId) {
+    alert("No class ID provided in URL.");
+  } else {
+    fetchClassDetail(classId);
+  }
+  document.getElementById("class-details-btn").addEventListener("click", () => {
+  if (classId) {
+    window.location.href = `class_details.html?class_id=${classId}`;
+  } else {
+    alert("No class ID available.");
+  }
+});
+
+
+  function fetchClassDetail(classId) {
+    fetch(`http://127.0.0.1:8000//classing/detail/?class_id=${classId}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch class detail");
+        return res.json();
+      })
+      .then((data) => {
+      
+        document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
+        
+  
+        const studentsData = data.students.map((student) => ({
+          name: student.name,
+          email: student.email,
+          contactNum: student.contact_num,
+          image: DEFAULT_AVATAR,
+          bio: "", 
+          age: "", 
+        }));
+
+        renderStudents(studentsData);
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Failed to load class detail");
+      });
+  }
+
+  function renderStudents(data) {
+    const container = document.getElementById("student-container");
+    container.innerHTML = "";
+    data.forEach((student) => {
+      const card = document.createElement("div");
+      card.className = "student-card";
+
+      card.innerHTML = `
+        <div class="profile-card" style="background-image: url('${student.image}')">
+          <div class="profile-overlay">
+            <h2>${student.name}${student.age ? ` <span>${student.age} years old</span>` : ""}</h2>
+            <p class="bio">${student.bio || ""}</p>
+            <p class="student-location"><img src="/Frontend/image/location.png" class="icon" /> ${student.email}</p>
+
+          </div>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+  }
+
+
+
+
+</script>

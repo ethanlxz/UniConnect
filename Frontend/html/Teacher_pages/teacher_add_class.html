@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Home - UniConnect</title>
+  <link rel="stylesheet" href="../../styles/teacher.css">
+ 
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="nav-item active">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </div>
+    <div class="nav-item">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
+      <div>Profile</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+        </div>
+      </div>
+    </nav>
+
+
+  <form id="add-class-form">
+  <div class="form-group">
+    <label for="class-name">Class Name</label>
+    <input type="text" id="class-name" name="class-name" required />
+  </div>
+  <div class="form-group">
+    <label for="total-students">How many total Students?</label>
+    <input type="number" id="total-students" name="total-students" required />
+  </div>
+  <div class="form-group">
+    <label for="students-per-group">How many students in a group?</label>
+    <input type="number" id="students-per-group" name="students-per-group" required />
+  </div>
+  <div class="form-group">
+    <label>Grouping Settings</label>
+    <button type="button" class="group-setting-btn" data-setting="auto">Auto</button>
+    <button type="button" class="group-setting-btn" data-setting="manual">Manual</button>
+  </div>
+  <div class="form-actions">
+    <button id="back-btn" type="button">Back</button>
+    <button id="submit-btn" type="submit">Create</button>
+  </div>
+</form>
+
+<script>
+  // 选中group setting按钮样式
+  document.querySelectorAll('.group-setting-btn').forEach(button => {
+    button.addEventListener('click', function () {
+      document.querySelectorAll('.group-setting-btn').forEach(btn => btn.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+
+  // 监听表单提交事件
+  const form = document.getElementById('add-class-form');
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault(); 
+
+    const name = document.getElementById("class-name").value.trim();
+    const maxStudents = parseInt(document.getElementById("total-students").value.trim());
+    const group = parseInt(document.getElementById("students-per-group").value.trim());
+    const username = localStorage.getItem("username");
+    const minGroupMembers = group; 
+
+    if (!name || isNaN(maxStudents) || isNaN(group) || isNaN(minGroupMembers)) {
+      alert("Please fill in all fields correctly.");
+      return;
+    }
+
+    fetch("http://127.0.0.1:8000/classing/create/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, max_students: maxStudents, username, group, min_group_members: minGroupMembers }),
+    })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to create class");
+      return res.json();
+    })
+    .then((newClass) => {
+          localStorage.setItem('lastCreatedClass', JSON.stringify({
+             name: newClass.name,
+             class_code: newClass.code
+  }));
+  
+  })
+
+
+  window.location.href = "teacher_preview_class.html";
+      
+      form.reset();
+     
+      Toastify({
+        text: "Class created successfully!",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "green"
+      }).showToast();
+    })
+    .catch((err) => alert(err.message));
+  ;
+
+</script>

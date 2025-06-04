@@ -13,16 +13,24 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="nav-item active">
-      <img src="../image/classes.png" alt="Classes Icon" />
+     <a href="student_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
       <div>Classes</div>
+    </a>
     </div>
+  
     <div class="nav-item">
-      <img src="../image/group icon.png" alt="Group Icon" />
+      <a href="student_group.html">
+      <img src="../../image/group icon.png" alt="Group Icon" />
       <div>Group</div>
+      </a>
     </div>
+
      <div class="nav-item">
-      <img src="../image/userprofile.png" alt="Profile Icon" />
+      <a href="student_profile.html">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
       <div>Profile</div>
+      </a>  
     </div>
   </div>
 
@@ -46,12 +54,15 @@
   </div>
 </body>
 
+ <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", async () => {
     const welcomeText = document.getElementById("welcomeText");
+    const username = localStorage.getItem('username');
+
 
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/student/profile?username=student1', {
+      const response = await fetch(`http://127.0.0.1:8000/api/student/profile?username=${encodeURIComponent(username)}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -64,8 +75,8 @@
 
       const student = await response.json();
 
-      if (student.name) {
-        welcomeText.textContent = `Welcome back, ${student.name}`;
+      if (student.username) {
+        welcomeText.textContent = `Welcome back, ${student.username}!`;
         Toastify({
           text: "Profile loaded successfully!",
           duration: 3000,
