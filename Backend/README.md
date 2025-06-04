@@ -495,3 +495,23 @@ Success Response:
     ]
 }
 ```
+
+5. Leave Group
+Endpoint: POST /grouping/leave/
+Payload:
+
+```json
+{
+  "username": "susannn",
+  "class_code": "nMAU8t",
+  "group_id": 6
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Student successfully left the group."
+}
+```
