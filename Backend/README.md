@@ -46,19 +46,53 @@ Validates the OTP (fails if older than 10 minutes).
 
 🎓 Student Endpoints
 1. Student Profile
-Endpoint: GET /api/student/profile?username=student1
+Endpoint: GET /api/student/profile/student1/
 Payload:
 
 Success Response:
 
 ```json
 {
-  "id": "STU001",
   "username": "student1",
   "email": "student@example.com",
   "name": "John Doe",
-  "password": "securepassword123",
-  "contact_num": "+1234567890"
+  "contact_num": "0123456789",
+  "gender": "Male",
+  "major": "Undeclared",
+  "photo": "http://127.0.0.1:8000/default.jpg",
+  "bio": "Bio loading… please wait.",
+  "instagram_link": null
+}
+```
+
+Endpoint: PUT /api/student/profile/student1/
+Payload:
+
+```json
+{
+  "email": "student@example.com",
+  "name": "John Doe",
+  "contact_num": "0123456789",
+  "gender": "M",
+  "major": "Diploma in IT",
+  "bio": "Bio loading… please wait.",
+  "instagram_link": null
+}
+```
+
+Success Response:
+
+```json
+{
+  "username": "student1",
+  "email": "student@example.com",
+  "name": "John Doe",
+  "contact_num": "0123456789",
+  "gender": "Male",
+  "major": "Diploma in IT",
+  "photo": "http://127.0.0.1:8000/default.jpg",
+  "bio": "Bio loading… please wait.",
+  "instagram_link": null
 }
 ```
 
@@ -73,7 +107,9 @@ Payload:
   "email": "student@example.com",
   "name": "John Doe",
   "password": "securepassword123",
-  "contact_num": "+1234567890"
+  "contact_num": "+1234567890",
+  "gender": "M",
+  "major": "Diploma in IT",
 }
 ```
 
@@ -102,19 +138,44 @@ Success Response:
 
 👨‍🏫 Lecturer Endpoints
 1. Lecturer Profile
-Endpoint: GET /api/lecturer/profile?username=lecturer1
+Endpoint: GET /api/lecturer/profile/LEC001/
 Payload:
 
 Success Response:
 
 ```json
 {
-  "id": "LEC001",
   "username": "lecturer1",
   "email": "lecturer@example.com",
   "name": "Dr. Smith",
-  "password": "securepassword123",
-  "contact_num": "+9876543210"
+  "contact_num": "+9876543210",
+  "major": "Degree in IT",
+  "photo": "http://127.0.0.1:8000/default.jpg"
+}
+```
+
+Endpoint: PUT /api/lecturer/profile/LEC001/
+Payload:
+
+```json
+{
+  "email": "lecturer@example.com",
+  "name": "Dr. Smith",
+  "contact_num": "+9876543210",
+  "major": "Degree in IT"
+}
+```
+
+Success Response:
+
+```json
+{
+  "username": "lecturer1",
+  "email": "lecturer@example.com",
+  "name": "Dr. Smith",
+  "contact_num": "+9876543210",
+  "major": "Degree in IT",
+  "photo": "http://127.0.0.1:8000/default.jpg"
 }
 ```
 
@@ -129,7 +190,8 @@ Payload:
   "email": "lecturer@example.com",
   "name": "Dr. Smith",
   "password": "securepassword123",
-  "contact_num": "+9876543210"
+  "contact_num": "+9876543210",
+  "major": "Degree in IT"
 }
 ```
 

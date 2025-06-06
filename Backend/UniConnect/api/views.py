@@ -4,6 +4,7 @@ from rest_framework import status
 from django.contrib.auth.hashers import check_password
 from .serializers import StudentRegisterSerializer, LecturerRegisterSerializer
 from .models import StudentProfile, LecturerProfile, OTP_profile
+from rest_framework.parsers import MultiPartParser, FormParser
 
 # for OTP function
 from django.utils.timezone import now, timedelta
@@ -207,45 +208,114 @@ class ResendOTPView(APIView):
         return self.resendOTP(email)
     
 class StudentProfileView(APIView):
-    def get(self, request):
-        username = request.query_params.get('username')
-        if not username:
-            return Response({'detail': 'Username is required as a query parameter.'}, status=400)
+    parser_classes = [MultiPartParser, FormParser]  # To handle file uploads
 
+    def get(self, request, username):
         try:
             student = StudentProfile.objects.get(username=username)
         except StudentProfile.DoesNotExist:
             return Response({'detail': 'Student not found.'}, status=404)
 
         data = {
-            'id': student.id,
             'username': student.username,
             'name': student.name,
             'email': student.email,
             'contact_num': student.contact_num,
+            'gender': student.get_gender_display(),
+            'major': student.major,
+            'photo': request.build_absolute_uri(student.profile_image.url) if student.profile_image else None,
+            'bio': student.bio,
+            'instagram_link': student.instagram_link
         }
 
         return Response(data, status=200)
+
+    def put(self, request, username):
+        username = request.data.get('username')
+        if not username:
+            return Response({'detail': 'Username is required in the request body.'}, status=400)
+
+        try:
+            student = StudentProfile.objects.get(username=username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Student not found.'}, status=404)
+
+        student.name = request.data.get('name', student.name)
+        student.email = request.data.get('email', student.email)
+        student.contact_num = request.data.get('contact_num', student.contact_num)
+        student.major = request.data.get('major', student.major)
+        student.bio = request.data.get('bio', student.bio)
+        student.gender = request.data.get('gender', student.gender)
+
+        # Update profile image if included
+        if 'profile_image' in request.FILES:
+            student.profile_image = request.FILES['profile_image']
+
+        student.save()
+
+        updated_data = {
+            'username': student.username,
+            'name': student.name,
+            'email': student.email,
+            'contact_num': student.contact_num,
+            'gender': student.get_gender_display(),
+            'major': student.major,
+            'photo': request.build_absolute_uri(student.profile_image.url) if student.profile_image else None,
+            'bio': student.bio,
+            'instagram_link': student.instagram_link
+        }
+
+        return Response(updated_data, status=200)
     
 class LecturerProfileView(APIView):
-    def get(self, request):
-        username = request.query_params.get('username')
-        if not username:
-            return Response({'detail': 'Username is required as a query parameter.'}, status=400)
+    parser_classes = [MultiPartParser, FormParser]  # To handle file uploads
 
+    def get(self, request, username):
         try:
             lecturer = LecturerProfile.objects.get(username=username)
         except LecturerProfile.DoesNotExist:
             return Response({'detail': 'Lecturer not found.'}, status=404)
 
         data = {
-            'id': lecturer.id,
             'username': lecturer.username,
             'name': lecturer.name,
             'email': lecturer.email,
             'contact_num': lecturer.contact_num,
+            'major': lecturer.major,
+            'photo': request.build_absolute_uri(lecturer.profile_image.url) if lecturer.profile_image else None,
         }
 
         return Response(data, status=200)
+    
+    def put(self, request, username):
+        username = request.data.get('username')
+        if not username:
+            return Response({'detail': 'Username is required in the request body.'}, status=400)
+
+        try:
+            lecturer = LecturerProfile.objects.get(username=username)
+        except LecturerProfile.DoesNotExist:
+            return Response({'detail': 'Lecturer not found.'}, status=404)
+
+        lecturer.name = request.data.get('name', lecturer.name)
+        lecturer.email = request.data.get('email', lecturer.email)
+        lecturer.contact_num = request.data.get('contact_num', lecturer.contact_num)
+        lecturer.major = request.data.get('major', lecturer.major)
+
+        if 'profile_image' in request.FILES:
+            lecturer.profile_image = request.FILES['profile_image']
+
+        lecturer.save()
+
+        updated_data = {
+            'username': lecturer.username,
+            'name': lecturer.name,
+            'email': lecturer.email,
+            'contact_num': lecturer.contact_num,
+            'photo': request.build_absolute_uri(lecturer.profile_image.url) if lecturer.profile_image else None,
+            'major': lecturer.major,
+        }
+
+        return Response(updated_data, status=200)
 
 
