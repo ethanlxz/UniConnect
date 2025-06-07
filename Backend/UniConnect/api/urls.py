@@ -9,8 +9,6 @@ urlpatterns = [
 	path('otp/send', SendOTPView.as_view(), name='send_otp'),
 	path('otp/verify',VerifyOTPView.as_view(), name='verify_otp'),
  	path('otp/resend',ResendOTPView.as_view(), name='resend_otp'),
-    path('student/profile/', StudentProfileView.as_view(), name='student_profile'),
-    path('lecturer/profile/', LecturerProfileView.as_view(), name='lecturer_profile'),
-  
-    
+    path('student/profile/<str:username>/', StudentProfileView.as_view(), name='student_profile'),
+    path('lecturer/profile/<str:username>/', LecturerProfileView.as_view(), name='lecturer_profile'),
 ]
