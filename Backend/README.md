@@ -506,7 +506,28 @@ Success Response:
 }
 ```
 
-3. Group List
+3. Request List
+Endpoint: GET /grouping/requests?username=susannn&class_code=nMAU8t
+Payload:
+
+Success Response:
+
+```json
+[
+    {
+        "request_id": 19,
+        "sender_username": "alexxx",
+        "receiver_username": "susannn"
+    },
+    {
+        "request_id": 20,
+        "sender_username": "raelll",
+        "receiver_username": "susannn"
+    }
+]
+```
+
+4. Group List
 Endpoint: GET /grouping/list/?class_id=4
 Payload:
 
@@ -547,7 +568,7 @@ Success Response:
 }
 ```
 
-4. Student myGroups View
+5. Student myGroups View
 Endpoint: GET /grouping/myGroups/?username=ysss
 Payload:
 
@@ -581,7 +602,7 @@ Success Response:
 }
 ```
 
-5. Leave Group
+6. Leave Group
 Endpoint: POST /grouping/leave/
 Payload:
 
