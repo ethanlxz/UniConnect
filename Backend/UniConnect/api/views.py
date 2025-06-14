@@ -225,7 +225,7 @@ class StudentProfileView(APIView):
             'major': student.major,
             'photo': request.build_absolute_uri(student.profile_image.url) if student.profile_image else None,
             'bio': student.bio,
-            'instagram_link': student.instagram_link
+            'instagram_id': student.instagram_id or ''
         }
 
         return Response(data, status=200)
@@ -246,6 +246,11 @@ class StudentProfileView(APIView):
         student.major = request.data.get('major', student.major)
         student.bio = request.data.get('bio', student.bio)
         student.gender = request.data.get('gender', student.gender)
+        if 'instagram_id' in request.data:
+            instagram_id = request.data.get('instagram_id')
+            if instagram_id and not instagram_id.startswith('@'):
+                return Response({'detail': "Instagram ID must start with '@'."}, status=400)
+            student.instagram_id = instagram_id
 
         # Update profile image if included
         if 'profile_image' in request.FILES:
@@ -262,7 +267,7 @@ class StudentProfileView(APIView):
             'major': student.major,
             'photo': request.build_absolute_uri(student.profile_image.url) if student.profile_image else None,
             'bio': student.bio,
-            'instagram_link': student.instagram_link
+            'instagram_id': student.instagram_id
         }
 
         return Response(updated_data, status=200)
