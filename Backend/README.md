@@ -61,7 +61,7 @@ Success Response:
   "major": "Undeclared",
   "photo": "http://127.0.0.1:8000/default.jpg",
   "bio": "Bio loading… please wait.",
-  "instagram_link": null
+  "instagram_id": "@student1"
 }
 ```
 
@@ -76,7 +76,7 @@ Payload:
   "gender": "M",
   "major": "Diploma in IT",
   "bio": "Bio loading… please wait.",
-  "instagram_link": null
+  "instagram_id": "@student1"
 }
 ```
 
@@ -92,7 +92,7 @@ Success Response:
   "major": "Diploma in IT",
   "photo": "http://127.0.0.1:8000/default.jpg",
   "bio": "Bio loading… please wait.",
-  "instagram_link": null
+  "instagram_link": "@student1"
 }
 ```
 
@@ -110,6 +110,8 @@ Payload:
   "contact_num": "+1234567890",
   "gender": "M",
   "major": "Diploma in IT",
+  "bio": "Bio loading… please wait.",
+  "instagram_id": "@ethanlaw"
 }
 ```
 
