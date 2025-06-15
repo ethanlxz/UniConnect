@@ -113,6 +113,39 @@ class RespondToGroupRequestAPIView(APIView):
         return Response({'detail': 'Request accepted and group updated.'})
 
 
+class GetGroupRequestsAPIView(APIView):
+    def get(self, request):
+        username = request.query_params.get('username')
+        class_code = request.query_params.get('class_code')
+
+        if not username or not class_code:
+            return Response({'detail': 'username and class_code are required.'}, status=400)
+
+        try:
+            user = StudentProfile.objects.get(username=username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'User not found.'}, status=404)
+
+        try:
+            class_instance = Class.objects.get(code=class_code)
+        except Class.DoesNotExist:
+            return Response({'detail': 'Class not found.'}, status=404)
+
+        if user not in class_instance.students.all():
+            return Response({'detail': 'User not enrolled in this class.'}, status=400)
+
+        requests = GroupRequest.objects.filter(receiver=user)
+        data = [
+            {
+                'request_id': req.id,
+                'sender_username': req.sender.username
+            }
+            for req in requests
+        ]
+
+        return Response(data)
+
+
 class ListGroupsAPIView(APIView):
     def get(self, request):
         class_id = request.query_params.get('class_id')
