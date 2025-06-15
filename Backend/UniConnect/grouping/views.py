@@ -138,8 +138,7 @@ class GetGroupRequestsAPIView(APIView):
         data = [
             {
                 'request_id': req.id,
-                'sender_username': req.sender.username,
-                'receiver_username': req.receiver.username,
+                'sender_username': req.sender.username
             }
             for req in requests
         ]

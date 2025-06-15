@@ -516,13 +516,11 @@ Success Response:
 [
     {
         "request_id": 19,
-        "sender_username": "alexxx",
-        "receiver_username": "susannn"
+        "sender_username": "alexxx"
     },
     {
         "request_id": 20,
-        "sender_username": "raelll",
-        "receiver_username": "susannn"
+        "sender_username": "raelll"
     }
 ]
 ```
