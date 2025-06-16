@@ -1,4 +1,6 @@
 from django.urls import path,include
+from django.conf import settings
+from django.conf.urls.static import static
 from .views import StudentRegisterView, StudentLoginView, LecturerRegisterView, LecturerLoginView, SendOTPView, VerifyOTPView, ResendOTPView, StudentProfileView, LecturerProfileView
 
 urlpatterns = [
@@ -11,4 +13,4 @@ urlpatterns = [
  	path('otp/resend',ResendOTPView.as_view(), name='resend_otp'),
     path('student/profile/<str:username>/', StudentProfileView.as_view(), name='student_profile'),
     path('lecturer/profile/<str:username>/', LecturerProfileView.as_view(), name='lecturer_profile'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
