@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+ 
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="nav-item active">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </div>
+    <div class="nav-item">
+      <img src="../../image/profile.png" alt="Profile Icon" />
+      <div>Profile</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+        </div>
+      </div>
+    </nav>
+
+    <div class="textContent">
+        <h2>My Profile</h2>
+    </div>
+
+    <div class='Container-Profile'>
+      <div class='profile'>
+        <div class='profile-pic'>
+          <img src="../../image/profile.png" alt="Profile Picture">
+        </div>
+        <div class='profile-info'>
+             <div class='profile-name'>
+                <h2 id="studentName"></h2>
+            </div>
+            <div class='profile-email'>
+                <h4 id="studentEmail"></h4>
+            </div>
+            <div class='profile-contact_num'>
+                <h4 id="studentContact"></h4>
+            </div>
+            <div class='profile-bio'>
+                <p id="studentBio"></p>
+            </div>
+            <div class='profile-major'>
+                <p id="studentMajor"></p>
+            </div>
+        </div>
+        <img id="studentPhoto" src="/Frontend/image/default_avatar.png" alt="Student Photo" />
+
+       
+     <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+     <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+  
+  const username = "student1";  
+
+  fetch(`http://127.0.0.1:8000/api/student/profile/${username}/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch student profile.");
+      }
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('studentName').innerText = data.name;
+      document.getElementById('studentEmail').innerText = data.email;
+      document.getElementById('studentContact').innerText = data.contact_num;
+      document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
+      document.getElementById('studentMajor').innerText = data.major || "No major info.";
+      document.getElementById('studentPhoto').src = data.photo || "/Frontend/image/default_avatar.png";
+    })
+    .catch(error => {
+      console.error(error);
+      alert("Unable to load student profile.");
+    });
+});
+</script>
+

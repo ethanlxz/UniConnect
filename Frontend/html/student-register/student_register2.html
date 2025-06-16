@@ -94,7 +94,7 @@
     async function resendOTP() {
         if (countdown > 0) return;
 
-        const email = localStorage.getItem('student_email');
+        const email = sessionStorage.getItem('student_email');
         const apiUrl = "http://127.0.0.1:8000/api/otp/resend";
         const payload = { email: email };
 

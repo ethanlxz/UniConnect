@@ -35,7 +35,7 @@
   </div>
 
     <div class="main-content">
-    <nav class="main-nav">
+    <nav class="main-nav"> 
       <div class="nav-brand">
         <h1>UniConnect.</h1>
       </div>
@@ -71,12 +71,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
-  // 默认头像
+ 
   const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
-
-  // 先从 URL 获取 class_id
   const params = new URLSearchParams(window.location.search);
   const classId = params.get("class_id");
+
+ const username=params.get("username");
+ 
+  
 
   if (!classId) {
     alert("No class ID provided in URL.");
@@ -85,24 +87,28 @@
   }
 
   function fetchClassDetail(classId) {
-    fetch(`http://127.0.0.1:8000//classing/detail/?class_id=${classId}`)
+    fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch class detail");
         return res.json();
       })
       .then((data) => {
-        // 修改页面班级标题
+          classCodeFromAPI = data.code;
         document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
         
+
         // 这里没有年龄和bio，暂时显示 email 和 contact_num
-        const studentsData = data.students.map((student) => ({
+        const studentsData = data.students
+        .filter(student => student.username !== username)
+         .map((student) => ({
           name: student.name,
           email: student.email,
           contactNum: student.contact_num,
           image: DEFAULT_AVATAR,
           bio: "", 
           age: "", 
-        }));
+          username: student.username,
+  }));
 
         renderStudents(studentsData);
       })
@@ -110,55 +116,143 @@
         console.error(err);
         alert("Failed to load class detail");
       });
+      
   }
 
   function renderStudents(data) {
-    const container = document.getElementById("student-container");
-    container.innerHTML = "";
-    data.forEach((student) => {
-      const card = document.createElement("div");
-      card.className = "student-card";
+  const container = document.getElementById("student-container");
+  container.innerHTML = "";
+  data.forEach((student) => {
+    const card = document.createElement("div");
+    card.className = "student-card";
+    card.dataset.username = student.username;  // 设置 dataset
 
-      card.innerHTML = `
-        <div class="profile-card" style="background-image: url('${student.image}')">
-          <div class="profile-overlay">
-            <h2>${student.name}${student.age ? ` <span>${student.age} years old</span>` : ""}</h2>
-            <p class="bio">${student.bio || ""}</p>
-            <p class="student-location"><img src="/Frontend/image/location.png" class="icon" /> ${student.email}</p>
-            <button class="send-request-btn">Send Request</button>
-          </div>
+    card.innerHTML = `
+      <div class="profile-card" style="background-image: url('${student.image}')">
+        <div class="profile-overlay">
+          <h2>${student.name}${student.age ? ` <span>${student.age} years old</span>` : ""}</h2>
+          <p class="bio">${student.bio || ""}</p>
+          <p class="student-location"><img src="/Frontend/image/location.png" class="icon" /> ${student.email}</p>
+          <button class="send-request-btn">Send Request</button>
         </div>
-      `;
+      </div>
+    `;
 
-      container.appendChild(card);
-    });
-  }
-
-  // 发送请求按钮事件
-  document.addEventListener("click", function (e) {
-    if (e.target.classList.contains("send-request-btn")) {
-      // 这里用名字做示例
-      const name = e.target.closest(".student-card").querySelector("h2").textContent;
-      alert(`Sent request to ${name}`);
-      // 这里你可以调用实际API发请求
-    }
+    container.appendChild(card);
   });
+}
 
-  document.querySelector("#leave-class-btn").addEventListener("click", () => {
-    fetch("/api/class/leave/", {
+
+  document.addEventListener("click", function (e) {
+  if (e.target.classList.contains("send-request-btn")) {
+    const studentCard = e.target.closest(".student-card");
+    const receiverUsername = studentCard.dataset.username;
+    const senderUsername = username;
+  
+   
+    const name = studentCard.querySelector("h2").textContent;
+    alert(`Sent request to ${name}`);
+
+ 
+    fetch("http://127.0.0.1:8000/grouping/send/",{
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ user_id: 123 }),
+      body: JSON.stringify({
+        class_code: classCodeFromAPI,
+        sender_username: senderUsername,
+        receiver_username: receiverUsername,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        alert(data.detail || "Request sent.");
+      })
+      .catch((error) => {
+        alert("Failed to send request.");
+        console.error(error);
+      });
+  }
+});
+
+
+
+  document.querySelector("#leave-class-btn").addEventListener("click", () => {
+    fetch("http://127.0.0.1:8000/classing/leave/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ code: classCodeFromAPI , username: username })
     })
       .then((res) => {
         if (!res.ok) throw new Error("Leave failed");
         alert("You have left the class");
+        window.location.href = "student_class.html";
       })
       .catch((err) => {
         console.error(err);
         alert("Error leaving class");
       });
   });
+
+  function renderPendingRequests(requests) {
+  const container = document.getElementById("student-container");
+  container.innerHTML = "";
+
+  requests.forEach(req => {
+    const card = document.createElement("div");
+    card.className = "student-card";
+    card.innerHTML = `
+      <div class="profile-card">
+        <div class="profile-overlay">
+          <h2>${req.sender_name}</h2>
+          <p>${req.sender_email}</p>
+          <button class="accept-btn" data-id="${req.request_id}" data-class="${req.class_code}">Accept</button>
+          <button class="reject-btn" data-id="${req.request_id}" data-class="${req.class_code}">Reject</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+document.getElementById("group-request-select").addEventListener("change", (e) => {
+  if (e.target.value === "Pending") {
+    renderPendingRequests(pendingRequests);  // 这里先用 mock 的
+  }
+});
+document.addEventListener("click", function (e) {
+  if (e.target.classList.contains("accept-btn") || e.target.classList.contains("reject-btn")) {
+    const requestId = e.target.dataset.id;
+    const classCode = e.target.dataset.class;
+    const action = e.target.classList.contains("accept-btn");  // true or false
+
+    fetch("http://127.0.0.1:8000/grouping/respond/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        request_id: parseInt(requestId),
+        class_code: classCode,
+        current_username: username,
+        action: action
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.detail);
+      
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to respond to request.");
+      });
+  }
+});
+
 </script>
