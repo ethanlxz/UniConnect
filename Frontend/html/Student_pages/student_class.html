@@ -20,7 +20,7 @@
     </div>
   
     <div class="nav-item">
-      <a href="student_group.html">
+      <a href="student_allgroups.html">
       <img src="../../image/group icon.png" alt="Group Icon" />
       <div>Group</div>
       </a>
@@ -79,6 +79,7 @@ const classGrid = document.getElementById("classGrid");
 
 
 
+
     document.getElementById("search-input").addEventListener("input", function () {
       const searchTerm = this.value.toLowerCase();
       const cards = document.querySelectorAll(".class-card");
@@ -101,36 +102,52 @@ const classGrid = document.getElementById("classGrid");
     }
 
 
-
-    function loadClasses() {
+function loadClasses() {
   fetch("http://127.0.0.1:8000/classing/student/classes/", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username:username }),
+    body: JSON.stringify({ username: username }),
   })
     .then((response) => response.json())
     .then((data) => {
       classGrid.innerHTML = "";
+
       data.forEach((cls) => {
         const card = document.createElement("div");
         card.className = "class-card";
         card.style.display = "flex";
-          card.addEventListener("click", function () {
-          window.location.href =`../Student_pages/class_members.html?username=${username}&class_id=${cls.id}`;
+
+        // 点击整张卡片去 class_members 页面
+        card.addEventListener("click", function () {
+          window.location.href = `../Student_pages/class_members.html?username=${username}&class_id=${cls.id}`;
         });
 
+        // 设置卡片内容
         card.innerHTML = `
           <div class="class-code">${cls.code}</div>
           <div class="class-name">${cls.name}</div>
-          <button onclick="window.location.href='/groups/${cls.id}'">Groups</button>
         `;
-        classGrid.appendChild(card);
+
+        // 创建 Groups 按钮
+        const groupBtn = document.createElement("button");
+        groupBtn.textContent = "Groups";
+        groupBtn.addEventListener("click", function (event) {
+          event.stopPropagation(); // 阻止点击事件冒泡
+          window.location.href = `../Student_pages/student_group.html?username=${username}&class_id=${cls.id}`;
+
+        });
+
+        card.appendChild(groupBtn); // 把按钮加进卡片
+        classGrid.appendChild(card); // 把卡片加进页面
       });
     })
     .catch((error) => {
       console.error("Failed to load student classes:", error);
     });
 }
+
+
+     
 
 
 

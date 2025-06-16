@@ -7,18 +7,29 @@
   <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
- 
 </head>
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
     <div class="nav-item active">
+     <a href="student_class.html">
       <img src="../../image/classes.png" alt="Classes Icon" />
       <div>Classes</div>
+    </a>
     </div>
+  
     <div class="nav-item">
-      <img src="../../image/profile.png" alt="Profile Icon" />
+      <a href="student_allgroups.html">
+      <img src="../../image/group icon.png" alt="Group Icon" />
+      <div>Group</div>
+      </a>
+    </div>
+
+     <div class="nav-item">
+      <a href="student_profile.html">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
       <div>Profile</div>
+      </a>  
     </div>
   </div>
 
@@ -41,10 +52,10 @@
     <div class='Container-Profile'>
       <div class='profile'>
         <div class='profile-pic'>
-          <img src="../../image/profile.png" alt="Profile Picture">
+          <img id="studentPhoto"  alt="Student Photo" />
         </div>
         <div class='profile-info'>
-             <div class='profile-name'>
+            <div class='profile-name'>
                 <h2 id="studentName"></h2>
             </div>
             <div class='profile-email'>
@@ -60,18 +71,19 @@
                 <p id="studentMajor"></p>
             </div>
         </div>
-        <img id="studentPhoto" src="/Frontend/image/default_avatar.png" alt="Student Photo" />
+      </div>
+    </div>
 
-       
-     <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-     <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
-
-    <script>
+<script>
 document.addEventListener('DOMContentLoaded', function () {
-  
-  const username = "student1";  
+  const username = localStorage.getItem("username"); // 动态获取用户名
 
-  fetch(`http://127.0.0.1:8000/api/student/profile/${username}/`, {
+  if (!username) {
+    alert("No username found. Please login first.");
+    return;
+  }
+
+  fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -89,7 +101,8 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('studentContact').innerText = data.contact_num;
       document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
       document.getElementById('studentMajor').innerText = data.major || "No major info.";
-      document.getElementById('studentPhoto').src = data.photo || "/Frontend/image/default_avatar.png";
+      document.getElementById('studentPhoto').src = data.photo ;
+      console.log(data.photo);
     })
     .catch(error => {
       console.error(error);
@@ -97,4 +110,5 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-
+</body>
+</html>

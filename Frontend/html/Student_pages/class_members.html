@@ -20,7 +20,7 @@
     </div>
   
     <div class="nav-item">
-      <a href="student_group.html">
+      <a href="student_allgroups.html">
       <img src="../../image/group icon.png" alt="Group Icon" />
       <div>Group</div>
       </a>
@@ -75,7 +75,6 @@
   const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
   const params = new URLSearchParams(window.location.search);
   const classId = params.get("class_id");
-
  const username=params.get("username");
  
   
@@ -86,46 +85,78 @@
     fetchClassDetail(classId);
   }
 
-  function fetchClassDetail(classId) {
-    fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch class detail");
-        return res.json();
-      })
-      .then((data) => {
-          classCodeFromAPI = data.code;
-        document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
-        
+// 全局缓存当前同学所在组的用户，用于判断 UI 显示
+let currentGroupMembers = [];
+let pendingSentRequests = [];
 
-        // 这里没有年龄和bio，暂时显示 email 和 contact_num
-        const studentsData = data.students
-        .filter(student => student.username !== username)
-         .map((student) => ({
-          name: student.name,
-          email: student.email,
-          contactNum: student.contact_num,
-          image: DEFAULT_AVATAR,
-          bio: "", 
-          age: "", 
-          username: student.username,
-  }));
+async function fetchClassDetail(classId) {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`);
+    if (!res.ok) throw new Error("Failed to fetch class detail");
 
-        renderStudents(studentsData);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Failed to load class detail");
-      });
-      
+    const data = await res.json();
+    classCodeFromAPI = data.code;
+    document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
+
+    await fetchGroupAndRequests(); 
+
+    const studentsData = data.students
+      .filter(student => student.username !== username)
+      .map(student => ({
+        name: student.name,
+        email: student.email,
+        contactNum: student.contact_num,
+        image: DEFAULT_AVATAR,
+        bio: "",
+        age: "",
+        username: student.username,
+      }));
+
+    renderStudents(studentsData);
+  } catch (err) {
+    console.error(err);
+    alert("Failed to load class detail");
   }
+}
 
-  function renderStudents(data) {
+// 加载组内成员和已发送请求
+async function fetchGroupAndRequests() {
+  try {
+    // 1. 当前组成员
+    const groupRes = await fetch(`http://127.0.0.1:8000/grouping/current-group?username=${username}&class_code=${classCodeFromAPI}`);
+    if (groupRes.ok) {
+      const groupData = await groupRes.json();
+      currentGroupMembers = groupData.members || [];
+    }
+
+    // 2. 已发送请求
+    const sentRes = await fetch(`http://127.0.0.1:8000/grouping/sent-requests?username=${username}&class_code=${classCodeFromAPI}`);
+    if (sentRes.ok) {
+      const sentData = await sentRes.json();
+      pendingSentRequests = sentData.map(req => req.receiver_username);
+    }
+
+  } catch (err) {
+    console.error("Error fetching group/request data:", err);
+  }
+}
+
+function renderStudents(data) {
   const container = document.getElementById("student-container");
   container.innerHTML = "";
   data.forEach((student) => {
     const card = document.createElement("div");
     card.className = "student-card";
-    card.dataset.username = student.username;  // 设置 dataset
+    card.dataset.username = student.username;
+
+    const isGroupmate = currentGroupMembers.includes(student.username);
+    const hasPendingRequest = pendingSentRequests.includes(student.username);
+
+    const buttonHTML = isGroupmate
+      ? `<span class="in-group-label">✔ In Group</span>`
+      : hasPendingRequest
+      ? `<span class="pending-label">⏳ Pending</span>`
+      : `<button class="send-request-btn">Send Request</button>`;
 
     card.innerHTML = `
       <div class="profile-card" style="background-image: url('${student.image}')">
@@ -133,13 +164,44 @@
           <h2>${student.name}${student.age ? ` <span>${student.age} years old</span>` : ""}</h2>
           <p class="bio">${student.bio || ""}</p>
           <p class="student-location"><img src="/Frontend/image/location.png" class="icon" /> ${student.email}</p>
-          <button class="send-request-btn">Send Request</button>
+          ${buttonHTML}
         </div>
       </div>
     `;
 
     container.appendChild(card);
   });
+}
+
+
+async function fetchPendingRequests(username, classCode) {
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCode}`);
+    if (!res.ok) throw new Error("Failed to fetch pending requests");
+
+    const requestList = await res.json();
+    const pendingRequests = [];
+
+    for (const req of requestList) {
+      const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${req.sender_username}/`);
+      if (!profileRes.ok) continue; // 忽略失败的
+
+      const senderData = await profileRes.json();
+      pendingRequests.push({
+        request_id: req.request_id,
+        class_code: classCode,
+        sender_username: req.sender_username,
+        sender_name: senderData.name,
+        sender_email: senderData.email
+      });
+    }
+
+    renderPendingRequests(pendingRequests);
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to load pending group requests.");
+  }
 }
 
 
@@ -222,11 +284,17 @@
     container.appendChild(card);
   });
 }
+
 document.getElementById("group-request-select").addEventListener("change", (e) => {
-  if (e.target.value === "Pending") {
-    renderPendingRequests(pendingRequests);  // 这里先用 mock 的
+  const value = e.target.value;
+
+  if (value === "Pending") {
+    fetchPendingRequests(username, classCodeFromAPI);
+  } else {
+    fetchClassDetail(classId); // 恢复原始同学列表
   }
 });
+
 document.addEventListener("click", function (e) {
   if (e.target.classList.contains("accept-btn") || e.target.classList.contains("reject-btn")) {
     const requestId = e.target.dataset.id;

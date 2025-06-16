@@ -121,9 +121,9 @@
     const bio = document.getElementById('bio').value.trim() || 'Bio loading… please wait.';
     const profileImageFile = document.getElementById('profile_image').files[0];
     const genderInput = document.querySelector('input[name="gender"]:checked');
+    const email = sessionStorage.getItem("student_email");
 
 
-    // 👇 统一检查是否为空（genderInput 单独判断）
     if (!fullName || !username || !course || !contact || !instagram || !bio || !genderInput) {
       Toastify({
         text: "Please fill in all the fields before proceeding.",
@@ -161,6 +161,7 @@
         gender,
         instagram_id: instagram,
         bio,
+        email,
         profile_image: base64Image
       }));
 

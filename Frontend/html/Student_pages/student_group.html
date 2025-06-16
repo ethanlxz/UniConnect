@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="nav-item active">
+     <a href="student_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </a>
+    </div>
+  
+    <div class="nav-item">
+      <a href="student_allgroups.html">
+      <img src="../../image/group icon.png" alt="Group Icon" />
+      <div>Group</div>
+      </a>
+    </div>
+
+     <div class="nav-item">
+      <a href="student_profile.html">
+      <img src="../../image/userprofile.png" alt="Profile Icon" />
+      <div>Profile</div>
+      </a>  
+    </div>
+  </div>
+  
+
+  <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+        </div>
+      </div>
+    </nav>
+<h1>My Groups</h1>
+<div id="group-container" class="group-grid"></div>
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const username = urlParams.get("username") || sessionStorage.getItem("student_username");
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${username}`)
+    .then(res => res.json())
+    .then(data => {
+      renderGroupCards(data.groups);
+    })
+    .catch(err => {
+      console.error("Failed to load groups:", err);
+      alert("Failed to load group data.");
+    });
+});
+
+function renderGroupCards(groups) {
+  const container = document.getElementById("group-container");
+  container.innerHTML = "";
+
+  groups.forEach(group => {
+    const card = document.createElement("div");
+    card.className = "group-card";
+
+    const memberList = group.members.map((member, idx) => `<li>${idx + 1}. ${member}</li>`).join("");
+
+    card.innerHTML = `
+      <h3>${group.class_code.toUpperCase()} - ${group.class_name.toUpperCase()}</h3>
+      <ol>${memberList}</ol>
+      <button class="leave-btn" data-groupid="${group.group_id}" data-classcode="${group.class_code}">Leave</button>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+// 离开小组事件处理
+document.addEventListener("click", function (e) {
+  if (e.target.classList.contains("leave-btn")) {
+    const groupId = e.target.dataset.groupid;
+    const classCode = e.target.dataset.classcode;
+
+    if (!confirm("Are you sure you want to leave this group?")) return;
+
+    fetch("http://127.0.0.1:8000/grouping/leave-group/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        group_id: parseInt(groupId),
+        username: username,
+        class_code: classCode
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.detail || "Left the group.");
+        location.reload(); // reload the updated group list
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to leave group.");
+      });
+  }
+});
+
+console.log("Received data:", data);
+
+</script>

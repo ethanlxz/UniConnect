@@ -554,3 +554,101 @@
 .send-request-btn:hover {
   background-color: #ff1f4b;
 }
+
+
+.profile-avatar img {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 4px solid #4caf50;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+
+.profile-details h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.profile-details h4 {
+  font-size: 16px;
+  color: #666;
+  margin: 4px 0;
+}
+
+.profile-bio,
+.profile-major {
+  margin-top: 15px;
+  font-size: 15px;
+  color: #444;
+  padding: 0 10px;
+}
+
+@media (max-width: 600px) {
+  .profile-card {
+    padding: 20px 10px;
+  }
+
+  .profile-details h2 {
+    font-size: 20px;
+  }
+
+  .profile-avatar img {
+    width: 100px;
+    height: 100px;
+  }
+}
+.in-group-label,
+.pending-label {
+  display: inline-block;
+  padding: 6px 10px;
+  background-color: #ccc;
+  border-radius: 5px;
+  font-size: 0.85rem;
+}
+
+.in-group-label {
+  background-color: #a3d9a5; /* green */
+}
+
+.pending-label {
+  background-color: #f4d35e; /* yellow */
+}
+
+/*student group*/
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  padding: 20px;
+}
+
+.group-card {
+  background-color: #222;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  position: relative;
+}
+
+.group-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.1rem;
+}
+
+.group-card ol {
+  margin: 0 0 10px 0;
+  padding-left: 20px;
+}
+
+.group-card button.leave-btn {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  background-color: #ffb6b6;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}

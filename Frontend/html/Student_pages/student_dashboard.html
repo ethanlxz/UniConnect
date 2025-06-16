@@ -21,7 +21,7 @@
   
     <div class="nav-item">
       <a href="student_group.html">
-      <img src="../../image/group icon.png" alt="Group Icon" />
+      <img src="student_allgroups.html" alt="Group Icon" />
       <div>Group</div>
       </a>
     </div>
@@ -61,43 +61,44 @@
     const username = localStorage.getItem('username');
 
 
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/api/student/profile?username=${encodeURIComponent(username)}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+   try {
+  const response = await fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
 
-      const student = await response.json();
+  const student = await response.json();
 
-      if (student.username) {
-        welcomeText.textContent = `Welcome back, ${student.username}!`;
-        Toastify({
-          text: "Profile loaded successfully!",
-          duration: 3000,
-          gravity: "top",
-          position: "right",
-          backgroundColor: "#4caf50"
-        }).showToast();
-      } else {
-        welcomeText.textContent = `Welcome back!`;
-      }
-    } catch (error) {
-      console.error('Fetch error:', error);
-      welcomeText.textContent = 'Welcome back!';
-      Toastify({
-        text: "Failed to load profile!",
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        backgroundColor: "#e74c3c"
-      }).showToast();
-    }
+  if (student.username) {
+    welcomeText.textContent = `Welcome back, ${student.username}!`;
+    Toastify({
+      text: "Profile loaded successfully!",
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#4caf50"
+    }).showToast();
+  } else {
+    welcomeText.textContent = `Welcome back!`;
+  }
+} catch (error) {
+  console.error('Fetch error:', error);
+  welcomeText.textContent = 'Welcome back!';
+  Toastify({
+    text: "Failed to load profile!",
+    duration: 3000,
+    gravity: "top",
+    position: "right",
+    backgroundColor: "#e74c3c"
+  }).showToast();
+}
+
 
     // Sidebar active effect
     document.querySelectorAll('.nav-item').forEach(item => {
