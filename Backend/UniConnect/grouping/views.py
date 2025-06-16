@@ -33,13 +33,20 @@ class SendGroupRequestAPIView(APIView):
         if sender not in class_instance.students.all() or receiver not in class_instance.students.all():
             return Response({'detail': 'Sender or receiver not enrolled in this class.'}, status=400)
 
-        # Check if sender or receiver is already in a finalized group for the class
-        if Group.objects.filter(class_instance=class_instance, members=sender, is_finalized=True).exists():
+        # Check if already in same group (any group, not just finalized)
+        sender_groups = Group.objects.filter(class_instance=class_instance, members=sender)
+        receiver_groups = Group.objects.filter(class_instance=class_instance, members=receiver)
+
+        if sender_groups.filter(id__in=receiver_groups.values_list('id', flat=True)).exists():
+            return Response({'detail': 'Sender and receiver are already in the same group.'}, status=400)
+
+        # Check if sender or receiver is already in a finalized group
+        if sender_groups.filter(is_finalized=True).exists():
             return Response({'detail': 'Sender is already in a finalized group for this class.'}, status=400)
-        if Group.objects.filter(class_instance=class_instance, members=receiver, is_finalized=True).exists():
+        if receiver_groups.filter(is_finalized=True).exists():
             return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
 
-        # Check if there is already a pending request between sender and receiver (in either direction)
+        #Check for existing request in either direction
         existing_request = GroupRequest.objects.filter(
             Q(sender=sender, receiver=receiver) | Q(sender=receiver, receiver=sender)
         ).exists()
@@ -49,6 +56,7 @@ class SendGroupRequestAPIView(APIView):
 
         GroupRequest.objects.create(sender=sender, receiver=receiver)
         return Response({'detail': 'Group request sent.'}, status=201)
+
 
 
 class RespondToGroupRequestAPIView(APIView):
