@@ -18,6 +18,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class StudentRegisterView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
     def post(self, request):
         serializer = StudentRegisterSerializer(data=request.data)
         if serializer.is_valid():
