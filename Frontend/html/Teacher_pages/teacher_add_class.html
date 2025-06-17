@@ -2,122 +2,264 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teacher Home - UniConnect</title>
-  <link rel="stylesheet" href="../../styles/teacher.css">
- 
-  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Teacher Home - UniConnect</title>
+	<link rel="stylesheet" href="../../styles/teacher.css">
+	<link rel="stylesheet" href="../../styles/teacher_add_class.css">
+
+	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
 </head>
 
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="nav-item active">
-      <img src="../../image/classes.png" alt="Classes Icon" />
-      <div>Classes</div>
-    </div>
-    <div class="nav-item">
-      <img src="../../image/userprofile.png" alt="Profile Icon" />
-      <div>Profile</div>
-    </div>
-  </div>
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<div class="nav-item ">
+			<a href="teacher_class.html">
+				<img src="../../image/classes.png" alt="Classes Icon" />
+				<div>Classes</div>
+			</a>
 
-  <div class="main-content">
-    <nav class="main-nav">
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
-        </div>
-      </div>
-    </nav>
+		</div>
+		<div class="nav-item">
+			<img src="../../image/profile.png" alt="Profile Icon" />
+			<div>Profile</div>
+		</div>
+	</div>
 
-
-  <form id="add-class-form">
-  <div class="form-group">
-    <label for="class-name">Class Name</label>
-    <input type="text" id="class-name" name="class-name" required />
-  </div>
-  <div class="form-group">
-    <label for="total-students">How many total Students?</label>
-    <input type="number" id="total-students" name="total-students" required />
-  </div>
-  <div class="form-group">
-    <label for="students-per-group">How many students in a group?</label>
-    <input type="number" id="students-per-group" name="students-per-group" required />
-  </div>
-  <div class="form-group">
-    <label>Grouping Settings</label>
-    <button type="button" class="group-setting-btn" data-setting="auto">Auto</button>
-    <button type="button" class="group-setting-btn" data-setting="manual">Manual</button>
-  </div>
-  <div class="form-actions">
-    <button id="back-btn" type="button">Back</button>
-    <button id="submit-btn" type="submit">Create</button>
-  </div>
-</form>
-
-<script>
-  // 选中group setting按钮样式
-  document.querySelectorAll('.group-setting-btn').forEach(button => {
-    button.addEventListener('click', function () {
-      document.querySelectorAll('.group-setting-btn').forEach(btn => btn.classList.remove('selected'));
-      this.classList.add('selected');
-    });
-  });
-
-  // 监听表单提交事件
-  const form = document.getElementById('add-class-form');
-
-  form.addEventListener('submit', (e) => {
-    e.preventDefault(); 
-
-    const name = document.getElementById("class-name").value.trim();
-    const maxStudents = parseInt(document.getElementById("total-students").value.trim());
-    const group = parseInt(document.getElementById("students-per-group").value.trim());
-    const username = localStorage.getItem("username");
-    const minGroupMembers = group; 
-
-    if (!name || isNaN(maxStudents) || isNaN(group) || isNaN(minGroupMembers)) {
-      alert("Please fill in all fields correctly.");
-      return;
-    }
-
-    fetch("http://127.0.0.1:8000/classing/create/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, max_students: maxStudents, username, group, min_group_members: minGroupMembers }),
-    })
-    .then((res) => {
-      if (!res.ok) throw new Error("Failed to create class");
-      return res.json();
-    })
-    .then((newClass) => {
-          localStorage.setItem('lastCreatedClass', JSON.stringify({
-             name: newClass.name,
-             class_code: newClass.code
-  }));
-  
-  })
+	<div class="main-content">
+		<nav class="main-nav">
+			<div class="nav-brand">
+				<h1>UniConnect.</h1>
+			</div>
+			<div class="nav-progress">
+				<div class="progress-step active">
+					<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+				</div>
+			</div>
+		</nav>
+		<div class="content-wrapper">
+			<form id="add-class-form">
+				<div class="form-group">
+					<label for="class-name">Class Name</label>
+					<input type="text" id="class-name" name="class-name" placeholder="e.g., Computer Architecture"
+						required />
+				</div>
+				<div class="form-group">
+					<label for="total-students">Total students in the class?</label>
+					<input type="number" id="total-students" name="total-students" required />
+				</div>
+				<div class="form-group">
+					<label for="students-per-group">Minimum number of students in a group?</label>
+					<input type="number" id="students-per-group" name="students-per-group" required />
+				</div>
+				<div class="form-actions">
+					<button id="back-btn" type="button">Back</button>
+					<button id="submit-btn" type="submit">Create</button>
+				</div>
+			</form>
+		</div>
 
 
-  window.location.href = "teacher_preview_class.html";
-      
-      form.reset();
-     
-      Toastify({
-        text: "Class created successfully!",
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        backgroundColor: "green"
-      }).showToast();
-    })
-    .catch((err) => alert(err.message));
-  ;
+		<!-- Preview Modal -->
+		<div class="modal-overlay" id="preview-modal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h2>Group Preview</h2>
+					<button class="close-modal">&times;</button>
+				</div>
+				<div class="modal-body">
+					<div class="preview-summary">
+						<div class="summary-item">
+							<h3>Total Students</h3>
+							<p id="summary-students">24</p>
+						</div>
+						<div class="summary-item">
+							<h3>Minimum Students per Group</h3>
+							<p id="summary-per-group">4</p>
+						</div>
+						<div class="summary-item">
+							<h3>Total Groups</h3>
+							<p id="summary-groups">6</p>
+						</div>
+					</div>
+					<div class="groups-container" id="preview-container">
+						<!-- Groups will be dynamically inserted here -->
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button class="modal-btn" id="modal-back-btn">Back</button>
+					<button type="button" class="modal-btn" id="modal-confirm-btn">Create Class</button>
+				</div>
+			</div>
+		</div>
 
-</script>
+		<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+		<script>
+
+			const form = document.getElementById('add-class-form');
+			const previewModal = document.getElementById('preview-modal');
+			const closeModalBtn = document.querySelector('.close-modal');
+			const modalBackBtn = document.getElementById('modal-back-btn');
+			const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+			const previewContainer = document.getElementById('preview-container');
+			const summaryStudents = document.getElementById('summary-students');
+			const summaryPerGroup = document.getElementById('summary-per-group');
+			const summaryGroups = document.getElementById('summary-groups');
+
+			// Group setting buttons
+			document.querySelectorAll('.group-setting-btn').forEach(button => {
+				button.addEventListener('click', function () {
+					document.querySelectorAll('.group-setting-btn').forEach(btn =>
+						btn.classList.remove('selected'));
+					this.classList.add('selected');
+				});
+			});
+
+			// Form submission handler
+			form.addEventListener('submit', function (e) {
+				e.preventDefault();
+
+				const className = document.getElementById('class-name').value.trim();
+				const totalStudents = parseInt(document.getElementById('total-students').value);
+				const groupSize = parseInt(document.getElementById('students-per-group').value);
+
+				// Basic validation
+				if (!className || isNaN(totalStudents) || isNaN(groupSize)) {
+					showToast('Please fill in all fields correctly', 'error');
+					return;
+				}
+
+				if (groupSize < 2) {
+					showToast('Group size must be at least 2 students', 'error');
+					return;
+				}
+
+				if (totalStudents < groupSize) {
+					showToast('Group size cannot be more than total students', 'error')
+					return;
+				}
+
+				summaryStudents.textContent = totalStudents;
+				summaryPerGroup.textContent = groupSize;
+
+				const groups = createGroups(totalStudents, groupSize);
+				renderGroupsPreview(groups);
+				summaryGroups.textContent = groups.length;
+
+				previewModal.classList.add('active');
+			});
+
+			function createGroups(totalStudents, groupSize) {
+				if (groupSize <= 0 || totalStudents <= 0) {
+					return [];
+				}
+
+				const numGroups = Math.floor(totalStudents / groupSize);
+				const groups = Array(numGroups).fill().map(() => []);
+
+				for (let i = 0; i < totalStudents; i++) {
+					groups[i % numGroups].push(i + 1);
+				}
+
+				return groups;
+			}
+
+			// Function to render groups in preview
+			function renderGroupsPreview(groups) {
+				previewContainer.innerHTML = '';
+
+				groups.forEach((group, index) => {
+					const groupBlock = document.createElement('div');
+					groupBlock.className = 'group-block';
+					groupBlock.innerHTML = `
+          <h3>Group ${index + 1}</h3>
+          <div class="group-members">
+            ${group.map(student =>
+						`<span class="student-badge">Student ${student}</span>`
+					).join('')}
+          </div>
+        `;
+					previewContainer.appendChild(groupBlock);
+				});
+			}
+
+			// Modal event handlers
+			closeModalBtn.addEventListener('click', () => {
+				previewModal.classList.remove('active');
+			});
+
+			modalBackBtn.addEventListener('click', () => {
+				previewModal.classList.remove('active');
+			});
+
+			modalConfirmBtn.addEventListener('click', async (e) => {
+				e.preventDefault();
+				const className = document.getElementById('class-name').value.trim();
+				const totalStudents = parseInt(document.getElementById('total-students').value);
+				const groupSize = parseInt(document.getElementById('students-per-group').value);
+
+				const payload = {
+					"username": localStorage.getItem("username"),
+					"name": className,
+					"max_students": totalStudents,
+					"group": Math.floor(totalStudents / groupSize),
+					"min_group_members": groupSize
+				};
+
+				await makeRequest("http://127.0.0.1:8000/classing/create/", {}, payload, 'POST');
+
+				previewModal.classList.remove('active');
+				form.reset();
+
+				console.log("test1");
+				localStorage.setItem("toastMessage", "Class created successfully!");
+				localStorage.setItem("toastType", "success");
+				window.location.href = "teacher_class.html";
+
+
+
+				// showToastAndRedirect(`Class "${className}" created successfully!`, 'success', "teacher_class.html");
+			});
+
+			// Close modal when clicking outside content
+			previewModal.addEventListener('click', (e) => {
+				if (e.target === previewModal) {
+					previewModal.classList.remove('active');
+				}
+			});
+
+			// Toast notification function
+			function showToast(message, type) {
+				const bgColor = type === 'success' ? '#4caf50' : '#f44336';
+
+				Toastify({
+					text: message,
+					duration: 3000,
+					gravity: "top",
+					position: "right",
+					backgroundColor: bgColor,
+				}).showToast();
+			}
+
+			document.getElementById('back-btn').addEventListener('click', () => {
+				window.history.back();
+			});
+
+
+			async function makeRequest(apiUrl, params = {}, payload = null, method = 'GET') {
+				const config = {
+					method: method.toLowerCase(),
+					url: apiUrl,
+					params: method.toUpperCase() === 'GET' ? params : {},
+					data: method.toUpperCase() === 'POST' ? payload : null,
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				};
+				const response = await axios(config);
+				return response.data;
+			}
+		</script>
+		<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
