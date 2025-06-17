@@ -16,6 +16,9 @@ from .utils import generate_random_code
 # JWT Token
 from rest_framework_simplejwt.tokens import RefreshToken
 
+# Password hashing
+from django.contrib.auth.hashers import make_password
+
 
 class StudentRegisterView(APIView):
     parser_classes = [MultiPartParser, FormParser]
@@ -51,6 +54,25 @@ class StudentLoginView(APIView):
         except StudentProfile.DoesNotExist:
             return Response({"error": "Student not found"}, status=status.HTTP_404_NOT_FOUND)
 
+class StudentResetPassView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        new_password = request.data.get('new_password')
+
+        if not username or not new_password:
+            return Response({"error": "Username and new password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Retrieve the student by username
+            student = StudentProfile.objects.get(username=username)
+
+            # Update the password securely
+            student.password = make_password(new_password)
+            student.save()
+
+            return Response({"message": "Password reset successful."}, status=status.HTTP_200_OK)
+        except StudentProfile.DoesNotExist:
+            return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
         
 class LecturerRegisterView(APIView):
     def post(self, request):
@@ -83,6 +105,26 @@ class LecturerLoginView(APIView):
                 return Response({"error": "Invalid password"}, status=status.HTTP_400_BAD_REQUEST)
         except LecturerProfile.DoesNotExist:
             return Response({"error": "Lecturer not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+class LecturerResetPassView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        new_password = request.data.get('new_password')
+
+        if not username or not new_password:
+            return Response({"error": "Username and new password are required."}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Retrieve the lecturer by username
+            lecturer = LecturerProfile.objects.get(username=username)
+
+            # Update the password securely
+            lecturer.password = make_password(new_password)
+            lecturer.save()
+
+            return Response({"message": "Password reset successful."}, status=status.HTTP_200_OK)
+        except LecturerProfile.DoesNotExist:
+            return Response({"error": "Lecturer not found."}, status=status.HTTP_404_NOT_FOUND)
 
 class SendOTPView(APIView):
     
