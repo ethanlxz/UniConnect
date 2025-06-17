@@ -139,8 +139,8 @@
     const password = localStorage.getItem('student_password');
     const age = localStorage.getItem('student_age');
     const contact = localStorage.getItem('student_contact');
-
-    const email = sessionStorage.getItem("student_email");
+   const email = sessionStorage.getItem("student_email");
+ 
     console.log("Verifying OTP for:", email);
 
     const apiUrl = "http://127.0.0.1:8000/api/otp/verify";

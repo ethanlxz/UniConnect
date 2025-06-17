@@ -52,7 +52,7 @@
       <select class="button group-btn" id="group-request-select">
         <option>Group Request</option>
         <option>Pending</option>
-        <option>Accepted</option>
+        
       </select>
     </div>
   </div>
@@ -123,23 +123,24 @@ async function fetchClassDetail(classId) {
 async function fetchGroupAndRequests() {
   try {
     // 1. 当前组成员
-    const groupRes = await fetch(`http://127.0.0.1:8000/grouping/current-group?username=${username}&class_code=${classCodeFromAPI}`);
-    if (groupRes.ok) {
-      const groupData = await groupRes.json();
-      currentGroupMembers = groupData.members || [];
-    }
-
-    // 2. 已发送请求
-    const sentRes = await fetch(`http://127.0.0.1:8000/grouping/sent-requests?username=${username}&class_code=${classCodeFromAPI}`);
-    if (sentRes.ok) {
-      const sentData = await sentRes.json();
-      pendingSentRequests = sentData.map(req => req.receiver_username);
-    }
-
-  } catch (err) {
-    console.error("Error fetching group/request data:", err);
+      const groupsRes = await fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${username}`);
+  if (groupsRes.ok) {
+    const groupData = await groupsRes.json();
+    const classGroup = groupData.groups.find(group => group.class_code === classCodeFromAPI);
+    currentGroupMembers = classGroup ? classGroup.members : [];
   }
+    // 2. 已发送请球
+    const requestsRes = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCodeFromAPI}`);
+  if (requestsRes.ok) {
+    const requestList = await requestsRes.json();
+    incomingRequests = requestList.map(req => req.sender_username);
+  }
+
+} catch (err) {
+  console.error("Error fetching group/request data:", err);
 }
+}
+    
 
 function renderStudents(data) {
   const container = document.getElementById("student-container");
@@ -237,7 +238,7 @@ async function fetchPendingRequests(username, classCode) {
         alert(data.detail || "Request sent.");
       })
       .catch((error) => {
-        alert("Failed to send request.");
+        alert("There is already a pending group request between these users.");
         console.error(error);
       });
   }

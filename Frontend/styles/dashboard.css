@@ -617,11 +617,12 @@
 }
 
 /*student group*/
-.group-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+
+.group-section {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
-  padding: 20px;
+  margin-top: 10px;
 }
 
 .group-card {
@@ -652,3 +653,13 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+
+.group-card {
+  background: #413434;
+  border-radius: 12px;
+  padding: 16px;
+  width: 250px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+

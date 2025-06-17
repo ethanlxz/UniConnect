@@ -101,7 +101,8 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('studentContact').innerText = data.contact_num;
       document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
       document.getElementById('studentMajor').innerText = data.major || "No major info.";
-      document.getElementById('studentPhoto').src = data.photo ;
+      document.getElementById('studentPhoto').src = data.photo;
+
       console.log(data.photo);
     })
     .catch(error => {

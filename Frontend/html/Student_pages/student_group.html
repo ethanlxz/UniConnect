@@ -46,18 +46,26 @@
         </div>
       </div>
     </nav>
-<h1>My Groups</h1>
+
 <div id="group-container" class="group-grid"></div>
 <script>
+    
 const urlParams = new URLSearchParams(window.location.search);
 const username = urlParams.get("username") || sessionStorage.getItem("student_username");
+const classId = urlParams.get("class_id");
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${username}`)
+
+
+  console.log("Class ID:", classId);
+  const username = urlParams.get("username") || sessionStorage.getItem("student_username");
+  
+
+  fetch(`http://127.0.0.1:8000/grouping/list/?class_id=${classId}`)
     .then(res => res.json())
     .then(data => {
-      renderGroupCards(data.groups);
+      renderGroupCards(data.final_groups, data.groups_forming, username, data.class_code, data.class_name);
     })
     .catch(err => {
       console.error("Failed to load groups:", err);
@@ -65,27 +73,75 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-function renderGroupCards(groups) {
+
+
+function renderGroupCards(finalizedGroups, formingGroups, username, classCode, className) {
   const container = document.getElementById("group-container");
   container.innerHTML = "";
 
-  groups.forEach(group => {
-    const card = document.createElement("div");
-    card.className = "group-card";
+  // --- Confirmed Groups Section ---
+  const finalizedHeader = document.createElement("h2");
+  finalizedHeader.textContent = "Confirmed Groups";
+  container.appendChild(finalizedHeader);
 
-    const memberList = group.members.map((member, idx) => `<li>${idx + 1}. ${member}</li>`).join("");
+  const finalizedContainer = document.createElement("div");
+  finalizedContainer.className = "group-section";
+  container.appendChild(finalizedContainer);
 
-    card.innerHTML = `
-      <h3>${group.class_code.toUpperCase()} - ${group.class_name.toUpperCase()}</h3>
-      <ol>${memberList}</ol>
-      <button class="leave-btn" data-groupid="${group.group_id}" data-classcode="${group.class_code}">Leave</button>
-    `;
+  if (finalizedGroups.length > 0) {
+    finalizedGroups.forEach(group => {
+      const card = createGroupCard(group, username, classCode, className);
+      finalizedContainer.appendChild(card);
+    });
+  } else {
+    finalizedContainer.innerHTML = "<p>No confirmed groups yet.</p>";
+  }
 
-    container.appendChild(card);
-  });
+  // --- Forming Groups Section ---
+  const formingHeader = document.createElement("h2");
+  formingHeader.textContent = "Groups Forming";
+  formingHeader.style.marginTop = "40px";
+  container.appendChild(formingHeader);
+
+  const formingContainer = document.createElement("div");
+  formingContainer.className = "group-section";
+  container.appendChild(formingContainer);
+
+  if (formingGroups.length > 0) {
+    formingGroups.forEach(group => {
+      const card = createGroupCard(group, username, classCode, className);
+      formingContainer.appendChild(card);
+    });
+  } else {
+    formingContainer.innerHTML = "<p>No forming groups currently.</p>";
+  }
 }
 
-// 离开小组事件处理
+
+function createGroupCard(group, username, classCode, className) {
+  const card = document.createElement("div");
+  card.className = "group-card";
+
+  const members = group.members.filter(Boolean); // remove null
+  const isMember = members.includes(username);
+
+  const memberList = members.map((member, idx) => `<li> ${member}</li>`).join("");
+
+  let actionHTML = "";
+
+  if (isMember) {
+    actionHTML = `<button class="leave-btn" data-groupid="${group.id}" data-classcode="${classCode}">Leave</button>`;
+  } 
+
+  card.innerHTML = `
+    <p><strong>${group.group_label}</strong></p>
+    <ol>${memberList}</ol>
+    ${actionHTML}
+  `;
+
+  return card;
+}
+
 document.addEventListener("click", function (e) {
   if (e.target.classList.contains("leave-btn")) {
     const groupId = e.target.dataset.groupid;
@@ -93,7 +149,7 @@ document.addEventListener("click", function (e) {
 
     if (!confirm("Are you sure you want to leave this group?")) return;
 
-    fetch("http://127.0.0.1:8000/grouping/leave-group/", {
+    fetch("http://127.0.0.1:8000/grouping/leave/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -116,6 +172,5 @@ document.addEventListener("click", function (e) {
   }
 });
 
-console.log("Received data:", data);
 
 </script>
