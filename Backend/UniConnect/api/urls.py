@@ -13,4 +13,7 @@ urlpatterns = [
  	path('otp/resend',ResendOTPView.as_view(), name='resend_otp'),
     path('student/profile/<str:username>/', StudentProfileView.as_view(), name='student_profile'),
     path('lecturer/profile/<str:username>/', LecturerProfileView.as_view(), name='lecturer_profile'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] 
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
