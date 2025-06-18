@@ -51,6 +51,27 @@
 
   <script>
 
+	window.addEventListener('DOMContentLoaded', () => {
+	const message = localStorage.getItem("toastMessage");
+	const type = localStorage.getItem("toastType");
+
+	if (message && type) {
+		Toastify({
+			text: message,
+			duration: 3000,
+			gravity: "top",
+			position: "right",
+			backgroundColor: type === 'success' ? '#4caf50' : '#f44336',
+			stopOnFocus: true
+		}).showToast();
+
+		// Clear the message so it doesn’t show again
+		localStorage.removeItem("toastMessage");
+		localStorage.removeItem("toastType");
+	}
+});
+
+
     const username = localStorage.getItem("username");
     const classGrid = document.getElementById("classGrid");
 
@@ -122,6 +143,7 @@
 loadClasses();
 
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 </body>
 
 </html>

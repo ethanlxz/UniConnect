@@ -1,8 +1,9 @@
+import axios from 'axios';
 
 async function makeRequest(apiUrl, params = {}, payload = null, method = 'GET') {
 	const config = {
 		method: method.toLowerCase(),
-		url: "http://127.0.0.1:8000/" + apiUrl,
+		url: apiUrl,
 		params: method.toUpperCase() === 'GET' ? params : {},
 		data: method.toUpperCase() === 'POST' ? payload : null,
 		headers: {
