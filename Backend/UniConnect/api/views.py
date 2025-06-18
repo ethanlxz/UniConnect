@@ -53,6 +53,8 @@ class StudentLoginView(APIView):
 
         
 class LecturerRegisterView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    
     def post(self, request):
         serializer = LecturerRegisterSerializer(data=request.data)
         if serializer.is_valid():
