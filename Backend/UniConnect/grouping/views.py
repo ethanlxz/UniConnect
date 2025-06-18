@@ -103,9 +103,10 @@ class RespondToGroupRequestAPIView(APIView):
                 return Response({'detail': 'Maximum number of groups reached for this class.'}, status=400)
             group = Group.objects.create(class_instance=class_instance)
             group.members.add(sender)
-
-        if Group.objects.filter(class_instance=class_instance, members=receiver, is_finalized=True).exists():
-            return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
+        
+        old_group = Group.objects.filter(class_instance=class_instance, members=receiver, is_finalized=False).exclude(id=group.id).first()
+        if old_group:
+            old_group.members.remove(receiver)
 
         if group.members.count() >= class_instance.min_group_members:
             return Response({'detail': 'Group is already full.'}, status=400)

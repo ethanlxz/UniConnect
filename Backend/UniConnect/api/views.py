@@ -75,6 +75,8 @@ class StudentResetPassView(APIView):
             return Response({"error": "Student not found."}, status=status.HTTP_404_NOT_FOUND)
         
 class LecturerRegisterView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    
     def post(self, request):
         serializer = LecturerRegisterSerializer(data=request.data)
         if serializer.is_valid():
