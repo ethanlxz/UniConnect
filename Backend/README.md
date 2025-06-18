@@ -65,7 +65,7 @@ Success Response:
 }
 ```
 
-Endpoint: PUT /api/student/profile/student1/
+Endpoint: PATCH /api/student/profile/student1/
 Payload:
 
 ```json

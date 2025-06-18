@@ -276,11 +276,7 @@ class StudentProfileView(APIView):
 
         return Response(data, status=200)
 
-    def put(self, request, username):
-        username = request.data.get('username')
-        if not username:
-            return Response({'detail': 'Username is required in the request body.'}, status=400)
-
+    def patch(self, request, username):
         try:
             student = StudentProfile.objects.get(username=username)
         except StudentProfile.DoesNotExist:
@@ -292,13 +288,13 @@ class StudentProfileView(APIView):
         student.major = request.data.get('major', student.major)
         student.bio = request.data.get('bio', student.bio)
         student.gender = request.data.get('gender', student.gender)
+
         if 'instagram_id' in request.data:
             instagram_id = request.data.get('instagram_id')
             if instagram_id and not instagram_id.startswith('@'):
                 return Response({'detail': "Instagram ID must start with '@'."}, status=400)
             student.instagram_id = instagram_id
 
-        # Update profile image if included
         if 'profile_image' in request.FILES:
             student.profile_image = request.FILES['profile_image']
 
@@ -317,6 +313,7 @@ class StudentProfileView(APIView):
         }
 
         return Response(updated_data, status=200)
+
     
 class LecturerProfileView(APIView):
     parser_classes = [MultiPartParser, FormParser]  # To handle file uploads
