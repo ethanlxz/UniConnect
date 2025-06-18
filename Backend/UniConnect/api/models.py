@@ -13,7 +13,7 @@ class StudentProfile(models.Model):
     )
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     major = models.CharField(max_length=50)
-    profile_image = models.ImageField(upload_to='student_profile_image/', default='default.jpg')
+    profile_image = models.ImageField(upload_to='student_profile_image/', default='student_profile_image/default.jpg')
     bio = models.TextField(max_length=200, default='Bio loading… please wait.')
     instagram_id = models.CharField(max_length=100, blank=True, null=True)
 
@@ -28,7 +28,7 @@ class LecturerProfile(models.Model):
     password = models.CharField(max_length=50)
     contact_num = models.CharField(max_length=15, unique=True)
     major = models.CharField(max_length=50)
-    profile_image = models.ImageField(upload_to='lecturer_profile_image/', default='default.jpg')
+    profile_image = models.ImageField(upload_to='lecturer_profile_image/', default='lecturer_profile_image/default.jpg')
 
     def __str__(self):
         return self.username
