@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
- 
 </head>
 <body>
     <!-- Sidebar -->
@@ -43,7 +42,9 @@
   <div class="welcome-text" id="welcomeText"></div>
 </div>
 <div class="content-area">
-  <button id="creatbtn">Create Class</button>
+  <a href="teacher_add_class.html">
+  <button id="create-btn">Create Class</button>
+  </a>
 </div>
     
     </div>
@@ -57,7 +58,7 @@
       const username = localStorage.getItem('username');
 
       try {
-        const response = await fetch(`http://127.0.0.1:8000/api/lecturer/profile?username=${encodeURIComponent(username)}`, {
+        const response = await fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -43,45 +43,70 @@
         <h2>My Profile</h2>
     </div>
 
-    <div class='Container-Profile'>
+   <div class='Container-Profile'>
       <div class='profile'>
         <div class='profile-pic'>
-          <img src="../../image/profile.png" alt="Profile Picture">
+          <img id="teacherPhoto"  alt="teacher Photo" />
         </div>
         <div class='profile-info'>
-          <div class='profile-name'>
-            <h2 id="teacherName"></h2>
-          </div>
-          <div class='profile-email'>
-            <h4 id="teacherEmail"></h4>
-          </div>
-          <div class='profile-contact_num'>
-            <h4 id="teacher_Contactnum"></h4>
-          </div>
+            <div class='profile-name'>
+                <h2 id="teacherName"></h2>
+            </div>
+            <div class='profile-email'>
+                <h4 id="teacherEmail"></h4>
+            </div>
+            <div class='profile-contact_num'>
+                <h4 id="teacherContact"></h4>
+            </div>
+            <div class='profile-bio'>
+                <p id="teacherBio"></p>
+            </div>
+            <div class='profile-major'>
+                <p id="teacherMajor"></p>
+            </div>
         </div>
       </div>
     </div>
      <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
      <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
 
-    <script>
-        documentaddEventListener('DOMContentLoaded', function() {
-            fetch('http://localhost:8080/teacher/profile', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token')
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                documentgetElementById('teacherName').innerText = data.name;
-                documentgetElementById('teacherEmail').innerText = data.email;
-                documentgetElementById('teacher_Contactnum').innerText = data.contact_num;
-            })
-            .catch(error => {
-                console.log(error);
-            })
-        })
+     <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const username = localStorage.getItem("username"); // 动态获取用户名
 
-    </script>
+  if (!username) {
+    alert("No username found. Please login first.");
+    return;
+  }
+
+  fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch student profile.");
+      }
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('teacherName').innerText = data.name;
+      document.getElementById('teacherEmail').innerText = data.email;
+      document.getElementById('teacherContact').innerText = data.contact_num;
+      document.getElementById('teacherBio').innerText = data.bio || "No bio yet.";
+      document.getElementById('teacherMajor').innerText = data.major || "No major info.";
+      document.getElementById('teacherPhoto').src = data.photo;
+
+      console.log(data.photo);
+    })
+    .catch(error => {
+      console.error(error);
+      alert("Unable to load lecturer profile.");
+    });
+});
+</script>
+</body>
+</html>
+

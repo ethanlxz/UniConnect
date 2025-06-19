@@ -28,13 +28,7 @@
     </div>
   </div>
 
-     <div class="nav-item">
-      <a href="student_profile.html">
-      <img src="../../image/userprofile.png" alt="Profile Icon" />
-      <div>Profile</div>
-      </a>  
-    </div>
-  </div>
+   
 
     <div class="main-content">
     <nav class="main-nav">
@@ -89,7 +83,7 @@
 
 
   function fetchClassDetail(classId) {
-    fetch(`http://127.0.0.1:8000//classing/detail/?class_id=${classId}`)
+    fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch class detail");
         return res.json();
@@ -106,6 +100,7 @@
           image: DEFAULT_AVATAR,
           bio: "", 
           age: "", 
+          photo:student.photo
         }));
 
         renderStudents(studentsData);
@@ -124,7 +119,7 @@
       card.className = "student-card";
 
       card.innerHTML = `
-        <div class="profile-card" style="background-image: url('${student.image}')">
+        <div class="profile-card" style="background-image: url('${student.photo}');">
           <div class="profile-overlay">
             <h2>${student.name}${student.age ? ` <span>${student.age} years old</span>` : ""}</h2>
             <p class="bio">${student.bio || ""}</p>

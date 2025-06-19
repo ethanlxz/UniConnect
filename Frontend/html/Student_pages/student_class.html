@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,43 +7,219 @@
   <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
-</head>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
 
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f3f1ee;
+      color: #222;
+    }
+
+    .sidebar {
+      width: 80px;
+      background-color: #c7c2c2;
+     
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+      justify-content: space-between;
+      position: fixed;
+      left: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar-brand img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-brand span {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .nav-item {
+      text-align: center;
+      margin: 12px 0;
+    }
+
+    .nav-item a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nav-item img {
+      width: 30px;
+      height: 30px;
+      transition: transform 0.2s;
+    }
+
+    .nav-item img:hover {
+      transform: scale(1.15);
+    }
+
+    .sidebar-avatar {
+      margin-bottom: 10px;
+    }
+
+    .sidebar-avatar img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ccc;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 40px 40px 40px 120px;
+      overflow-y: auto;
+      width: 100%;
+    }
+
+    .main-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .main-nav h1 {
+      font-size: 24px;
+    }
+
+    .container h2 {
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .actions input {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .actions button, .actions a.join {
+      padding: 10px 14px;
+      background: #000;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    #classGrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .class-card {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      padding: 20px;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+
+    .class-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .class-card .class-code {
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      margin-bottom: 8px;
+    }
+
+    .class-card .class-name {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #000;
+      word-wrap: break-word;
+    }
+
+    .class-card button {
+      padding: 6px 10px;
+      font-size: 14px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+  </style>
+</head>
 <body>
   <div class="sidebar">
-    <div class="nav-item active">
-     <a href="student_class.html">
-      <img src="../../image/classes.png" alt="Classes Icon" />
-      <div>Classes</div>
-    </a>
+    <div>
+      <div class="sidebar-brand">
+        <img src="../../image/uniconnect.png" alt="UniConnect Logo" />
+        <span>UniConnect</span>
+      </div>
+      <div class="nav-item">
+        <a href="student_class.html">
+          <img src="../../image/classes.png" alt="Classes Icon" />
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="student_allgroups.html">
+          <img src="../../image/group icon.png" alt="Group Icon" />
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="student_profile.html">
+          <img src="../../image/userprofile.png" alt="Profile Icon" />
+        </a>
+      </div>
     </div>
-  
-    <div class="nav-item">
-      <a href="student_allgroups.html">
-      <img src="../../image/group icon.png" alt="Group Icon" />
-      <div>Group</div>
-      </a>
-    </div>
-
-     <div class="nav-item">
-      <a href="student_profile.html">
-      <img src="../../image/userprofile.png" alt="Profile Icon" />
-      <div>Profile</div>
-      </a>  
+    <div class="sidebar-avatar">
+      <img id="sidebarProfilePic" src="../../image/default-avatar.png" alt="My Avatar" />
     </div>
   </div>
-  
 
   <div class="main-content">
     <nav class="main-nav">
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
-        </div>
-      </div>
+      <h1>Hi, <span id="studentName">Student</span>!</h1>
     </nav>
 
     <div class="container">
@@ -53,33 +228,16 @@
         <input type="text" id="search-input" placeholder="Search for a class" />
         <button id="search-button">Search</button>
         <button class="sort" onclick="sortCourses()">Sort by course name</button>
-        <a href="../Student_pages/join_class.html" class="join" id="joinBtn" >Join</a>
-
+        <a href="../Student_pages/join_class.html" class="join" id="joinBtn">Join</a>
       </div>
 
-
       <div id="classGrid"></div>
-
-
-  
-   
+    </div>
   </div>
-</div>
-
 
   <script>
-
-const joinModal = document.getElementById("joinModal");
-const joinBtn = document.getElementById("joinBtn");
-const closeJoinModal = document.getElementById("closeJoinModal");
-const submitJoin = document.getElementById("submitJoin");
-const username = localStorage.getItem("username");
-const classGrid = document.getElementById("classGrid");
-
-
-
-
-
+    const username = localStorage.getItem("username");
+    const classGrid = document.getElementById("classGrid");
 
     document.getElementById("search-input").addEventListener("input", function () {
       const searchTerm = this.value.toLowerCase();
@@ -89,7 +247,6 @@ const classGrid = document.getElementById("classGrid");
         card.style.display = title.includes(searchTerm) ? "flex" : "none";
       });
     });
-
 
     function sortCourses() {
       const cards = Array.from(classGrid.children);
@@ -102,58 +259,54 @@ const classGrid = document.getElementById("classGrid");
       cards.forEach((card) => classGrid.appendChild(card));
     }
 
+    function loadClasses() {
+      fetch("http://127.0.0.1:8000/classing/student/classes/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: username }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          classGrid.innerHTML = "";
 
-function loadClasses() {
-  fetch("http://127.0.0.1:8000/classing/student/classes/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: username }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      classGrid.innerHTML = "";
+          data.forEach((cls) => {
+            const card = document.createElement("div");
+            card.className = "class-card";
 
-      data.forEach((cls) => {
-        const card = document.createElement("div");
-        card.className = "class-card";
-        card.style.display = "flex";
+            card.addEventListener("click", function () {
+              window.location.href = `../Student_pages/class_members.html?username=${username}&class_id=${cls.id}`;
+            });
 
-        // 点击整张卡片去 class_members 页面
-        card.addEventListener("click", function () {
-          window.location.href = `../Student_pages/class_members.html?username=${username}&class_id=${cls.id}`;
+            card.innerHTML = `
+              <div class="class-code">${cls.code}</div>
+              <div class="class-name">${cls.name}</div>
+            `;
+
+            const groupBtn = document.createElement("button");
+            groupBtn.textContent = "Groups";
+            groupBtn.addEventListener("click", function (event) {
+              event.stopPropagation();
+              window.location.href = `../Student_pages/student_group.html?username=${username}&class_id=${cls.id}`;
+            });
+
+            card.appendChild(groupBtn);
+            classGrid.appendChild(card);
+          });
+        })
+        .catch((error) => {
+          console.error("Failed to load student classes:", error);
         });
-
-        // 设置卡片内容
-        card.innerHTML = `
-          <div class="class-code">${cls.code}</div>
-          <div class="class-name">${cls.name}</div>
-        `;
-
-        // 创建 Groups 按钮
-        const groupBtn = document.createElement("button");
-        groupBtn.textContent = "Groups";
-        groupBtn.addEventListener("click", function (event) {
-          event.stopPropagation(); // 阻止点击事件冒泡
-          window.location.href = `../Student_pages/student_group.html?username=${username}&class_id=${cls.id}`;
-
-        });
-
-        card.appendChild(groupBtn); // 把按钮加进卡片
-        classGrid.appendChild(card); // 把卡片加进页面
-      });
-    })
-    .catch((error) => {
-      console.error("Failed to load student classes:", error);
-    });
-}
-
-
-     
-
-
+    }
 
     loadClasses();
+
+    fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("sidebarProfilePic").src = data.photo;
+        document.getElementById("studentName").innerText = data.name;
+      })
+      .catch(error => console.error("Failed to load profile data:", error));
   </script>
 </body>
-
 </html>

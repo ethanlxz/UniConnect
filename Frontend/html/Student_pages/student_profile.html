@@ -3,76 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Teacher Home - UniConnect</title>
-  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
-  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <title>Student Dashboard - UniConnect</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f3f1ee;
+      color: #222;
+    }
+
+    .sidebar {
+      width: 100px;
+      background-color: #fff;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .sidebar-brand img {
+      width: 40px;
+      height: 40px;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-brand span {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+.sidebar {
+  width: 80px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+  justify-content: space-between; /* ✅ 关键：上部分 + 底部头像分离 */
+}
+
+    .sidebar-avatar {
+  margin-bottom: 10px;
+}
+
+.sidebar-avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+    .nav-item {
+      text-align: center;
+      margin: 10px 0;
+      text-decoration: none;
+    }
+
+    .nav-item img {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 4px;
+    }
+
+    .nav-item div {
+      font-size: 12px;
+      color: #444;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 40px;
+      overflow-y: auto;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    .header h2 {
+      font-size: 24px;
+    }
+
+    .search-upgrade {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .search-upgrade input {
+      padding: 10px 16px;
+      border-radius: 20px;
+      border: none;
+      background-color: #fff;
+      width: 200px;
+    }
+
+    .search-upgrade button {
+      background-color: #000;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .card {
+      background-color: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+
+    .card h4 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .profile-section {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .profile-pic img {
+      width: 300px;
+      height: 400px;
+      object-fit: cover;
+     
+    }
+
+    .profile-info h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+
+    .profile-info p {
+      margin-bottom: 4px;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="nav-item active">
-     <a href="student_class.html">
+    <div class="sidebar-brand">
+      <img src="../../image/uniconnect.png" alt="UniConnect Logo" />
+      <span>UniConnect</span>
+    </div>
+
+    <a class="nav-item" href="student_class.html">
       <img src="../../image/classes.png" alt="Classes Icon" />
       <div>Classes</div>
     </a>
-    </div>
-  
-    <div class="nav-item">
-      <a href="student_allgroups.html">
+
+    <a class="nav-item" href="student_allgroups.html">
       <img src="../../image/group icon.png" alt="Group Icon" />
       <div>Group</div>
-      </a>
+    </a>
+
+   
+
+    <div class="sidebar-avatar">
+    <img id="sidebarProfilePic" src="../../image/default-avatar.png" alt="My Avatar" />
+  </div>
+</div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <div class="header">
+      <div>
+        <h2 id="greeting">Hi, Student!</h2>
+        <p>Let’s take a look at your profile today</p>
+      </div>
+      <div class="search-upgrade">
+        <input type="text" placeholder="Search for anything" />
+        <button>Upgrade</button>
+      </div>
     </div>
 
-     <div class="nav-item">
-      <a href="student_profile.html">
-      <img src="../../image/userprofile.png" alt="Profile Icon" />
-      <div>Profile</div>
-      </a>  
+    <div class="dashboard-grid">
+      <div class="card profile-section">
+        <div class="profile-pic">
+          <img id="studentPhoto" alt="Student Photo" />
+        </div>
+        <div class="profile-info">
+       
+        </div>
+      </div>
+
+      <div class="card">
+
+        <h4>Details</h4>
+          <h3 id="studentName">Name:</h3>
+        <p id="studentEmail">email@example.com</p>
+        <p id="studentContact">0123456789</p>
+        <p id="studentBio">I love learning and working in teams.</p>
+        <p id="studentMajor">Computer Science</p>
+      </div>
     </div>
   </div>
-
-  <div class="main-content">
-    <nav class="main-nav">
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
-        </div>
-      </div>
-    </nav>
-
-    <div class="textContent">
-        <h2>My Profile</h2>
-    </div>
-
-    <div class='Container-Profile'>
-      <div class='profile'>
-        <div class='profile-pic'>
-          <img id="studentPhoto"  alt="Student Photo" />
-        </div>
-        <div class='profile-info'>
-            <div class='profile-name'>
-                <h2 id="studentName"></h2>
-            </div>
-            <div class='profile-email'>
-                <h4 id="studentEmail"></h4>
-            </div>
-            <div class='profile-contact_num'>
-                <h4 id="studentContact"></h4>
-            </div>
-            <div class='profile-bio'>
-                <p id="studentBio"></p>
-            </div>
-            <div class='profile-major'>
-                <p id="studentMajor"></p>
-            </div>
-        </div>
-      </div>
-    </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -97,11 +252,15 @@ document.addEventListener('DOMContentLoaded', function () {
     })
     .then(data => {
       document.getElementById('studentName').innerText = data.name;
+      document.getElementById('greeting').innerText = `Hi, ${data.name}!`;
+
       document.getElementById('studentEmail').innerText = data.email;
       document.getElementById('studentContact').innerText = data.contact_num;
       document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
       document.getElementById('studentMajor').innerText = data.major || "No major info.";
       document.getElementById('studentPhoto').src = data.photo;
+      document.getElementById('sidebarProfilePic').src = data.photo;
+
 
       console.log(data.photo);
     })
@@ -109,6 +268,95 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error(error);
       alert("Unable to load student profile.");
     });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const username = localStorage.getItem("username");
+
+  if (!username) {
+    alert("No username found. Please login first.");
+    return;
+  }
+
+  // 加载资料
+  fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`)
+    .then(response => {
+      if (!response.ok) throw new Error("Failed to fetch student profile.");
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('studentName').innerText = data.name;
+      document.getElementById('studentEmail').innerText = data.email;
+      document.getElementById('studentContact').innerText = data.contact_num;
+      document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
+      document.getElementById('studentMajor').innerText = data.major || "No major info.";
+      document.getElementById('studentPhoto').src = data.photo;
+
+      // 初始化内联编辑绑定
+      makeEditable('studentName', 'name', data.name);
+      makeEditable('studentEmail', 'email', data.email);
+      makeEditable('studentContact', 'contact_num', data.contact_num);
+      makeEditable('studentBio', 'bio', data.bio);
+      makeEditable('studentMajor', 'major', data.major);
+    })
+    .catch(error => {
+      console.error(error);
+      alert("Unable to load student profile.");
+    });
+
+  // 内联编辑函数
+  function makeEditable(elementId, fieldName, initialValue) {
+    const element = document.getElementById(elementId);
+
+    element.style.cursor = "pointer";
+    element.title = "Click to edit";
+
+    element.addEventListener('click', function () {
+      const inputType = fieldName === "bio" ? "textarea" : "input";
+      const input = document.createElement(inputType);
+      input.value = initialValue;
+      input.style.width = "100%";
+
+   
+      input.style.fontSize = window.getComputedStyle(element).fontSize;
+
+      element.replaceWith(input);
+      input.focus();
+
+      function save() {
+        const newValue = input.value.trim();
+        if (newValue === "") return alert("Field cannot be empty.");
+        
+        const payload = { [fieldName]: newValue };
+
+        fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error("Update failed.");
+          return res.json();
+        })
+        .then(() => {
+          const newSpan = document.createElement(element.tagName.toLowerCase());
+          newSpan.id = elementId;
+          newSpan.innerText = newValue;
+          input.replaceWith(newSpan);
+          makeEditable(elementId, fieldName, newValue); 
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Failed to update.");
+        });
+      }
+
+      input.addEventListener('blur', save);
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') save();
+      });
+    });
+  }
 });
 </script>
 </body>

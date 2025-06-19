@@ -23,7 +23,7 @@
 }
 
   body {
-    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Outfit', sans-serif;
     background: var(--background-gray);
     min-height: 100vh;
     display: flex;
@@ -32,6 +32,10 @@
     padding: 1rem;
     line-height: 1.6;
   }
+
+textarea,button,input,select,.role-card{
+    font-family: 'Outfit', sans-serif;
+}
   
   /* ========== All Container ========== */
   .container {
