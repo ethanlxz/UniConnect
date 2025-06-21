@@ -171,8 +171,13 @@ class ListGroupsAPIView(APIView):
         # Finalized Groups
         finalized_groups = Group.objects.filter(class_instance=class_instance, is_finalized=True).order_by('id')
 
-        # Temporary Groups (including empty ones)
-        temp_groups = TemporaryGroup.objects.filter(class_instance=class_instance).order_by('id')
+        # Delete all empty temporary groups
+        TemporaryGroup.objects.filter(class_instance=class_instance, members__isnull=True).delete()
+
+        # Reload temp groups after deletion
+        temp_groups = TemporaryGroup.objects.filter(class_instance=class_instance).annotate(
+            member_count=Count('members')
+        ).filter(member_count__gt=0).order_by('id')
 
         def serialize_finalized_group(group, index):
             members = list(group.members.all())
@@ -326,3 +331,32 @@ class FinalizeTemporaryGroupAPIView(APIView):
         temp_group.delete()
 
         return Response({'detail': 'Group finalized.'}, status=200)
+
+class ChangeLeaderAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        class_code = request.data.get('class_code')
+        temp_group_id = request.data.get('temp_group_id')
+        new_leader_username = request.data.get('new_leader_username')
+
+        if not all([username, class_code, temp_group_id, new_leader_username]):
+            return Response({'detail': 'username, class_code, temp_group_id, and new_leader_username are required.'}, status=400)
+
+        try:
+            current_leader = StudentProfile.objects.get(username=username)
+            new_leader = StudentProfile.objects.get(username=new_leader_username)
+            class_instance = Class.objects.get(code=class_code)
+            temp_group = TemporaryGroup.objects.get(id=temp_group_id, class_instance=class_instance)
+        except (StudentProfile.DoesNotExist, Class.DoesNotExist, TemporaryGroup.DoesNotExist):
+            return Response({'detail': 'Invalid username, class code, or group ID.'}, status=404)
+
+        if temp_group.leader != current_leader:
+            return Response({'detail': 'Only the current leader can change the leader.'}, status=403)
+
+        if new_leader not in temp_group.members.all():
+            return Response({'detail': 'New leader must be a member of the group.'}, status=400)
+
+        temp_group.leader = new_leader
+        temp_group.save()
+
+        return Response({'detail': f'Leader changed to {new_leader.username} successfully.'}, status=200)
