@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Group, GroupRequest
+from .models import Group, GroupRequest, TemporaryGroup
 from classing.models import Class
 from api.models import StudentProfile
 from django.db.models import Q
+from django.db.models import Count
 
 # Create your views here.
 class SendGroupRequestAPIView(APIView):
@@ -58,13 +59,12 @@ class SendGroupRequestAPIView(APIView):
         return Response({'detail': 'Group request sent.'}, status=201)
 
 
-
 class RespondToGroupRequestAPIView(APIView):
     def post(self, request):
         request_id = request.data.get('request_id')
         class_code = request.data.get('class_code')
         current_username = request.data.get('current_username')
-        action = request.data.get('action')  #true (accept), false (decline)
+        action = request.data.get('action')  # true = accept, false = decline
 
         if not all([request_id, class_code, current_username]) or not isinstance(action, bool):
             return Response({'detail': 'request_id, class_code, current_username, and a boolean action are required.'}, status=400)
@@ -77,7 +77,7 @@ class RespondToGroupRequestAPIView(APIView):
         try:
             class_instance = Class.objects.get(code=class_code)
         except Class.DoesNotExist:
-            return Response({'detail': 'Class not found with the given code.'}, status=404)
+            return Response({'detail': 'Class not found.'}, status=404)
 
         sender = group_request.sender
         receiver = group_request.receiver
@@ -86,40 +86,39 @@ class RespondToGroupRequestAPIView(APIView):
             return Response({'detail': 'You are not authorized to respond to this request.'}, status=403)
 
         if sender not in class_instance.students.all() or receiver not in class_instance.students.all():
-            return Response({'detail': 'Sender or receiver is not enrolled in this class.'}, status=400)
+            return Response({'detail': 'Sender or receiver not enrolled in this class.'}, status=400)
 
         if action is False:
             group_request.delete()
             return Response({'detail': 'Request declined.'})
 
-
         if Group.objects.filter(class_instance=class_instance, members=receiver, is_finalized=True).exists():
             return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
 
-        group = Group.objects.filter(class_instance=class_instance, members=sender, is_finalized=False).first()
+        temp_group = TemporaryGroup.objects.filter(class_instance=class_instance, members=sender).first()
 
-        if not group:
-            if Group.objects.filter(class_instance=class_instance).count() >= class_instance.group:
-                return Response({'detail': 'Maximum number of groups reached for this class.'}, status=400)
-            group = Group.objects.create(class_instance=class_instance)
-            group.members.add(sender)
-        
-        old_group = Group.objects.filter(class_instance=class_instance, members=receiver, is_finalized=False).exclude(id=group.id).first()
+        if not temp_group:
+            temp_group = TemporaryGroup.objects.create(
+                class_instance=class_instance,
+                leader=sender
+            )
+            temp_group.members.add(sender)
+
+        old_group = TemporaryGroup.objects.filter(class_instance=class_instance, members=receiver).exclude(id=temp_group.id).first()
         if old_group:
             old_group.members.remove(receiver)
+            if old_group.members.count() <= 1:
+                old_group.members.clear()
+                old_group.leader = None
+                old_group.save()
 
-        if group.members.count() >= class_instance.min_group_members:
-            return Response({'detail': 'Group is already full.'}, status=400)
+        if receiver not in temp_group.members.all():
+            temp_group.members.add(receiver)
 
-        group.members.add(receiver)
-        group.save()
-
-        if group.members.count() >= class_instance.min_group_members:
-            group.is_finalized = True
-            group.save()
-
+        temp_group.save()
         group_request.delete()
-        return Response({'detail': 'Request accepted and group updated.'})
+
+        return Response({'detail': 'Request accepted. Students added to sender’s temporary group.', 'temp_group_id': temp_group.id}, status=200)
 
 
 class GetGroupRequestsAPIView(APIView):
@@ -169,21 +168,39 @@ class ListGroupsAPIView(APIView):
         min_members = class_instance.min_group_members or 4
         max_groups_allowed = class_instance.group
 
+        # Finalized Groups
         finalized_groups = Group.objects.filter(class_instance=class_instance, is_finalized=True).order_by('id')
-        forming_groups = Group.objects.filter(class_instance=class_instance, is_finalized=False).order_by('id')
 
-        def serialize_group(group, label_prefix, index):
+        # Temporary Groups (including empty ones)
+        temp_groups = TemporaryGroup.objects.filter(class_instance=class_instance).order_by('id')
+
+        def serialize_finalized_group(group, index):
             members = list(group.members.all())
             member_names = [m.name for m in members]
             while len(member_names) < min_members:
                 member_names.append(None)
-
             return {
-                'group_label': f"{label_prefix} {index + 1}",
+                'group_type': 'finalized',
+                'group_label': f"Finalized Group {index + 1}",
                 'id': group.id,
                 'members': member_names,
                 'member_count': len(members),
-                'is_finalized': group.is_finalized,
+                'is_finalized': True,
+            }
+
+        def serialize_temp_group(temp_group, index):
+            members = list(temp_group.members.all())
+            member_names = [m.name for m in members]
+            while len(member_names) < min_members:
+                member_names.append(None)
+            return {
+                'group_type': 'temporary',
+                'group_label': f"Temp Group {index + 1}",
+                'id': temp_group.id,
+                'leader': temp_group.leader.username if temp_group.leader else None,
+                'members': member_names,
+                'member_count': len(members),
+                'is_finalized': False,
             }
 
         data = {
@@ -191,8 +208,8 @@ class ListGroupsAPIView(APIView):
             'class_name': class_instance.name,
             'min_group_members': min_members,
             'max_groups_allowed': max_groups_allowed,
-            'final_groups': [serialize_group(group, "Group", idx) for idx, group in enumerate(finalized_groups)],
-            'groups_forming': [serialize_group(group, "Forming Group", idx) for idx, group in enumerate(forming_groups)],
+            'final_groups': [serialize_finalized_group(g, i) for i, g in enumerate(finalized_groups)],
+            'temporary_groups': [serialize_temp_group(g, i) for i, g in enumerate(temp_groups)],
         }
 
         return Response(data, status=200)
@@ -210,7 +227,6 @@ class MyGroupsAPIView(APIView):
         except StudentProfile.DoesNotExist:
             return Response({'detail': 'Student not found.'}, status=404)
 
-        # Fetch groups where this student is a member
         groups = Group.objects.filter(members=student)
 
         group_data = []
@@ -233,9 +249,10 @@ class LeaveGroupAPIView(APIView):
         username = request.data.get('username')
         class_code = request.data.get('class_code')
         group_id = request.data.get('group_id')
+        group_type = request.data.get('group_type')  # 'temporary' or 'finalized'
 
-        if not all([username, class_code, group_id]):
-            return Response({'detail': 'username, class_code, and group_id are required.'}, status=400)
+        if not all([username, class_code, group_id, group_type]):
+            return Response({'detail': 'username, class_code, group_id, and group_type are required.'}, status=400)
 
         try:
             student = StudentProfile.objects.get(username=username)
@@ -247,22 +264,65 @@ class LeaveGroupAPIView(APIView):
         except Class.DoesNotExist:
             return Response({'detail': 'Class not found.'}, status=404)
 
-        try:
-            group = Group.objects.get(id=group_id, class_instance=class_instance)
-        except Group.DoesNotExist:
-            return Response({'detail': 'Group not found in the specified class.'}, status=404)
+        if group_type == 'temporary':
+            try:
+                temp_group = TemporaryGroup.objects.get(id=group_id, class_instance=class_instance)
+            except TemporaryGroup.DoesNotExist:
+                return Response({'detail': 'Temporary group not found.'}, status=404)
 
-        if student not in group.members.all():
-            return Response({'detail': 'Student is not a member of this group.'}, status=400)
+            if student not in temp_group.members.all():
+                return Response({'detail': 'Student is not a member of this temporary group.'}, status=400)
 
-        if group.is_finalized:
+            temp_group.members.remove(student)
+
+            if temp_group.current_member_count() <= 1:
+                temp_group.delete()
+                return Response({'detail': 'Student left. Temporary group deleted because only 1 member remained.'}, status=200)
+            
+            if temp_group.leader == student:
+                remaining_members = list(temp_group.members.all())
+                temp_group.leader = remaining_members[0] if remaining_members else None
+            temp_group.save()
+
+            return Response({'detail': 'Student successfully left the temporary group.'}, status=200)
+
+        elif group_type == 'finalized':
+            try:
+                final_group = Group.objects.get(id=group_id, class_instance=class_instance, is_finalized=True)
+            except Group.DoesNotExist:
+                return Response({'detail': 'Finalized group not found.'}, status=404)
+
+            if student not in final_group.members.all():
+                return Response({'detail': 'Student is not a member of this finalized group.'}, status=400)
+
             return Response({'detail': 'Cannot leave a finalized group.'}, status=400)
 
-        group.members.remove(student)
+        else:
+            return Response({'detail': 'Invalid group type. Must be "temporary" or "finalized".'}, status=400)
+    
 
-        # Delete empty group
-        if group.members.count() == 0:
-            group.delete()
-            return Response({'detail': 'Student left and the group was deleted (no members left).'}, status=200)
+class FinalizeTemporaryGroupAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        class_code = request.data.get('class_code')
+        temp_group_id = request.data.get('temp_group_id')
 
-        return Response({'detail': 'Student successfully left the group.'}, status=200)
+        try:
+            student = StudentProfile.objects.get(username=username)
+            class_instance = Class.objects.get(code=class_code)
+            temp_group = TemporaryGroup.objects.get(id=temp_group_id, class_instance=class_instance)
+        except (StudentProfile.DoesNotExist, Class.DoesNotExist, TemporaryGroup.DoesNotExist):
+            return Response({'detail': 'Invalid input.'}, status=404)
+
+        if temp_group.leader != student:
+            return Response({'detail': 'Only leader can finalize.'}, status=403)
+
+        if temp_group.current_member_count() < class_instance.min_group_members:
+            return Response({'detail': 'Not enough members to finalize.'}, status=400)
+
+        final_group = Group.objects.create(class_instance=class_instance, is_finalized=True)
+        final_group.members.set(temp_group.members.all())
+
+        temp_group.delete()
+
+        return Response({'detail': 'Group finalized.'}, status=200)

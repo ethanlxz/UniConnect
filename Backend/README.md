@@ -485,7 +485,8 @@ Success Response:
 
 ```json
 {
-    "detail": "Request accepted and group updated."
+    "detail": "Request accepted. Students added to sender’s temporary group.",
+    "temp_group_id": 6
 }
 ```
 
@@ -539,27 +540,32 @@ Success Response:
     "max_groups_allowed": 4,
     "final_groups": [
         {
-            "group_label": "Group 1",
-            "id": 4,
+            "group_type": "finalized",
+            "group_label": "Finalized Group 1",
+            "id": 1,
             "members": [
-                "ethan",
                 "ys",
-                "sam"
+                "ethanlxz",
+                "xy",
+                "adam"
             ],
-            "member_count": 3,
+            "member_count": 4,
             "is_finalized": true
         }
     ],
-    "groups_forming": [
+    "temporary_groups": [
         {
-            "group_label": "Forming Group 1",
-            "id": 5,
+            "group_type": "temporary",
+            "group_label": "Temp Group 1",
+            "id": 6,
+            "leader": "alexxx",
             "members": [
                 "rael",
+                "alex",
                 "susan",
                 null
             ],
-            "member_count": 2,
+            "member_count": 3,
             "is_finalized": false
         }
     ]
@@ -606,9 +612,10 @@ Payload:
 
 ```json
 {
-  "username": "susannn",
-  "class_code": "nMAU8t",
-  "group_id": 6
+  "username": "susannnn",
+  "class_code": "HLHYCP",
+  "group_id": 5,
+  "group_type": "temporary"
 }
 ```
 
@@ -616,6 +623,26 @@ Success Response:
 
 ```json
 {
-    "detail": "Student successfully left the group."
+    "detail": "Student successfully left the temporary group."
+}
+```
+
+7. FinalizeTemporaryGroup
+Endpoint: POST /grouping/finalTG/
+Payload:
+
+```json
+{
+  "username": "ethan",
+  "class_code": "HLHYCP",
+  "temp_group_id": 4
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Group finalized."
 }
 ```
