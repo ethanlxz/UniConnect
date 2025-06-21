@@ -646,3 +646,24 @@ Success Response:
     "detail": "Group finalized."
 }
 ```
+
+8. Change Group Leader
+Endpoint: POST /grouping/changeLeader/
+Payload:
+
+```json
+{
+  "username": "alexxx",
+  "class_code": "HLHYCP",
+  "temp_group_id": 7,
+  "new_leader_username": "raelll"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Leader changed to raelll successfully."
+}
+```
