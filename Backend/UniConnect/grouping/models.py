@@ -26,3 +26,17 @@ class GroupRequest(models.Model):
 
     def __str__(self):
         return f"{self.sender.username} → {self.receiver.username}"
+
+class TemporaryGroup(models.Model):
+    class_instance = models.ForeignKey(Class, on_delete=models.CASCADE, related_name='temp_groups')
+    members = models.ManyToManyField(StudentProfile, related_name='temp_groups', blank=True)
+    leader = models.ForeignKey(StudentProfile, null=True, blank=True, on_delete=models.SET_NULL, related_name='led_temp_groups')
+
+    def current_member_count(self):
+        return self.members.count()
+
+    def is_available(self):
+        return self.current_member_count() == 0
+
+    def __str__(self):
+        return f"TempGroup {self.id} ({self.class_instance.code})"

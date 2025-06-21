@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SendGroupRequestAPIView, RespondToGroupRequestAPIView, GetGroupRequestsAPIView,ListGroupsAPIView, MyGroupsAPIView, LeaveGroupAPIView
+from .views import SendGroupRequestAPIView, RespondToGroupRequestAPIView, GetGroupRequestsAPIView,ListGroupsAPIView, MyGroupsAPIView, LeaveGroupAPIView, FinalizeTemporaryGroupAPIView
 
 urlpatterns = [
     path('send/', SendGroupRequestAPIView.as_view(), name='send-group-request'),
@@ -8,4 +8,5 @@ urlpatterns = [
     path('list/', ListGroupsAPIView.as_view(), name='list-groups'),
     path('myGroups/', MyGroupsAPIView.as_view(), name='my-groups'),
     path('leave/', LeaveGroupAPIView.as_view(), name='leave-group'),
+    path('finalTG/', FinalizeTemporaryGroupAPIView.as_view(), name='finalize-temporary-group'),
 ]
