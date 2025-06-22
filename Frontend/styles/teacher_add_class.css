@@ -13,6 +13,12 @@
       align-items: center;
       padding: 20px;
     }
+    body{
+    font-family: 'Outfit', sans-serif;
+}
+textarea,button,input,select{
+    font-family: 'Outfit', sans-serif;
+}
 
     form {
       max-width: 500px;

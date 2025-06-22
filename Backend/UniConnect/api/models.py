@@ -5,7 +5,7 @@ class StudentProfile(models.Model):
     username = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=30)
     email = models.EmailField()
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=100)
     contact_num = models.CharField(max_length=15, unique=True)
     GENDER_CHOICES = (
         ('M', 'Male'),
@@ -25,7 +25,7 @@ class LecturerProfile(models.Model):
     username = models.CharField(max_length=30, unique=True)
     name = models.CharField(max_length=30)
     email = models.EmailField()
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=100)
     contact_num = models.CharField(max_length=15, unique=True)
     major = models.CharField(max_length=50)
     profile_image = models.ImageField(upload_to='lecturer_profile_image/', default='lecturer_profile_image/default.jpg')

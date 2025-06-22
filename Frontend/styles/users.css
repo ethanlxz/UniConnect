@@ -10,6 +10,13 @@
 .toastify {
     font-family: 'Outfit', sans-serif;
     font-size: 14px;
+
+}
+body{
+    font-family: 'Outfit', sans-serif;
+}
+textarea,button,input,select{
+    font-family: 'Outfit', sans-serif;
 }
 
 /* horizontal navigation bar */
@@ -20,11 +27,14 @@
     padding: 1rem 2rem;
     background: rgb(219, 219, 219);
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    
+   
 }
 .nav-brand h1 {
     color: var(--primary-blue);
     font-size: 1.8rem;
     font-weight: 600;
+
 }
 
 /* Progress bar */
@@ -188,11 +198,11 @@ input {
 }
 
 /*OTP verification*/
-.otp-container {
-    max-width: 400px;
+.container {
+    max-width: 700px;
     margin: 5rem auto;
     padding: 2rem;
-    background: white;
+    background: rgb(255, 255, 255);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
     text-align: center;
@@ -210,17 +220,13 @@ input {
     height: 45px;
     text-align: center;
     font-size: 20px;
-    border: 2px solid #e0e0e0;
+    background-color: #e2e2e2;
+    border: 2px solid #bcbbbb;
     border-radius: 8px;
     
 }
 
-.resend-link {
-    color: #3498DB;
-    cursor: pointer;
-    margin-top: 1rem;
-    display: inline-block;
-}
+
 
 .timer {
     color: #95a5a6;
@@ -231,6 +237,41 @@ input {
   width: 40px;
   height: 40px;
   text-align: center;
+  background-color:#f1f1f1;
   font-size: 18px;
 }
 
+.otp-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-primary {
+  background-color: #1509ff;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1509ff;
+}
+
+#resendLink {
+  font-size: 14px;
+  color: gray;
+  text-decoration: none;
+  cursor: not-allowed;
+}
+#resendLink.active {
+  color: #1509ff;
+  cursor: pointer;
+  pointer-events: auto;
+}

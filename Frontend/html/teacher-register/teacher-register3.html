@@ -34,42 +34,92 @@
         <input type="text" id="username" placeholder="username">
     </div>
 
-    <h2>What is your Teaching course?</h2>
     <div class="form-group">
-        <select name="course" id="course">
-            <option value="course1">CCP4124-Object Oriented Programming</option>
-            <option value="course2">CCP4213-Data Structure and Algorithm</option>
-            <option value="course3">CCP4223-Database Management System</option>
-            <option value="course4">CCP4224-Computer Networks</option>
-            <option value="course5">CIT4183 Introduction to Cloud Computing</option>
-            <option value="course6">CIT4184 Introduction to Cyber Security</option>
-        </select>
-    </div>
+        <label><h2>Gender?</h2></label>
+        <div class="gender-icons">
+          <label>
+            <input type="radio" name="gender" value="M" hidden />
+            <img src="https://cdn-icons-png.flaticon.com/512/126/126486.png" alt="Male" class="gender-icon" />
+          </label>
+          <label>
+            <input type="radio" name="gender" value="F" hidden />
+            <img src="https://cdn-icons-png.flaticon.com/512/126/126485.png" alt="Female" class="gender-icon" />
+          </label>
+        </div>
+      </div>
 
-    <h2>Contact Number</h2>
-    <div class="form-group phone-input">
-        <select class="country-code">
-            <option>+60</option>
+   <div class="form-group">
+        <label><h2>What is your teaching course?</h2></label>
+        <select id="major">
+          <option value="">Select your course</option>
+          <option value="Computer Science">Computer Science</option>
+          <option value="Business">Business</option>
+          <option value="Design">Design</option>
+          <option value="Engineering">Engineering</option>
         </select>
-        <input type="tel" id="contact" placeholder="Contact Number">
-    </div>
+      </div>
+
+     <div class="form-group">
+        <label><h2>Contact Number?</h2></label>
+        <input type="text" id="contact_num" value="+60" />
+      </div>
+
+    <div class="form-group">
+        <label><h2>Upload Your Profile Photo</h2></label>
+        <input type="file" id="profile_image" accept="image/*" />
+        <div id="preview-container">
+          <img id="preview" src="" alt="Preview" style="display:none; max-width:120px; margin-top:10px;" />
+        </div>
+      </div>
 
     <button class="primary-btn" id="nextBtn">Next</button>
 </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script>
+    const email = sessionStorage.getItem('email');
 
-    document.getElementById('nextBtn').addEventListener('click', function() {
-      const fullName = document.getElementById('fullName').value;
-      const username = document.getElementById('username').value;
-      const course = document.getElementById('course').value;
-      const contact = document.getElementById('contact').value;
-      const code = document.querySelector('.country-code').value;
+    // Gender selection functionality
+    document.querySelectorAll('.gender-icon').forEach(img => {
+      img.addEventListener('click', () => {
+        document.querySelectorAll('.gender-icon').forEach(i => i.classList.remove('selected'));
+        document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
+        img.classList.add('selected');
+        img.previousElementSibling.checked = true;
+      });
+    });
 
+    // Image preview functionality
+    document.getElementById('profile_image').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('preview');
+      
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
 
-      if (!fullName || !username||!course || !contact) {
+    // Next button functionality
+    document.getElementById('nextBtn').addEventListener('click', function () {
+      const fullName = document.getElementById('fullName').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const major = document.getElementById('major').value;
+      const contact_num = document.getElementById('contact_num').value.trim();
+      const profileImageFile = document.getElementById('profile_image').files[0];
+         const email = sessionStorage.getItem("lecturer_email");
+          const genderInput = document.querySelector('input[name="gender"]:checked');
+       
+
+           const gender = genderInput.value;
+      
+      // Validation
+      if (!fullName || !username || !major || !contact_num ) {
         Toastify({
           text: "Please fill in all the fields before proceeding.",
           duration: 3000,
@@ -80,19 +130,35 @@
         return;
       }
 
-  
-      sessionStorage.setItem('registrationData', JSON.stringify({
-        fullName,
-        username,
-        course,
-        contact,
-        code
-      }));
+      if (!profileImageFile) {
+        Toastify({
+          text: "Please upload a profile image.",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          style: { background: "red" }
+        }).showToast();
+        return;
+      }
 
-      // Redirect to password page
-      window.location.href = "teacher-password.html";
+
+      // Convert image to base64 and store data
+      const reader = new FileReader();
+      reader.onload = function (e) {
+      const base64Image = e.target.result;
+
+        sessionStorage.setItem('registrationData', JSON.stringify({
+          name: fullName,
+          username,
+          major,
+          contact_num,
+          email,
+          profile_image: base64Image
+        }));
+        window.location.href = 'teacher-password.html';
+      }
+      reader.readAsDataURL(profileImageFile);
     });
-
   </script>
 </body>
 </html>

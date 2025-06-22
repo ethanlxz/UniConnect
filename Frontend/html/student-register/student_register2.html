@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/Frontend/styles/users.css">
     <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet">
-
+    
+<style>
+    body{
+        font-family:  'Outfit', sans-serif;
+    }
+</style>
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -38,7 +43,7 @@
         </div>
 
 <div class="form-group">
-  <button class="btn btn-primary" onclick="verifyOTP()">Verify</button>
+  <button class="btn-primary" onclick="verifyOTP()">Verify</button>
   <a href="#" id="resendLink" onclick="resendOTP()" style="margin-left: 1rem; pointer-events: none; color: gray;">Resend OTP (60s)</a>
 </div>
 
@@ -94,7 +99,7 @@
     async function resendOTP() {
         if (countdown > 0) return;
 
-        const email = localStorage.getItem('student_email');
+        const email = sessionStorage.getItem('student_email');
         const apiUrl = "http://127.0.0.1:8000/api/otp/resend";
         const payload = { email: email };
 
@@ -139,8 +144,8 @@
     const password = localStorage.getItem('student_password');
     const age = localStorage.getItem('student_age');
     const contact = localStorage.getItem('student_contact');
-
-    const email = sessionStorage.getItem("student_email");
+   const email = sessionStorage.getItem("student_email");
+ 
     console.log("Verifying OTP for:", email);
 
     const apiUrl = "http://127.0.0.1:8000/api/otp/verify";

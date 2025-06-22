@@ -2,43 +2,46 @@
 <html lang="en">
 
 <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Teacher Home - UniConnect</title>
-	<link rel="stylesheet" href="../../styles/teacher.css">
-	<link rel="stylesheet" href="../../styles/teacher_add_class.css">
-
-	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" />
+  <title>Student Home - UniConnect</title>
+  <link rel="stylesheet" href="/Frontend/styles/teacher_add_class.css" />
+  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
 </head>
 
 <body>
-	<!-- Sidebar -->
-	<div class="sidebar">
-		<div class="nav-item ">
-			<a href="teacher_class.html">
-				<img src="../../image/classes.png" alt="Classes Icon" />
-				<div>Classes</div>
-			</a>
+     <!-- Sidebar -->
+  <div class="sidebar">
+  <div class="nav-item active ">
+    <a href="teacher_class.html">
+      <img src="../../image/classes.png" alt="Classes Icon" />
+      <div>Classes</div>
+    </a>
+  </div>
 
-		</div>
-		<div class="nav-item">
-			<img src="../../image/profile.png" alt="Profile Icon" />
-			<div>Profile</div>
-		</div>
-	</div>
+    <div class="nav-item">
+      <a href="teacher_profile.html">
+      <img src="../../image/profile.png" alt="Profile Icon" />
+      <div>Profile</div>
+      </a>
+    </div>
+  </div>
 
-	<div class="main-content">
-		<nav class="main-nav">
-			<div class="nav-brand">
-				<h1>UniConnect.</h1>
-			</div>
-			<div class="nav-progress">
-				<div class="progress-step active">
-					<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
-				</div>
-			</div>
-		</nav>
+   
+
+    <div class="main-content">
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+        </div>
+      </div>
+    </nav>
 		<div class="content-wrapper">
 			<form id="add-class-form">
 				<div class="form-group">

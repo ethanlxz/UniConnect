@@ -19,6 +19,8 @@
     .gender-icon.selected {
       border: 2px solid blue;
     }
+  
+    
   </style>
 </head>
 <body>
@@ -48,19 +50,14 @@
       </div>
 
       <div class="form-group">
-        <h2>Your Birthday?</h2>
-        <input type="date" id="birthDate" />
-      </div>
-
-      <div class="form-group">
         <label><h2>Gender?</h2></label>
         <div class="gender-icons">
           <label>
-            <input type="radio" name="gender" value="male" hidden />
+            <input type="radio" name="gender" value="M" hidden />
             <img src="https://cdn-icons-png.flaticon.com/512/126/126486.png" alt="Male" class="gender-icon" />
           </label>
           <label>
-            <input type="radio" name="gender" value="female" hidden />
+            <input type="radio" name="gender" value="F" hidden />
             <img src="https://cdn-icons-png.flaticon.com/512/126/126485.png" alt="Female" class="gender-icon" />
           </label>
         </div>
@@ -82,32 +79,70 @@
         <input type="text" id="contact_num" value="+60" />
       </div>
 
+      <div class="form-group">
+         <label><h2>Instagram ID</h2></label>
+         <input type="url" id="instagram" placeholder="@yourhandle" />
+        </div>
+        
+      <div class="form-group">
+        <label><h2>Short Bio </h2></label>
+        <textarea id="bio" placeholder="Tell us a bit about yourself..." maxlength="200" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label><h2>Upload Your Profile Photo</h2></label>
+        <input type="file" id="profile_image" accept="image/*" />
+        <div id="preview-container">
+          <img id="preview" src="" alt="Preview" style="display:none; max-width:120px; margin-top:10px;" />
+        </div>
+      </div>
+
       <button class="primary-btn" id="nextBtn">Next</button>
     </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
   <script>
-    // Gender icon selection
+    const email = sessionStorage.getItem('email');
+
+    // Gender selection functionality
     document.querySelectorAll('.gender-icon').forEach(img => {
       img.addEventListener('click', () => {
-        document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
         document.querySelectorAll('.gender-icon').forEach(i => i.classList.remove('selected'));
-        img.previousElementSibling.checked = true;
+        document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
         img.classList.add('selected');
+        img.previousElementSibling.checked = true;
       });
     });
 
-    // Next button click
+    // Image preview functionality
+    document.getElementById('profile_image').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('preview');
+      
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Next button functionality
     document.getElementById('nextBtn').addEventListener('click', function () {
       const fullName = document.getElementById('name').value.trim();
       const username = document.getElementById('username').value.trim();
-      const birthDate = document.getElementById('birthDate').value;
       const course = document.getElementById('course').value;
       const contact = document.getElementById('contact_num').value.trim();
+      const instagram = document.getElementById('instagram').value.trim();
+      const bio = document.getElementById('bio').value.trim() || 'Bio loading… please wait.';
+      const profileImageFile = document.getElementById('profile_image').files[0];
       const genderInput = document.querySelector('input[name="gender"]:checked');
-
-      if (!fullName || !username ||  !birthDate || !course || !contact || !genderInput) {
+         const email = sessionStorage.getItem("student_email");
+      
+      // Validation
+      if (!fullName || !username || !course || !contact || !instagram || !bio || !genderInput) {
         Toastify({
           text: "Please fill in all the fields before proceeding.",
           duration: 3000,
@@ -118,18 +153,40 @@
         return;
       }
 
+      if (!profileImageFile) {
+        Toastify({
+          text: "Please upload a profile image.",
+          duration: 3000,
+          gravity: "top",
+          position: "center",
+          style: { background: "red" }
+        }).showToast();
+        return;
+      }
+
       const gender = genderInput.value;
 
-      sessionStorage.setItem('registrationData', JSON.stringify({
-        name: fullName,
-        username,
-        birthDate,
-        course,
-        contact_num: contact,
-        gender
-      }));
+      // Convert image to base64 and store data
+      const reader = new FileReader();
+      reader.onload = function (e) {
+      const base64Image = e.target.result;
 
-      window.location.href = "student-password.html";
+        sessionStorage.setItem('registrationData', JSON.stringify({
+          name: fullName,
+          username,
+          major: course,
+          contact_num: contact,
+          gender,
+          instagram_id: instagram,
+          bio,
+          email,
+          profile_image: base64Image
+        }));
+
+        // Navigate to password page (NOT login page)
+        window.location.href = "student-password.html";
+      };
+      reader.readAsDataURL(profileImageFile);
     });
   </script>
 </body>
