@@ -667,3 +667,46 @@ Success Response:
     "detail": "Leader changed to raelll successfully."
 }
 ```
+
+8. DefinalizeTemporaryGroup
+Endpoint: POST /grouping/definalTG/
+Payload:
+
+```json
+{
+  "username": "ethan",
+  "class_code": "HLHYCP",
+  "temp_group_id": 4
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Group definalized."
+}
+```
+
+9. ConvertToExistingGroup
+Endpoint: POST /grouping/convert-group/
+Description: Converts a finalized temporary group into an existing group by transferring all members and leader, then deletes the temporary group.
+
+Payload:
+
+```json
+{
+  "username": "student123",
+  "class_code": "CS101",
+  "temp_group_id": 1,
+  "target_group_id": 5
+}
+```
+
+Success Response:
+
+```json
+{
+  "detail": "Group converted successfully.",
+}
+```

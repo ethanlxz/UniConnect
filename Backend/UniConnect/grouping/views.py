@@ -7,6 +7,9 @@ from api.models import StudentProfile
 from django.db.models import Q
 from django.db.models import Count
 
+# for group conversion
+from django.db import transaction 
+
 # Create your views here.
 class SendGroupRequestAPIView(APIView):
     def post(self, request):
@@ -169,7 +172,7 @@ class ListGroupsAPIView(APIView):
         max_groups_allowed = class_instance.group
 
         # Finalized Groups
-        finalized_groups = Group.objects.filter(class_instance=class_instance, is_finalized=True).order_by('id')
+        finalized_groups = Group.objects.filter(class_instance=class_instance).order_by('group_id')
 
         # Delete all empty temporary groups
         TemporaryGroup.objects.filter(class_instance=class_instance, members__isnull=True).delete()
@@ -181,16 +184,20 @@ class ListGroupsAPIView(APIView):
 
         def serialize_finalized_group(group, index):
             members = list(group.members.all())
-            member_names = [m.name for m in members]
-            while len(member_names) < min_members:
-                member_names.append(None)
+            member_names = [f"{m.username} ({m.name})" if m.name else m.username for m in members]
+            leader_name = group.leader.username if group.leader else "No leader"
+    
             return {
-                'group_type': 'finalized',
-                'group_label': f"Finalized Group {index + 1}",
-                'id': group.id,
-                'members': member_names,
-                'member_count': len(members),
-                'is_finalized': True,
+            'group_type': 'finalized',
+            'group_label': f"Group {group.group_id}",
+            'group_id': group.group_id,  # Using the explicit group_id field
+            'class_code': group.class_instance.code if group.class_instance else None,
+            'members': member_names,
+            'member_count': group.current_member_count(),  # Using model method
+            'max_members': group.max_members,
+            'is_full': group.is_full,
+            'leader': leader_name,
+            'leader_id': group.leader.id if group.leader else None,
             }
 
         def serialize_temp_group(temp_group, index):
@@ -324,14 +331,39 @@ class FinalizeTemporaryGroupAPIView(APIView):
 
         if temp_group.current_member_count() < class_instance.min_group_members:
             return Response({'detail': 'Not enough members to finalize.'}, status=400)
-
-        final_group = Group.objects.create(class_instance=class_instance, is_finalized=True)
-        final_group.members.set(temp_group.members.all())
-
-        temp_group.delete()
+        
+        temp_group.is_finalized = True
+        temp_group.save()
 
         return Response({'detail': 'Group finalized.'}, status=200)
 
+class DefinalizeGroupAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        class_code = request.data.get('class_code')
+        temp_group_id = request.data.get('temp_group_id')
+
+        try:
+            student = StudentProfile.objects.get(username=username)
+            class_instance = Class.objects.get(code=class_code)
+            temp_group = TemporaryGroup.objects.get(
+                id=temp_group_id, 
+                class_instance=class_instance,
+                is_finalized=True 
+            )
+        except (StudentProfile.DoesNotExist, Class.DoesNotExist, TemporaryGroup.DoesNotExist):
+            return Response({'detail': 'Invalid input or group not found.'}, status=404)
+        # Check if user is the group leader
+        if temp_group.leader != student:
+            return Response({'detail': 'Only leader can definalize.'}, status=403)
+
+        temp_group.is_finalized = False
+        temp_group.save()
+
+        return Response({
+            'detail': 'Group definalized successfully.',
+        }, status=200)
+        
 class ChangeLeaderAPIView(APIView):
     def post(self, request):
         username = request.data.get('username')
@@ -360,3 +392,90 @@ class ChangeLeaderAPIView(APIView):
         temp_group.save()
 
         return Response({'detail': f'Leader changed to {new_leader.username} successfully.'}, status=200)
+    
+    from django.db import transaction
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework import status
+
+class ConvertToExistingGroupAPIView(APIView):
+    @transaction.atomic
+    def post(self, request):
+        # Get input data
+        username = request.data.get('username')
+        class_code = request.data.get('class_code')
+        temp_group_id = request.data.get('temp_group_id')
+        target_group_id = request.data.get('target_group_id')
+
+        # Validate required fields
+        if not all([username, class_code, temp_group_id, target_group_id]):
+            return Response({'detail': 'Missing required fields.'}, 
+                          status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Get all necessary objects
+            student = StudentProfile.objects.get(username=username)
+            class_instance = Class.objects.get(code=class_code)
+            temp_group = TemporaryGroup.objects.get(
+                id=temp_group_id,
+                class_instance=class_instance,
+                is_finalized=True
+            )
+            target_group = Group.objects.get(
+                group_id=target_group_id,
+                class_instance=class_instance
+            )
+        except (StudentProfile.DoesNotExist, Class.DoesNotExist, 
+               TemporaryGroup.DoesNotExist, Group.DoesNotExist):
+            return Response({'detail': 'Invalid input data.'}, 
+                          status=status.HTTP_404_NOT_FOUND)
+
+        # Authorization check
+        if temp_group.leader != student:
+            return Response({'detail': 'Only leader can perform this action.'}, 
+                          status=status.HTTP_403_FORBIDDEN)
+
+        # Business logic validation
+        temp_member_count = temp_group.current_member_count()
+        
+        if target_group.is_full:
+            return Response({'detail': 'Target group is already full.'},
+                          status=status.HTTP_400_BAD_REQUEST)
+            
+        if target_group.max_members != temp_member_count:
+            return Response(
+                {'detail': f'Target group requires {target_group.max_members} members, but temporary group has {temp_member_count}.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Check if target group has enough capacity
+        available_slots = target_group.max_members - target_group.current_member_count()
+        if available_slots < temp_member_count:
+            return Response(
+                {'detail': f'Target group only has {available_slots} available slots but needs {temp_member_count}.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Perform the conversion
+        try:
+            # Add all members from temp group to target group
+            target_group.members.add(*temp_group.members.all())
+            
+            # Set leader if not already set
+            if not target_group.leader:
+                target_group.leader = temp_group.leader
+                target_group.save()
+            
+            # Update is_full status
+            target_group.update_is_full()
+            
+            # Delete the temporary group
+            temp_group.delete()
+            
+            return Response({
+                'detail': 'Group converted successfully.',
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({'detail': f'Error during conversion: {str(e)}'},
+                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)

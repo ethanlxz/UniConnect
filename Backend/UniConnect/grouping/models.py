@@ -3,18 +3,24 @@ from api.models import StudentProfile
 from classing.models import Class
 
 # Create your models here.
+
 class Group(models.Model):
+    group_id = models.AutoField(primary_key=True)
     class_instance = models.ForeignKey(Class, on_delete=models.CASCADE, related_name='class_groups')
+    max_members = models.PositiveIntegerField(help_text="Exact number of members required in this group")
     members = models.ManyToManyField(StudentProfile, related_name='groups')
-    is_finalized = models.BooleanField(default=False)
+    leader = models.ForeignKey(StudentProfile, null=True, blank=True, on_delete=models.SET_NULL, related_name='led_groups')
+    is_full = models.BooleanField(default=False, editable=False)
 
     def current_member_count(self):
         return self.members.count()
 
-    def check_and_finalize(self):
-        if self.current_member_count() >= self.class_instance.min_group_members:
-            self.is_finalized = True
-            self.save()
+    def update_is_full(self):
+        self.is_full = (self.current_member_count() >= self.max_members)
+        self.save(update_fields=['is_full'])
+
+    def __str__(self):
+        return f"Group {self.group_id} (Class: {self.class_instance})"
 
 class GroupRequest(models.Model):
     sender = models.ForeignKey(StudentProfile, related_name='sent_requests', on_delete=models.CASCADE)
@@ -31,6 +37,7 @@ class TemporaryGroup(models.Model):
     class_instance = models.ForeignKey(Class, on_delete=models.CASCADE, related_name='temp_groups')
     members = models.ManyToManyField(StudentProfile, related_name='temp_groups', blank=True)
     leader = models.ForeignKey(StudentProfile, null=True, blank=True, on_delete=models.SET_NULL, related_name='led_temp_groups')
+    is_finalized = models.BooleanField(default=False, editable=False)
 
     def current_member_count(self):
         return self.members.count()

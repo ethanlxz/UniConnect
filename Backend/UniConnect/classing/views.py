@@ -8,6 +8,8 @@ from rest_framework import status
 from grouping.models import Group
 
 # Create your views here.
+
+
 class CreateClassAPIView(APIView):
     def post(self, request):
         serializer = ClassCreateSerializer(data=request.data)
@@ -21,7 +23,25 @@ class CreateClassAPIView(APIView):
             except LecturerProfile.DoesNotExist:
                 return Response({'detail': 'Lecturer not found.'}, status=404)
 
+            validated_data = serializer.validated_data
+            max_students = validated_data['max_students']
+            num_groups = validated_data['group']
+            min_members = validated_data['min_group_members']
+            
+            base_size = max_students // num_groups
+            remainder = max_students % num_groups
+            
             class_instance = serializer.save(lecturer=lecturer)
+            
+            for i in range(num_groups):
+                group_size = base_size + 1 if i < remainder else base_size
+                
+                final_size = max(group_size, min_members)
+                
+                Group.objects.create(
+                    class_instance=class_instance,
+                    max_members=final_size
+                )
 
             return Response({
                 "name": class_instance.name,
@@ -29,6 +49,7 @@ class CreateClassAPIView(APIView):
                 "max_students": class_instance.max_students,
                 "group": class_instance.group,
                 "min_group_members": class_instance.min_group_members,
+                "created_groups": num_groups
             }, status=201)
 
         return Response(serializer.errors, status=400)
