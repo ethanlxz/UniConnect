@@ -448,6 +448,58 @@ Success Response:
 }
 ```
 
+10. Student Detail in Class
+Endpoint: GET /classing/studentDetail/?class_code=aHvlFz
+
+Success Response:
+
+```json
+{
+    "students": [
+        {
+            "id": 1,
+            "username": "ysss",
+            "name": "ys",
+            "email": "ys@gmail.com",
+            "contact_num": "01234567",
+            "group_type": "temporary"
+        },
+        {
+            "id": 2,
+            "username": "ethan",
+            "name": "ethanlxz",
+            "email": "ethan@gmail.com",
+            "contact_num": "012378624",
+            "group_type": "temporary"
+        },
+        {
+            "id": 3,
+            "username": "xyyy",
+            "name": "xy",
+            "email": "xy@gmail.com",
+            "contact_num": "0127386283",
+            "group_type": "temporary"
+        },
+        {
+            "id": 4,
+            "username": "alexxx",
+            "name": "alex",
+            "email": "alex@gmail.com",
+            "contact_num": "0173827683",
+            "group_type": "temporary"
+        },
+        {
+            "id": 5,
+            "username": "adammm",
+            "name": "adam",
+            "email": "adam@gmail.com",
+            "contact_num": "017836382",
+            "group_type": "no group"
+        }
+    ]
+}
+```
+
 Grouping
 1. Send Request
 Endpoint: POST /grouping/send/
@@ -736,4 +788,60 @@ Success Response:
 {
     "detail": "adammm has been removed from the group."
 }
+```
+
+11. SendJoinRequest
+Endpoint: POST /grouping/sendJoinRequest/
+Payload:
+
+```json
+{
+  "sender_username": "xyyy",
+  "target_username": "ethan",
+  "class_code": "HLHYCP"
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Join request sent to leader ysss."
+}
+```
+
+11. RespondJoinRequest
+Endpoint: POST /grouping/respondJoinRequest/
+Payload:
+
+```json
+{
+  "request_id": 1,
+  "class_code": "izi897",
+  "leader_username": "ethan",
+  "action": true
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "Join request sent to leader ysss."
+}
+```
+
+12. Join Request List
+Endpoint: GET /grouping/joinRequests?leader_username=ysss&class_code=izi897
+Payload:
+
+Success Response:
+
+```json
+[
+    {
+        "request_id": 2,
+        "sender_username": "alexxx"
+    }
+]
 ```

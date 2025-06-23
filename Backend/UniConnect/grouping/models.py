@@ -47,3 +47,14 @@ class TemporaryGroup(models.Model):
 
     def __str__(self):
         return f"TempGroup {self.id} ({self.class_instance.code})"
+    
+class JoinGroupRequest(models.Model):
+    sender = models.ForeignKey(StudentProfile, related_name='join_sent_requests', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(StudentProfile, related_name='join_received_requests', on_delete=models.CASCADE) # Always leader
+    temp_group = models.ForeignKey(TemporaryGroup, on_delete=models.CASCADE, related_name='join_requests')
+
+    class Meta:
+        unique_together = ('sender', 'receiver')
+
+    def __str__(self):
+        return f"{self.sender.username} → Leader {self.receiver.username} (join TempGroup {self.temp_group.id})"

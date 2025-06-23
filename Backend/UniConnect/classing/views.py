@@ -271,3 +271,38 @@ class LeaveClassAPIView(APIView):
         class_instance.students.remove(student)
 
         return Response({'detail': 'Successfully left the class.'}, status=200)
+
+
+class ListClassStudentsAPIView(APIView):
+    def get(self, request):
+        class_code = request.query_params.get('class_code')
+        if not class_code:
+            return Response({'detail': 'class_code is required.'}, status=400)
+
+        try:
+            class_instance = Class.objects.get(code=class_code)
+        except Class.DoesNotExist:
+            return Response({'detail': 'Class not found.'}, status=404)
+
+        students = class_instance.students.all()
+        student_data = []
+
+        for student in students:
+            # Determine group type
+            if Group.objects.filter(class_instance=class_instance, members=student).exists():
+                group_type = 'finalized'
+            elif TemporaryGroup.objects.filter(class_instance=class_instance, members=student).exists():
+                group_type = 'temporary'
+            else:
+                group_type = 'no group'
+
+            student_data.append({
+                'id': student.id,
+                'username': student.username,
+                'name': student.name,
+                'email': student.email,
+                'contact_num': student.contact_num,
+                'group_type': group_type
+            })
+
+        return Response({'students': student_data}, status=200)
