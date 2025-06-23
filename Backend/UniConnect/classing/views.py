@@ -5,7 +5,7 @@ from .models import Class
 from .serializers import ClassCreateSerializer
 from api.models import LecturerProfile, StudentProfile
 from rest_framework import status
-from grouping.models import Group
+from grouping.models import Group, TemporaryGroup
 
 # Create your views here.
 
@@ -260,11 +260,13 @@ class LeaveClassAPIView(APIView):
         if student not in class_instance.students.all():
             return Response({'detail': 'Student is not enrolled in this class.'}, status=400)
         
-        try:
-            group = Group.objects.get(class_instance=class_instance, members=student)
-            group.members.remove(student)
-        except Group.DoesNotExist:
-            pass
+        # Check for membership in any TemporaryGroup
+        if TemporaryGroup.objects.filter(class_instance=class_instance, members=student).exists():
+            return Response({'detail': 'You are in a temporary group. Leave the group before leaving the class.'}, status=400)
+
+        # Check for membership in any Group (finalized or not)
+        if Group.objects.filter(class_instance=class_instance, members=student).exists():
+            return Response({'detail': 'You are in a group. Leave the group before leaving the class.'}, status=400)
 
         class_instance.students.remove(student)
 
