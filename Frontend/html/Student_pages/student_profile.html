@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Student Dashboard - UniConnect</title>
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+ <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <style>
     * {
       box-sizing: border-box;
@@ -20,71 +21,38 @@
       color: #222;
     }
 
-    .sidebar {
-      width: 100px;
-      background-color: #fff;
-      border-right: 1px solid #ddd;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px 0;
-    }
-
     .sidebar-brand {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin-bottom: 30px;
+      color:white;
     }
 
     .sidebar-brand img {
       width: 40px;
       height: 40px;
       margin-bottom: 6px;
+      color:white;
     }
 
     .sidebar-brand span {
       font-size: 14px;
       font-weight: bold;
-      color: #333;
-    }
-.sidebar {
-  width: 80px;
-  background-color: #fff;
-  border-right: 1px solid #ddd;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px 0;
-  justify-content: space-between; /* ✅ 关键：上部分 + 底部头像分离 */
-}
-
-    .sidebar-avatar {
-  margin-bottom: 10px;
-}
-
-.sidebar-avatar img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-    .nav-item {
-      text-align: center;
-      margin: 10px 0;
-      text-decoration: none;
+      color: #ffffff;
     }
 
-    .nav-item img {
-      width: 30px;
-      height: 30px;
-      margin-bottom: 4px;
-    }
+.nav-item img {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 4px;
+  filter: brightness(0) invert(1); /* 图标变白 */
+}
+
 
     .nav-item div {
       font-size: 12px;
-      color: #444;
+      color: #070707;
     }
 
     .main-content {
@@ -104,29 +72,6 @@
       font-size: 24px;
     }
 
-    .search-upgrade {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .search-upgrade input {
-      padding: 10px 16px;
-      border-radius: 20px;
-      border: none;
-      background-color: #fff;
-      width: 200px;
-    }
-
-    .search-upgrade button {
-      background-color: #000;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 20px;
-      border: none;
-      cursor: pointer;
-    }
-
     .dashboard-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -134,7 +79,7 @@
     }
 
     .card {
-      background-color: #fff;
+      background-color: #000000;
       border-radius: 20px;
       padding: 30px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.05);
@@ -161,37 +106,55 @@
     .profile-info h3 {
       font-size: 20px;
       margin-bottom: 8px;
+      color:black;
     }
 
     .profile-info p {
       margin-bottom: 4px;
-      color: #555;
+      color: #000000;
     }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
   <div class="sidebar">
-    <div class="sidebar-brand">
-      <img src="../../image/uniconnect.png" alt="UniConnect Logo" />
-      <span>UniConnect</span>
+      <div class="nav-item">
+        <a href="student_class.html">
+          <img src="../../image/classes.png" alt="Classes Icon" />
+                <div>Class</div>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="student_allgroups.html">
+          <img src="../../image/group icon.png" alt="Group Icon" />
+                <div>Group</div>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="student_profile.html">
+          <img src="../../image/userprofile.png" alt="Profile Icon" />
+                <div>Profile</div>
+        </a>  
+      </div>
     </div>
+  </div>
 
-    <a class="nav-item" href="student_class.html">
-      <img src="../../image/classes.png" alt="Classes Icon" />
-      <div>Classes</div>
-    </a>
 
-    <a class="nav-item" href="student_allgroups.html">
-      <img src="../../image/group icon.png" alt="Group Icon" />
-      <div>Group</div>
-    </a>
+
+    <nav class="main-nav">
+      <div class="nav-brand">
+        <h1>UniConnect</h1>
+      </div>
+      <div class="nav-progress">
+        <div class="progress-step active">
+          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+        </div>
+      </div>
+    </nav>
 
    
 
-    <div class="sidebar-avatar">
-    <img id="sidebarProfilePic" src="../../image/default-avatar.png" alt="My Avatar" />
-  </div>
+
 </div>
 
   <!-- Main Content -->
@@ -256,7 +219,7 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
       document.getElementById('studentMajor').innerText = data.major || "No major info.";
       document.getElementById('studentPhoto').src = data.photo;
-      document.getElementById('sidebarProfilePic').src = data.photo;
+   
 
 
       console.log(data.photo);
