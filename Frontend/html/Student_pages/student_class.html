@@ -7,211 +7,30 @@
   <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-    }
-
-    body {
-      display: flex;
-      min-height: 100vh;
-      background-color: #f3f1ee;
-      color: #222;
-    }
-
-    .sidebar {
-      width: 80px;
-      background-color: #c7c2c2;
-     
-      border-right: 1px solid #ddd;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px 0;
-      justify-content: space-between;
-      position: fixed;
-      left: 0;
-      top: 0;
-      bottom: 0;
-    }
-
-    .sidebar-brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .sidebar-brand img {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 6px;
-    }
-
-    .sidebar-brand span {
-      font-size: 14px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .nav-item {
-      text-align: center;
-      margin: 12px 0;
-    }
-
-    .nav-item a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .nav-item img {
-      width: 30px;
-      height: 30px;
-      transition: transform 0.2s;
-    }
-
-    .nav-item img:hover {
-      transform: scale(1.15);
-    }
-
-    .sidebar-avatar {
-      margin-bottom: 10px;
-    }
-
-    .sidebar-avatar img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #ccc;
-    }
-
-    .main-content {
-      flex-grow: 1;
-      padding: 40px 40px 40px 120px;
-      overflow-y: auto;
-      width: 100%;
-    }
-
-    .main-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 40px;
-    }
-
-    .main-nav h1 {
-      font-size: 24px;
-    }
-
-    .container h2 {
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
-
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-
-    .actions input {
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      flex: 1;
-      min-width: 160px;
-    }
-
-    .actions button, .actions a.join {
-      padding: 10px 14px;
-      background: #000;
-      color: #ffffff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    #classGrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .class-card {
-      display: flex;
-      flex-direction: column;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      padding: 20px;
-      background: #fff;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-      transition: transform 0.2s;
-    }
-
-    .class-card:hover {
-      transform: translateY(-4px);
-    }
-
-    .class-card .class-code {
-      font-size: 14px;
-      font-weight: 500;
-      color: #666;
-      margin-bottom: 8px;
-    }
-
-    .class-card .class-name {
-      font-size: 18px;
-      font-weight: bold;
-      margin-bottom: 12px;
-      color: #000;
-      word-wrap: break-word;
-    }
-
-    .class-card button {
-      padding: 6px 10px;
-      font-size: 14px;
-      background: #333;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      align-self: flex-start;
-    }
-  </style>
+  
 </head>
 <body>
   <div class="sidebar">
-    <div>
-      <div class="sidebar-brand">
-        <img src="../../image/uniconnect.png" alt="UniConnect Logo" />
-    
-      </div>
       <div class="nav-item">
         <a href="student_class.html">
           <img src="../../image/classes.png" alt="Classes Icon" />
+                <div>Class</div>
         </a>
       </div>
       <div class="nav-item">
         <a href="student_allgroups.html">
           <img src="../../image/group icon.png" alt="Group Icon" />
+                <div>Group</div>
         </a>
       </div>
       <div class="nav-item">
         <a href="student_profile.html">
           <img src="../../image/userprofile.png" alt="Profile Icon" />
-        </a>
+                <div>Profile</div>
+        </a>  
       </div>
     </div>
+  </div>
  
   </div>
 
