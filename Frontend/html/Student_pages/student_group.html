@@ -606,9 +606,10 @@
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      username: username,
-      class_code: classId,
-      temp_group_id:  temp_group_id  
+        username: username,
+        class_code: classId,
+        temp_group_id: temp_group_id,
+      
     })
   })
   .then(res => res.json())
@@ -631,7 +632,7 @@
         body: JSON.stringify({
           username: username,
           class_code: classId,
-          temp_group_id: tempGroupId
+          temp_group_id: tempGroupId,
         })
       })
         .then(res => res.json())
@@ -652,14 +653,14 @@
         return;
       }
 
-      fetch("http://127.0.0.1:8000/grouping/convert-group/", {
+      fetch("http://127.0.0.1:8000/grouping/api/convert-to-group/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          username: username,
-          class_code: classId,
-          temp_group_id: tempGroupId,
-          target_group_id: parseInt(targetGroupId)
+            username: username,
+            class_code: classId,
+            temp_group_id: tempGroupId,
+            target_group_id: parseInt(targetGroupId)
         })
       })
         .then(res => res.json())
