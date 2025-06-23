@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import CreateClassAPIView, JoinClassAPIView, EditClassAPIView, DeleteClassAPIView, RemoveStudentAPIView, LecturerClassListAPIView, StudentClassListAPIView, ClassDetailAPIView, LeaveClassAPIView
+from .views import (CreateClassAPIView, JoinClassAPIView, EditClassAPIView, DeleteClassAPIView, RemoveStudentAPIView, 
+                    LecturerClassListAPIView, StudentClassListAPIView, ClassDetailAPIView, LeaveClassAPIView)
 
 urlpatterns = [
     path('create/', CreateClassAPIView.as_view(), name='create_class'),

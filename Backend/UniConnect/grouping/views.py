@@ -38,8 +38,8 @@ class SendGroupRequestAPIView(APIView):
             return Response({'detail': 'Sender or receiver not enrolled in this class.'}, status=400)
 
         # Check if already in same group (any group, not just finalized)
-        sender_groups = Group.objects.filter(class_instance=class_instance, members=sender)
-        receiver_groups = Group.objects.filter(class_instance=class_instance, members=receiver)
+        sender_groups = TemporaryGroup.objects.filter(class_instance=class_instance, members=sender)
+        receiver_groups = TemporaryGroup.objects.filter(class_instance=class_instance, members=receiver)
 
         if sender_groups.filter(id__in=receiver_groups.values_list('id', flat=True)).exists():
             return Response({'detail': 'Sender and receiver are already in the same group.'}, status=400)
@@ -95,7 +95,7 @@ class RespondToGroupRequestAPIView(APIView):
             group_request.delete()
             return Response({'detail': 'Request declined.'})
 
-        if Group.objects.filter(class_instance=class_instance, members=receiver, is_finalized=True).exists():
+        if Group.objects.filter(class_instance=class_instance, members=receiver).exists():
             return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
 
         temp_group = TemporaryGroup.objects.filter(class_instance=class_instance, members=sender).first()
@@ -239,22 +239,40 @@ class MyGroupsAPIView(APIView):
         except StudentProfile.DoesNotExist:
             return Response({'detail': 'Student not found.'}, status=404)
 
-        groups = Group.objects.filter(members=student)
-
         group_data = []
-        for group in groups:
+
+        # Finalized groups
+        finalized_groups = Group.objects.filter(members=student)
+        for group in finalized_groups:
             class_instance = group.class_instance
             member_names = list(group.members.values_list('name', flat=True))
 
             group_data.append({
-                'group_id': group.id,
+                'group_id': group.group_id,
                 'class_code': class_instance.code,
                 'class_name': class_instance.name,
                 'members': member_names,
-                'is_finalized': group.is_finalized,
+                'leader': group.leader.username if group.leader else None,
+                'group_type': 'finalized',
+            })
+
+        # Temporary groups
+        temp_groups = TemporaryGroup.objects.filter(members=student)
+        for temp_group in temp_groups:
+            class_instance = temp_group.class_instance
+            member_names = list(temp_group.members.values_list('name', flat=True))
+
+            group_data.append({
+                'group_id': temp_group.id,
+                'class_code': class_instance.code,
+                'class_name': class_instance.name,
+                'members': member_names,
+                'leader': temp_group.leader.username if temp_group.leader else None,
+                'group_type': 'temporary',
             })
 
         return Response({'groups': group_data}, status=200)
+
     
 class LeaveGroupAPIView(APIView):
     def post(self, request):
@@ -479,3 +497,42 @@ class ConvertToExistingGroupAPIView(APIView):
         except Exception as e:
             return Response({'detail': f'Error during conversion: {str(e)}'},
                           status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class RemoveMemberFromTempGroupAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')  # The current leader
+        member_to_remove = request.data.get('member_username')
+        class_code = request.data.get('class_code')
+        temp_group_id = request.data.get('temp_group_id')
+
+        if not all([username, member_to_remove, class_code, temp_group_id]):
+            return Response({'detail': 'username, member_username, class_code, and temp_group_id are required.'}, status=400)
+
+        try:
+            leader = StudentProfile.objects.get(username=username)
+            member = StudentProfile.objects.get(username=member_to_remove)
+            class_instance = Class.objects.get(code=class_code)
+            temp_group = TemporaryGroup.objects.get(id=temp_group_id, class_instance=class_instance)
+        except (StudentProfile.DoesNotExist, Class.DoesNotExist, TemporaryGroup.DoesNotExist):
+            return Response({'detail': 'Invalid user, class, or group.'}, status=404)
+
+        if temp_group.leader != leader:
+            return Response({'detail': 'Only the group leader can remove members.'}, status=403)
+
+        if member == leader:
+            return Response({'detail': 'Leader cannot remove themselves.'}, status=400)
+
+        if member not in temp_group.members.all():
+            return Response({'detail': 'Member is not in this group.'}, status=400)
+
+        temp_group.members.remove(member)
+
+        # If only 1 member remains, delete the group
+        if temp_group.current_member_count() <= 1:
+            temp_group.delete()
+            return Response({'detail': 'Member removed. Group deleted because only 1 member remained.'}, status=200)
+
+        temp_group.save()
+
+        return Response({'detail': f'{member.username} has been removed from the group.'}, status=200)

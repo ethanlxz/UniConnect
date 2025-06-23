@@ -242,7 +242,8 @@ Success Response:
     "code": "ClassCode1",
     "max_students": 60,
     "group": 10,
-    "min_group_members": 6
+    "min_group_members": 6,
+    "created_groups": 10
 }
 ```
 
@@ -582,25 +583,30 @@ Success Response:
 {
     "groups": [
         {
-            "group_id": 1,
-            "class_code": "IAcCYV",
-            "class_name": "Math",
+            "group_id": 6,
+            "class_code": "mvd7Vk",
+            "class_name": "FYP",
             "members": [
-                "ethan",
-                "ys"
+                "ys",
+                "ethanlxz",
+                "xy",
+                "alex"
             ],
-            "is_finalized": false
+            "leader": "ysss",
+            "group_type": "finalized"
         },
         {
-            "group_id": 4,
-            "class_code": "nMAU8t",
+            "group_id": 1,
+            "class_code": "DTcXDr",
             "class_name": "AI",
             "members": [
-                "ethan",
                 "ys",
-                "sam"
+                "ethanlxz",
+                "xy",
+                "alex"
             ],
-            "is_finalized": true
+            "leader": "ysss",
+            "group_type": "temporary"
         }
     ]
 }
@@ -689,7 +695,7 @@ Success Response:
 ```
 
 9. ConvertToExistingGroup
-Endpoint: POST /grouping/convert-group/
+Endpoint: POST /grouping/api/convert-to-group/
 Description: Converts a finalized temporary group into an existing group by transferring all members and leader, then deletes the temporary group.
 
 Payload:
@@ -708,5 +714,26 @@ Success Response:
 ```json
 {
   "detail": "Group converted successfully.",
+}
+```
+
+10. Remove Member from Temporary Group
+Endpoint: POST /grouping/removeMember/
+Payload:
+
+```json
+{
+  "username": "ethan",
+  "member_username": "adammm",
+  "class_code": "HLHYCP",
+  "temp_group_id": 4
+}
+```
+
+Success Response:
+
+```json
+{
+    "detail": "adammm has been removed from the group."
 }
 ```
