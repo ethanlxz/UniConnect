@@ -142,7 +142,7 @@
          const email = sessionStorage.getItem("student_email");
       
       // Validation
-      if (!fullName || !username || !course || !contact || !instagram || !bio || !genderInput) {
+      if (!fullName || !username || !course || !contact || !genderInput) {
         Toastify({
           text: "Please fill in all the fields before proceeding.",
           duration: 3000,
@@ -153,41 +153,38 @@
         return;
       }
 
-      if (!profileImageFile) {
-        Toastify({
-          text: "Please upload a profile image.",
-          duration: 3000,
-          gravity: "top",
-          position: "center",
-          style: { background: "red" }
-        }).showToast();
-        return;
-      }
+    
 
       const gender = genderInput.value;
 
-      // Convert image to base64 and store data
-      const reader = new FileReader();
-      reader.onload = function (e) {
-      const base64Image = e.target.result;
+   
 
-        sessionStorage.setItem('registrationData', JSON.stringify({
-          name: fullName,
-          username,
-          major: course,
-          contact_num: contact,
-          gender,
-          instagram_id: instagram,
-          bio,
-          email,
-          profile_image: base64Image
-        }));
+        const saveDataAndRedirect = (base64Image) => {
+  sessionStorage.setItem('registrationData', JSON.stringify({
+    name: fullName,
+    username,
+    major: course,
+    contact_num: contact,
+    gender,
+    instagram_id: instagram,
+    bio,
+    email,
+    profile_image: base64Image || null // 空图时设为 null
+  }));
 
         // Navigate to password page (NOT login page)
         window.location.href = "student-password.html";
       };
-      reader.readAsDataURL(profileImageFile);
-    });
+     if (profileImageFile) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    const base64Image = e.target.result;
+    saveDataAndRedirect(base64Image);
+  };
+  reader.readAsDataURL(profileImageFile);
+} else {
+  saveDataAndRedirect(null);  // 没上传图也继续
+};},)
   </script>
 </body>
 </html>
