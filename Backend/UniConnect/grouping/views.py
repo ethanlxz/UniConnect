@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Group, GroupRequest, TemporaryGroup
+from .models import Group, GroupRequest, TemporaryGroup, JoinGroupRequest
 from classing.models import Class
 from api.models import StudentProfile
 from django.db.models import Q
@@ -536,3 +536,133 @@ class RemoveMemberFromTempGroupAPIView(APIView):
         temp_group.save()
 
         return Response({'detail': f'{member.username} has been removed from the group.'}, status=200)
+
+
+class SendJoinGroupRequestAPIView(APIView):
+    def post(self, request):
+        sender_username = request.data.get('sender_username')
+        target_username = request.data.get('target_username')  # Could be any member
+        class_code = request.data.get('class_code')
+
+        if not all([sender_username, target_username, class_code]):
+            return Response({'detail': 'sender_username, target_username, and class_code are required.'}, status=400)
+
+        try:
+            class_instance = Class.objects.get(code=class_code)
+            sender = StudentProfile.objects.get(username=sender_username)
+            target = StudentProfile.objects.get(username=target_username)
+        except (Class.DoesNotExist, StudentProfile.DoesNotExist):
+            return Response({'detail': 'Invalid class or user.'}, status=404)
+
+        if sender == target:
+            return Response({'detail': 'Sender and target cannot be the same.'}, status=400)
+
+        if sender not in class_instance.students.all() or target not in class_instance.students.all():
+            return Response({'detail': 'Users are not in the class.'}, status=400)
+
+        # Get temp group of the target member
+        temp_group = TemporaryGroup.objects.filter(class_instance=class_instance, members=target, is_finalized=False).first()
+        if not temp_group:
+            return Response({'detail': 'Target user is not in a temporary group.'}, status=400)
+
+        # Get the actual group leader
+        leader = temp_group.leader
+        if not leader:
+            return Response({'detail': 'This group has no assigned leader.'}, status=400)
+
+        if sender == leader:
+            return Response({'detail': 'You cannot send a join request to your own group.'}, status=400)
+
+        if TemporaryGroup.objects.filter(class_instance=class_instance, members=sender).exists():
+            return Response({'detail': 'Sender is already in a temporary group.'}, status=400)
+
+        if JoinGroupRequest.objects.filter(sender=sender, receiver=leader).exists():
+            return Response({'detail': 'Join request already sent to this group.'}, status=400)
+
+        JoinGroupRequest.objects.create(sender=sender, receiver=leader, temp_group=temp_group)
+        return Response({'detail': f'Join request sent to leader {leader.username}.'}, status=201)
+
+
+class RespondToJoinGroupRequestAPIView(APIView):
+    def post(self, request):
+        request_id = request.data.get('request_id')
+        class_code = request.data.get('class_code')
+        leader_username = request.data.get('leader_username')
+        action = request.data.get('action')  #true = accept, false = decline
+
+        if not all([request_id, class_code, leader_username]) or not isinstance(action, bool):
+            return Response({'detail': 'request_id, class_code, leader_username, and a boolean action are required.'}, status=400)
+
+        try:
+            join_request = JoinGroupRequest.objects.get(id=request_id)
+        except JoinGroupRequest.DoesNotExist:
+            return Response({'detail': 'Join request not found.'}, status=404)
+
+        if join_request.receiver.username != leader_username:
+            return Response({'detail': 'You are not authorized to respond to this request.'}, status=403)
+
+        try:
+            class_instance = Class.objects.get(code=class_code)
+        except Class.DoesNotExist:
+            return Response({'detail': 'Class not found.'}, status=404)
+
+        temp_group = join_request.temp_group
+        sender = join_request.sender
+
+        # Ensure the temp_group belongs to the given class
+        if temp_group.class_instance != class_instance:
+            return Response({'detail': 'This join request does not belong to the specified class.'}, status=400)
+
+        if action is False:
+            join_request.delete()
+            return Response({'detail': 'Join request declined.'}, status=200)
+
+        # Check if sender already in a group
+        if TemporaryGroup.objects.filter(class_instance=class_instance, members=sender).exists():
+            join_request.delete()
+            return Response({'detail': 'Sender is already in another group.'}, status=400)
+
+        # Add sender to the group
+        temp_group.members.add(sender)
+        temp_group.save()
+
+        # Delete the join request
+        join_request.delete()
+
+        return Response({'detail': f'{sender.username} has been added to the group.'}, status=200)
+
+    
+class GetJoinRequestsAPIView(APIView):
+    def get(self, request):
+        leader_username = request.query_params.get('leader_username')
+        class_code = request.query_params.get('class_code')
+
+        if not leader_username or not class_code:
+            return Response({'detail': 'leader_username and class_code are required.'}, status=400)
+
+        try:
+            leader = StudentProfile.objects.get(username=leader_username)
+        except StudentProfile.DoesNotExist:
+            return Response({'detail': 'Leader not found.'}, status=404)
+
+        try:
+            class_instance = Class.objects.get(code=class_code)
+        except Class.DoesNotExist:
+            return Response({'detail': 'Class not found.'}, status=404)
+
+        # Get the leader’s temp group for that class
+        temp_group = TemporaryGroup.objects.filter(class_instance=class_instance, leader=leader).first()
+        if not temp_group:
+            return Response({'detail': 'No group found for this leader in this class.'}, status=404)
+
+        join_requests = JoinGroupRequest.objects.filter(receiver=leader, temp_group=temp_group)
+
+        data = [
+            {
+                'request_id': req.id,
+                'sender_username': req.sender.username
+            }
+            for req in join_requests
+        ]
+
+        return Response(data)

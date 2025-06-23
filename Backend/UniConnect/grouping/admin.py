@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Group, GroupRequest, TemporaryGroup
+from .models import Group, GroupRequest, TemporaryGroup, JoinGroupRequest
 
 # Register your models here.
 
@@ -33,6 +33,13 @@ class TemporaryGroupAdmin(admin.ModelAdmin):
         return ", ".join([m.username for m in obj.members.all()])
     get_members.short_description = 'Members'
 
+
+class JoinGroupRequestAdmin(admin.ModelAdmin):
+    list_display = ('id', 'sender', 'receiver', 'temp_group')
+    search_fields = ('sender__username', 'receiver__username', 'temp_group__class_instance__code')
+    list_filter = ('temp_group__class_instance',)
+
 admin.site.register(Group, GroupAdmin)
 admin.site.register(GroupRequest, GroupRequestAdmin)
 admin.site.register(TemporaryGroup, TemporaryGroupAdmin)
+admin.site.register(JoinGroupRequest, JoinGroupRequestAdmin)
