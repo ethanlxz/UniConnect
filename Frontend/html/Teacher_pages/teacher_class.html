@@ -1,127 +1,153 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Teacher Home - UniConnect</title>
-  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
-  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
- 
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>UniConnect</title>
+	<link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+
 </head>
+
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-  <div class="nav-item ">
-    <a href="teacher_class.html">
-      <img src="../../image/classes.png" alt="Classes Icon" />
-      <div>Classes</div>
-    </a>
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<div class="nav-item ">
+			<a href="teacher_class.html">
+				<img src="../../image/classes.png" alt="Classes Icon" />
+				<div>Classes</div>
+			</a>
 
-    </div>
-    <div class="nav-item">
-      <a href="teacher_profile.html">
-      <img src="../../image/profile.png" alt="Profile Icon" />
-      <div>Profile</div>
-    </a>
-    </div>
-  </div>
+		</div>
+		<div class="nav-item">
+			<a href="teacher_profile.html">
+				<img src="../../image/profile.png" alt="Profile Icon" />
+				<div>Profile</div>
+			</a>
+		</div>
+	</div>
 
-  <div class="main-content">
-    <nav class="main-nav">
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
-        </div>
-      </div>
-    </nav>
-    <div class="container">
-      <h2>My Classes</h2>
-      <div class="actions">
-        <input type="text" id="search-input" placeholder="Search for a class" />
-        <button id="search-button">Search</button>
-        <button class="sort" onclick="sortCourses()">Sort by course name</button>
-        <a href="teacher_add_class.html" class="create-btn">Create class</a>
+	<div class="main-content">
+		<nav class="main-nav">
+			<div class="nav-brand">
+				<h1>UniConnect.</h1>
+			</div>
+			<div class="nav-progress">
+				<div class="progress-step active">
+					<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+				</div>
+			</div>
+		</nav>
 
-        <div id="classGrid"></div>
-      </div>
+	 
+		<div class="container">
+			<h2>My Classes</h2>
+			<div class="actions">
+				<input type="text" id="search-input" placeholder="Search for a class" />
+				<button id="search-button">Search</button>
+				<button class="sort" onclick="sortCourses()">Sort by course name</button>
+				<a href="teacher_add_class.html" class="create-btn">Create class</a>
 
-  <script>
+				<div id="classGrid"></div>
+			</div>
+		</div>	
 
-    const username = localStorage.getItem("username");
-    const classGrid = document.getElementById("classGrid");
+			<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+			<script>
+				window.addEventListener('DOMContentLoaded', () => {
+					const message = localStorage.getItem("toastMessage");
+					const type = localStorage.getItem("toastType");
+
+					if (message && type) {
+						Toastify({
+							text: message,
+							duration: 3000,
+							gravity: "top",
+							position: "right",
+							backgroundColor: type === 'success' ? '#4caf50' : '#f44336',
+							stopOnFocus: true
+						}).showToast();
+
+						// Clear the message so it doesn’t show again
+						localStorage.removeItem("toastMessage");
+						localStorage.removeItem("toastType");
+					}
+				});
+
+				const username = localStorage.getItem("username");
+				const classGrid = document.getElementById("classGrid");
 
 
-    document.getElementById("search-input").addEventListener("input", function () {
-      const searchTerm = this.value.toLowerCase();
-      const cards = document.querySelectorAll(".class-card");
-      cards.forEach((card) => {
-        const title = card.querySelector(".class-name").innerText.toLowerCase();
-        card.style.display = title.includes(searchTerm) ? "flex" : "none";
-      });
-    });
+				document.getElementById("search-input").addEventListener("input", function () {
+					const searchTerm = this.value.toLowerCase();
+					const cards = document.querySelectorAll(".class-card");
+					cards.forEach((card) => {
+						const title = card.querySelector(".class-name").innerText.toLowerCase();
+						card.style.display = title.includes(searchTerm) ? "flex" : "none";
+					});
+				});
 
 
-    function sortCourses() {
-      const cards = Array.from(classGrid.children);
-      cards.sort((a, b) => {
-        const nameA = a.querySelector(".class-name").innerText.toUpperCase();
-        const nameB = b.querySelector(".class-name").innerText.toUpperCase();
-        return nameA.localeCompare(nameB);
-      });
-      classGrid.innerHTML = "";
-      cards.forEach((card) => classGrid.appendChild(card));
-    }
+				function sortCourses() {
+					const cards = Array.from(classGrid.children);
+					cards.sort((a, b) => {
+						const nameA = a.querySelector(".class-name").innerText.toUpperCase();
+						const nameB = b.querySelector(".class-name").innerText.toUpperCase();
+						return nameA.localeCompare(nameB);
+					});
+					classGrid.innerHTML = "";
+					cards.forEach((card) => classGrid.appendChild(card));
+				}
 
 
 
-    function loadClasses() {
-  fetch("http://127.0.0.1:8000/classing/lecturer/classes/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({username:username }), })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      classGrid.innerHTML = ""; 
+				function loadClasses() {
+					fetch("http://127.0.0.1:8000/classing/lecturer/classes/", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ username: username }),
+					})
+						.then((response) => {
+							if (!response.ok) {
+								throw new Error(`HTTP error! status: ${response.status}`);
+							}
+							return response.json();
+						})
+						.then((data) => {
+							classGrid.innerHTML = "";
 
-      if (!Array.isArray(data)) {
-        console.error("Expected array but got:", data);
-        return;
-      }
+							if (!Array.isArray(data)) {
+								console.error("Expected array but got:", data);
+								return;
+							}
 
-      data.forEach((cls) => {
-        const card = document.createElement("div");
-        card.className = "class-card";
-        card.style.display = "flex";
-          card.addEventListener("click", function () {
-          window.location.href =`../Teacher_pages/teacher_class_member.html?username=${username}&class_id=${cls.id}`;
-        });
-        card.innerHTML = `
+							data.forEach((cls) => {
+								const card = document.createElement("div");
+								card.className = "class-card";
+								card.style.display = "flex";
+								card.addEventListener("click", function () {
+									window.location.href = `../Teacher_pages/teacher_class_member.html?username=${username}&class_id=${cls.id}`;
+								});
+								card.innerHTML = `
           <div class="class-code">${cls.code || "No Code"}</div>
           <div class="class-name">${cls.name}</div>
           <button onclick="window.location.href='/groups/${cls.id}'">Groups</button>
         `;
-        classGrid.appendChild(card);
-      });
-    })
-    .catch((error) => {
-      console.error("Failed to load classes:", error);
-    });
-}
+								classGrid.appendChild(card);
+							});
+						})
+						.catch((error) => {
+							console.error("Failed to load classes:", error);
+						});
+				}
 
-loadClasses();
+				loadClasses();
 
-  </script>
+			</script>
 </body>
 
 </html>
