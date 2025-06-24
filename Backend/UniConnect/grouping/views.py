@@ -44,11 +44,17 @@ class SendGroupRequestAPIView(APIView):
         if sender_groups.filter(id__in=receiver_groups.values_list('id', flat=True)).exists():
             return Response({'detail': 'Sender and receiver are already in the same group.'}, status=400)
 
-        # Check if sender or receiver is already in a finalized group
+        # Check if sender or receiver is already in a finalized TemporaryGroup
         if sender_groups.filter(is_finalized=True).exists():
             return Response({'detail': 'Sender is already in a finalized group for this class.'}, status=400)
         if receiver_groups.filter(is_finalized=True).exists():
             return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
+        
+        # Check if sender or receiver is already in a finalized Group (permanent group)
+        if Group.objects.filter(class_instance=class_instance, members=sender).exists():
+            return Response({'detail': 'Sender is already in a fixed group for this class.'}, status=400)
+        if Group.objects.filter(class_instance=class_instance, members=receiver).exists():
+            return Response({'detail': 'Receiver is already in a fixed group for this class.'}, status=400)
 
         #Check for existing request in either direction
         existing_request = GroupRequest.objects.filter(
@@ -95,8 +101,14 @@ class RespondToGroupRequestAPIView(APIView):
             group_request.delete()
             return Response({'detail': 'Request declined.'})
 
+        if Group.objects.filter(class_instance=class_instance, members=sender).exists():
+            return Response({'detail': 'Sender is already in a fixed group for this class.'}, status=400)
         if Group.objects.filter(class_instance=class_instance, members=receiver).exists():
-            return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
+            return Response({'detail': 'Receiver is already in a fixed group for this class.'}, status=400)
+        if TemporaryGroup.objects.filter(class_instance=class_instance, members=sender, is_finalized=True).exists():
+            return Response({'detail': 'Sender is already in a finalized group.'}, status=400)
+        if TemporaryGroup.objects.filter(class_instance=class_instance, members=receiver, is_finalized=True).exists():
+            return Response({'detail': 'Receiver is already in a finalized group.'}, status=400)
 
         temp_group = TemporaryGroup.objects.filter(class_instance=class_instance, members=sender).first()
 
@@ -575,6 +587,10 @@ class SendJoinGroupRequestAPIView(APIView):
 
         if TemporaryGroup.objects.filter(class_instance=class_instance, members=sender).exists():
             return Response({'detail': 'Sender is already in a temporary group.'}, status=400)
+        
+        # Check if sender is in a fixed group
+        if Group.objects.filter(class_instance=class_instance, members=sender).exists():
+            return Response({'detail': 'Sender is already in a fixed group.'}, status=400)
 
         if JoinGroupRequest.objects.filter(sender=sender, receiver=leader).exists():
             return Response({'detail': 'Join request already sent to this group.'}, status=400)
