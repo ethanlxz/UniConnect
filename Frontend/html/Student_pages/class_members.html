@@ -1,286 +1,298 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Teacher Home - UniConnect</title>
-  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
-  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-    }
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Teacher Home - UniConnect</title>
+	<link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Outfit', sans-serif;
+		}
 
 
 
-    .sidebar-brand span {
-      font-size: 12px;
-      font-weight: bold;
-      color: #333;
-    }
+		.sidebar-brand span {
+			font-size: 12px;
+			font-weight: bold;
+			color: #333;
+		}
 
-    .nav-item {
-      text-align: center;
-      margin: 16px 0;
-    }
+		.nav-item {
+			text-align: center;
+			margin: 16px 0;
+		}
 
-    .nav-item a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-    }
+		.nav-item a {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-decoration: none;
+			color: inherit;
+		}
 
-    .nav-item img {
-      width: 32px;
-      height: 32px;
-      transition: transform 0.3s ease;
-    }
+		.nav-item img {
+			width: 32px;
+			height: 32px;
+			transition: transform 0.3s ease;
+		}
 
-    .nav-item img:hover {
-      transform: scale(1.2);
-    }
+		.nav-item img:hover {
+			transform: scale(1.2);
+		}
 
- 
-    .main-content {
-      flex-grow: 1;
-      padding: 40px 40px 40px 120px;
-      overflow-y: auto;
-      width: 100%;
-    }
 
-    .main-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
+		.main-content {
+			flex-grow: 1;
+			padding: 40px 40px 40px 120px;
+			overflow-y: auto;
+			width: 100%;
+		}
 
-    .main-nav h1 {
-      font-size: 26px;
-      color: #333;
-    }
+		.main-nav {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 30px;
+		}
 
-    .nav-progress {
-      display: flex;
-      gap: 12px;
-    }
+		.main-nav h1 {
+			font-size: 26px;
+			color: #333;
+		}
 
-    .progress-step {
-      width: 40px;
-      height: 40px;
-      background-color: #0077ff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+		.nav-progress {
+			display: flex;
+			gap: 12px;
+		}
 
-    .progress-step img {
-      width: 20px;
-      height: 20px;
-    }
+		.progress-step {
+			width: 40px;
+			height: 40px;
+			background-color: #0077ff;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		}
 
-    .container h2 {
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
+		.progress-step img {
+			width: 20px;
+			height: 20px;
+		}
 
-    .group-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
+		.container h2 {
+			font-size: 22px;
+			margin-bottom: 20px;
+		}
 
-    .group-card {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
+		.group-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+			gap: 20px;
+			margin-top: 20px;
+		}
 
-    .group-card h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
+		.group-card {
+			background: #fff;
+			border: 1px solid #ccc;
+			border-radius: 12px;
+			padding: 20px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+		}
 
-    .group-card p {
-      font-size: 14px;
-      color: #555;
-    }
-  </style>
+		.group-card h3 {
+			font-size: 18px;
+			margin-bottom: 10px;
+		}
+
+		.group-card p {
+			font-size: 14px;
+			color: #555;
+		}
+	</style>
 </head>
+
 <body>
-  <div class="sidebar">
-      <div class="nav-item">
-        <a href="student_class.html">
-          <img src="../../image/classes.png" alt="Classes Icon" />
-                <div>Class</div>
-        </a>
-      </div>
-      <div class="nav-item">
-        <a href="student_allgroups.html">
-          <img src="../../image/group icon.png" alt="Group Icon" />
-                <div>Group</div>
-        </a>
-      </div>
-      <div class="nav-item">
-        <a href="student_profile.html">
-          <img src="../../image/userprofile.png" alt="Profile Icon" />
-                <div>Profile</div>
-        </a>  
-      </div>
-    </div>
-  </div>
- 
-  </div>
+	<div class="sidebar">
+		<div class="nav-item">
+			<a href="student_class.html">
+				<img src="../../image/classes.png" alt="Classes Icon" />
+				<div>Class</div>
+			</a>
+		</div>
+		<div class="nav-item">
+			<a href="student_allgroups.html">
+				<img src="../../image/group icon.png" alt="Group Icon" />
+				<div>Group</div>
+			</a>
+		</div>
+		<div class="nav-item">
+			<a href="student_profile.html">
+				<img src="../../image/userprofile.png" alt="Profile Icon" />
+				<div>Profile</div>
+			</a>
+		</div>
+	</div>
+	</div>
+
+	</div>
 
 
 
-      <div class="main-content">
-    <nav class="main-nav"> 
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
-        </div>
-      </div>
-    </nav>
-<div class="main-header">
-    <h1>CPT4214 - FYP</h1>
-    <div>
-      <button class="button leave-btn" id="leave-class-btn">Leave Class</button>
-      <select class="button group-btn" id="group-request-select">
-        <option>Group Request</option>
-        <option>Pending</option>
-        
-      </select>
-    </div>
-  </div>
+	<div class="main-content">
+		<nav class="main-nav">
+			<div class="nav-brand">
+				<h1>UniConnect.</h1>
+			</div>
+			<div class="nav-progress">
+				<div class="progress-step active">
+					<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+				</div>
+			</div>
+		</nav>
+		<div class="main-header">
+			<h1>CPT4214 - FYP</h1>
+			<div>
+				<button class="button leave-btn" id="leave-class-btn">Leave Class</button>
+				<select class="button group-btn" id="group-request-select">
+					<option>Group Request</option>
+					<option>Pending</option>
 
-  <div class="controls">
-    <select id="sort-select">
-      <option value="name">Sort by Name</option>
-      <option value="age">Sort by Age</option>
-    </select>
+				</select>
+			</div>
+		</div>
 
-    <input type="text" id="search-input" placeholder="Search by name..." />
-  </div>
+		<div class="controls">
+			<select id="sort-select">
+				<option value="name">Sort by Name</option>
+				<option value="age">Sort by Age</option>
+			</select>
 
-    <div id="student-container" class="student-grid">
-</div>
-  </div>
+			<input type="text" id="search-input" placeholder="Search by name..." />
+		</div>
+
+		<div id="student-container" class="student-grid">
+		</div>
+	</div>
 </body>
+
 </html>
 
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
- 
-  const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
-  const params = new URLSearchParams(window.location.search);
-  const classId = params.get("class_id");
- const username=params.get("username");
- 
-  
 
-  if (!classId) {
-    alert("No class ID provided in URL.");
-  } else {
-    fetchClassDetail(classId);
-  }
-let currentGroupMembers = [];
-let pendingSentRequests = [];
+	const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
+	const params = new URLSearchParams(window.location.search);
+	const classId = params.get("class_id");
+	const username = params.get("username");
 
-async function fetchClassDetail(classId) {
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`);
-    if (!res.ok) throw new Error("Failed to fetch class detail");
 
-    const data = await res.json();
-    classCodeFromAPI = data.code;
-    document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
+	if (!classId) {
+		alert("No class ID provided in URL.");
+	} else {
+		fetchClassDetail(classId);
+	}
+	let currentGroupMembers = [];
+	let pendingSentRequests = [];
 
-    await fetchGroupAndRequests(); 
+	document.getElementById("search-input").addEventListener("input", function () {
+		const searchTerm = this.value.toLowerCase();
+		const cards = document.querySelectorAll(".student-card");
 
-    const studentsData = await Promise.all(data.students
-  .filter(student => student.username !== username)
-  .map(async (student) => {
-    const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${student.username}/`);
-    const profile = profileRes.ok ? await profileRes.json() : {};
+		cards.forEach((card) => {
+			const studentName = card.querySelector("h2").innerText.toLowerCase();
+			card.style.display = studentName.includes(searchTerm) ? "block" : "none";
+		});
+	});
 
-    return {
-      username: student.username,
-      name: profile.name || student.name,
-      email: profile.email || student.email,
-      contactNum: profile.contact_num || "",
-      gender: profile.gender || "",
-      major: profile.major || "",
-      instagram: profile.instagram_id || "",
-      bio: profile.bio || "",
-      image: profile.photo || DEFAULT_AVATAR,
-      age: "", // 你可根据 birth date 来扩展
-    };
-  })
-);
+	async function fetchClassDetail(classId) {
+		try {
+			const res = await fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`);
+			if (!res.ok) throw new Error("Failed to fetch class detail");
 
-    renderStudents(studentsData);
-  } catch (err) {
-    console.error(err);
-    alert("Failed to load class detail");
-  }
-}
+			const data = await res.json();
+			classCodeFromAPI = data.code;
+			document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
 
-// 加载组内成员和已发送请求
-async function fetchGroupAndRequests() {
-  try {
-    // 1. 当前组成员
-      const groupsRes = await fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${username}`);
-  if (groupsRes.ok) {
-    const groupData = await groupsRes.json();
-    const classGroup = groupData.groups.find(group => group.class_code === classCodeFromAPI);
-    currentGroupMembers = classGroup ? classGroup.members : [];
-  }
-    // 2. 已发送请球
-    const requestsRes = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCodeFromAPI}`);
-  if (requestsRes.ok) {
-    const requestList = await requestsRes.json();
-    incomingRequests = requestList.map(req => req.sender_username);
-  }
+			await fetchGroupAndRequests();
 
-} catch (err) {
-  console.error("Error fetching group/request data:", err);
-}
-}
-    
+			const studentsData = await Promise.all(data.students
+				.filter(student => student.username !== username)
+				.map(async (student) => {
+					const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${student.username}/`);
+					const profile = profileRes.ok ? await profileRes.json() : {};
 
-function renderStudents(data) {
-  const container = document.getElementById("student-container");
-  container.innerHTML = "";
-  data.forEach((student) => {
-    const card = document.createElement("div");
-    card.className = "student-card";
-    card.dataset.username = student.username;
+					return {
+						username: student.username,
+						name: profile.name || student.name,
+						email: profile.email || student.email,
+						contactNum: profile.contact_num || "",
+						gender: profile.gender || "",
+						major: profile.major || "",
+						instagram: profile.instagram_id || "",
+						bio: profile.bio || "",
+						image: profile.photo || DEFAULT_AVATAR,
+						age: "", // 你可根据 birth date 来扩展
+					};
+				})
+			);
 
-    const isGroupmate = currentGroupMembers.includes(student.username);
-    const hasPendingRequest = pendingSentRequests.includes(student.username);
+			renderStudents(studentsData);
+		} catch (err) {
+			console.error(err);
+			alert("Failed to load class detail");
+		}
+	}
 
-    const buttonHTML = isGroupmate
-      ? `<span class="in-group-label">✔ In Group</span>`
-      : hasPendingRequest
-      ? `<span class="pending-label">⏳ Pending</span>`
-      : `<button class="send-request-btn">Send Request</button>`;
+	// 加载组内成员和已发送请求
+	async function fetchGroupAndRequests() {
+		try {
+			// 1. 当前组成员
+			const groupsRes = await fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${username}`);
+			if (groupsRes.ok) {
+				const groupData = await groupsRes.json();
+				const classGroup = groupData.groups.find(group => group.class_code === classCodeFromAPI);
+				currentGroupMembers = classGroup ? classGroup.members : [];
+			}
+			// 2. 已发送请球
+			const requestsRes = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCodeFromAPI}`);
+			if (requestsRes.ok) {
+				const requestList = await requestsRes.json();
+				incomingRequests = requestList.map(req => req.sender_username);
+			}
 
-    card.innerHTML = `
+		} catch (err) {
+			console.error("Error fetching group/request data:", err);
+		}
+	}
+
+
+	function renderStudents(data) {
+		const container = document.getElementById("student-container");
+		container.innerHTML = "";
+		data.forEach((student) => {
+			const card = document.createElement("div");
+			card.className = "student-card";
+			card.dataset.username = student.username;
+
+			const isGroupmate = currentGroupMembers.includes(student.username);
+			const hasPendingRequest = pendingSentRequests.includes(student.username);
+
+			const buttonHTML = isGroupmate
+				? `<span class="in-group-label">✔ In Group</span>`
+				: hasPendingRequest
+					? `<span class="pending-label">⏳ Pending</span>`
+					: `<button class="send-request-btn">Send Request</button>`;
+
+			card.innerHTML = `
      <div class="profile-card" style="background-image: url('${student.image || DEFAULT_AVATAR}');">
 
         <div class="profile-overlay">
@@ -291,109 +303,109 @@ function renderStudents(data) {
       </div>
     `;
 
-    container.appendChild(card);
-  });
-}
+			container.appendChild(card);
+		});
+	}
 
 
-async function fetchPendingRequests(username, classCode) {
-  try {
-    const res = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCode}`);
-    if (!res.ok) throw new Error("Failed to fetch pending requests");
+	async function fetchPendingRequests(username, classCode) {
+		try {
+			const res = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCode}`);
+			if (!res.ok) throw new Error("Failed to fetch pending requests");
 
-    const requestList = await res.json();
-    const pendingRequests = [];
+			const requestList = await res.json();
+			const pendingRequests = [];
 
-    for (const req of requestList) {
-      const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${req.sender_username}/`);
-      if (!profileRes.ok) continue; // 忽略失败的
+			for (const req of requestList) {
+				const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${req.sender_username}/`);
+				if (!profileRes.ok) continue; // 忽略失败的
 
-      const senderData = await profileRes.json();
-      pendingRequests.push({
-        request_id: req.request_id,
-        class_code: classCode,
-        sender_username: req.sender_username,
-        sender_name: senderData.name,
-        sender_email: senderData.email
-      });
-    }
+				const senderData = await profileRes.json();
+				pendingRequests.push({
+					request_id: req.request_id,
+					class_code: classCode,
+					sender_username: req.sender_username,
+					sender_name: senderData.name,
+					sender_email: senderData.email
+				});
+			}
 
-    renderPendingRequests(pendingRequests);
+			renderPendingRequests(pendingRequests);
 
-  } catch (err) {
-    console.error(err);
-    alert("Failed to load pending group requests.");
-  }
-}
-
-
-  document.addEventListener("click", function (e) {
-  if (e.target.classList.contains("send-request-btn")) {
-    const studentCard = e.target.closest(".student-card");
-    const receiverUsername = studentCard.dataset.username;
-    const senderUsername = username;
-  
-   
-    const name = studentCard.querySelector("h2").textContent;
-    alert(`Sent request to ${name}`);
-
- 
-    fetch("http://127.0.0.1:8000/grouping/send/",{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        class_code: classCodeFromAPI,
-        sender_username: senderUsername,
-        receiver_username: receiverUsername,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Request failed");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        alert(data.detail || "Request sent.");
-      })
-      .catch((error) => {
-        alert("There is already a pending group request between these users.");
-        console.error(error);
-      });
-  }
-});
+		} catch (err) {
+			console.error(err);
+			alert("Failed to load pending group requests.");
+		}
+	}
 
 
+	document.addEventListener("click", function (e) {
+		if (e.target.classList.contains("send-request-btn")) {
+			const studentCard = e.target.closest(".student-card");
+			const receiverUsername = studentCard.dataset.username;
+			const senderUsername = username;
 
-  document.querySelector("#leave-class-btn").addEventListener("click", () => {
-    fetch("http://127.0.0.1:8000/classing/leave/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ code: classCodeFromAPI , username: username })
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Leave failed");
-        alert("You have left the class");
-        window.location.href = "student_class.html";
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Error leaving class");
-      });
-  });
 
-  function renderPendingRequests(requests) {
-  const container = document.getElementById("student-container");
-  container.innerHTML = "";
+			const name = studentCard.querySelector("h2").textContent;
+			alert(`Sent request to ${name}`);
 
-  requests.forEach(req => {
-    const card = document.createElement("div");
-    card.className = "student-card";
-    card.innerHTML = `
+
+			fetch("http://127.0.0.1:8000/grouping/send/", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					class_code: classCodeFromAPI,
+					sender_username: senderUsername,
+					receiver_username: receiverUsername,
+				}),
+			})
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error("Request failed");
+					}
+					return response.json();
+				})
+				.then((data) => {
+					alert(data.detail || "Request sent.");
+				})
+				.catch((error) => {
+					alert("There is already a pending group request between these users.");
+					console.error(error);
+				});
+		}
+	});
+
+
+
+	document.querySelector("#leave-class-btn").addEventListener("click", () => {
+		fetch("http://127.0.0.1:8000/classing/leave/", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({ code: classCodeFromAPI, username: username })
+		})
+			.then((res) => {
+				if (!res.ok) throw new Error("Leave failed");
+				alert("You have left the class");
+				window.location.href = "student_class.html";
+			})
+			.catch((err) => {
+				console.error(err);
+				alert("Error leaving class");
+			});
+	});
+
+	function renderPendingRequests(requests) {
+		const container = document.getElementById("student-container");
+		container.innerHTML = "";
+
+		requests.forEach(req => {
+			const card = document.createElement("div");
+			card.className = "student-card";
+			card.innerHTML = `
       <div class="profile-card">
         <div class="profile-overlay">
           <h2>${req.sender_name}</h2>
@@ -403,46 +415,46 @@ async function fetchPendingRequests(username, classCode) {
         </div>
       </div>
     `;
-    container.appendChild(card);
-  });
-}
+			container.appendChild(card);
+		});
+	}
 
-document.getElementById("group-request-select").addEventListener("change", (e) => {
-  const value = e.target.value;
+	document.getElementById("group-request-select").addEventListener("change", (e) => {
+		const value = e.target.value;
 
-  if (value === "Pending") {
-    fetchPendingRequests(username, classCodeFromAPI);
-  } else {
-    fetchClassDetail(classId); // 恢复原始同学列表
-  }
-});
+		if (value === "Pending") {
+			fetchPendingRequests(username, classCodeFromAPI);
+		} else {
+			fetchClassDetail(classId); // 恢复原始同学列表
+		}
+	});
 
-document.addEventListener("click", function (e) {
-  if (e.target.classList.contains("accept-btn") || e.target.classList.contains("reject-btn")) {
-    const requestId = e.target.dataset.id;
-    const classCode = e.target.dataset.class;
-    const action = e.target.classList.contains("accept-btn");  // true or false
+	document.addEventListener("click", function (e) {
+		if (e.target.classList.contains("accept-btn") || e.target.classList.contains("reject-btn")) {
+			const requestId = e.target.dataset.id;
+			const classCode = e.target.dataset.class;
+			const action = e.target.classList.contains("accept-btn");  // true or false
 
-    fetch("http://127.0.0.1:8000/grouping/respond/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        request_id: parseInt(requestId),
-        class_code: classCode,
-        current_username: username,
-        action: action
-      })
-    })
-      .then(res => res.json())
-      .then(data => {
-        alert(data.detail);
-      
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Failed to respond to request.");
-      });
-  }
-});
+			fetch("http://127.0.0.1:8000/grouping/respond/", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					request_id: parseInt(requestId),
+					class_code: classCode,
+					current_username: username,
+					action: action
+				})
+			})
+				.then(res => res.json())
+				.then(data => {
+					alert(data.detail);
+
+				})
+				.catch(err => {
+					console.error(err);
+					alert("Failed to respond to request.");
+				});
+		}
+	});
 
 </script>
