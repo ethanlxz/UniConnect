@@ -229,19 +229,6 @@
 				}
 			});
 
-			// Toast notification function
-			function showToast(message, type) {
-				const bgColor = type === 'success' ? '#4caf50' : '#f44336';
-
-				Toastify({
-					text: message,
-					duration: 3000,
-					gravity: "top",
-					position: "right",
-					backgroundColor: bgColor,
-				}).showToast();
-			}
-
 			document.getElementById('back-btn').addEventListener('click', () => {
 				window.history.back();
 			});

@@ -95,7 +95,7 @@
             return res.json();
           })
           .then((data) => {
-            document.getElementById("class-title").textContent = `${data.code} - ${data.name}`;
+            document.getElementById("class-title").textContent = `${data.name}`;
             document.getElementById("class-code").textContent = data.code || "N/A";
             document.getElementById("groups-formed").textContent = `${data.groups_formed || 0} / ${data.total_groups || "?"}`;
             document.getElementById("total-members").textContent = data.students ? data.students.length : (data.current_student_count || 0);

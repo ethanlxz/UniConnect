@@ -2,123 +2,263 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" />
-  <title>Student Home - UniConnect</title>
-  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
-  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" />
+	<title>Student Home - UniConnect</title>
+	<link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
 </head>
 
+<style>
+	/* Modal Styles */
+	.modal1 {
+		display: none;
+		position: fixed;
+		z-index: 1000;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0, 0, 0, 0.5);
+		font-family: 'Outfit', sans-serif;
+	}
+
+	.modal-content1 {
+		background-color: #fefefe;
+		margin: 10% auto;
+		padding: 20px;
+		border-radius: 8px;
+		width: 80%;
+		max-width: 600px;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.close-modal1 {
+		color: #aaa;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+		cursor: pointer;
+	}
+
+	.close-modal1:hover {
+		color: black;
+	}
+
+	.class-info {
+		margin: 20px 0;
+	}
+
+	.class-info p {
+		margin: 10px 0;
+	}
+
+	#delete-class-btn {
+		padding: 0.5rem 1rem;
+		cursor: pointer;
+		background-color: #e74c3c;
+		color: white;
+		border: none;
+		border-radius: 4px;
+		margin-top: 20px;
+	}
+
+	#delete-class-btn:hover {
+		background-color: #c0392b;
+	}
+</style>
+
 <body>
-     <!-- Sidebar -->
-  <div class="sidebar">
-  <div class="nav-item active ">
-    <a href="teacher_class.html">
-      <img src="../../image/classes.png" alt="Classes Icon" />
-      <div>Classes</div>
-    </a>
-  </div>
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<div class="nav-item active ">
+			<a href="teacher_class.html">
+				<img src="../../image/classes.png" alt="Classes Icon" />
+				<div>Classes</div>
+			</a>
+		</div>
 
-    <div class="nav-item">
-      <a href="teacher_profile.html">
-      <img src="../../image/profile.png" alt="Profile Icon" />
-      <div>Profile</div>
-      </a>
-    </div>
-  </div>
+		<div class="nav-item">
+			<a href="teacher_profile.html">
+				<img src="../../image/userprofile.png" alt="Profile Icon" />
+				<div>Profile</div>
+			</a>
+		</div>
+	</div>
 
-   
 
-    <div class="main-content">
-    <nav class="main-nav">
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
-        </div>
-      </div>
-    </nav>
-<div class="main-header">
-    <h1>CPT4214 - FYP</h1>
-    <div>
+	<div class="main-content">
+		<nav class="main-nav">
+			<div class="nav-brand">
+				<h1>UniConnect.</h1>
+			</div>
+			<div class="nav-progress">
+				<div class="progress-step active">
+					<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+				</div>
+			</div>
+		</nav>
+		<div class="main-header">
+			<h1>CPT4214 - FYP</h1>
+			<div>
 
-    </div>
-  </div>
+			</div>
+		</div>
 
-  <div class="controls">
-      <button id="class-details-btn" class="button small-btn">Class Details</button>
-    <select id="sort-select">
-      <option value="name">Sort by Name</option>
-      <option value="age">Sort by Age</option>
-    </select>
+		<div class="controls">
+			<button id="class-details-btn" class="button small-btn">Class Details</button>
+			<select id="sort-select">
+				<option value="name">Sort by Name</option>
+				<option value="age">Sort by Age</option>
+			</select>
 
-    <input type="text" id="search-input" placeholder="Search by name..." />
-  </div>
+			<input type="text" id="search-input" placeholder="Search by name..." />
+		</div>
 
-    <div id="student-container" class="student-grid">
-</div>
+		<div id="student-container" class="student-grid">
+		</div>
+	</div>
+
+	<!-- Modal Structure -->
+	<div id="class-details-modal" class="modal1">
+		<div class="modal-content1">
+			<span class="close-modal1">&times;</span>
+			<h1 id="class-title">Loading...</h1>
+			<div class="class-info">
+				<p><strong>Class Code:</strong> <span id="class-code"></span></p>
+				<p><strong>Groups formed:</strong> <span id="groups-formed"></span></p>
+				<p><strong>Minimum members per group:</strong> <span id="min-members"></span></p>
+				<p><strong>Total Class Members:</strong> <span id="total-members"></span></p>
+			</div>
+			<button id="delete-class-btn">Delete Class</button>
+		</div>
+	</div>
+
+
+</body>
 
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
+	
+	const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
+	const params = new URLSearchParams(window.location.search);
+	const classId = params.get("class_id");
 
-  const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
-  const params = new URLSearchParams(window.location.search);
-  const classId = params.get("class_id");
+	document.addEventListener("DOMContentLoaded", () => {
+		if (!classId) {
+			alert("No class ID provided in URL.");
+			return;
+		}
 
-  if (!classId) {
-    alert("No class ID provided in URL.");
-  } else {
-    fetchClassDetail(classId);
-  }
-  document.getElementById("class-details-btn").addEventListener("click", () => {
-  if (classId) {
-    window.location.href = `class_details.html?class_id=${classId}`;
-  } else {
-    alert("No class ID available.");
-  }
-});
+		// Get the modal elements
+		const modal = document.getElementById("class-details-modal");
+		const classDetailsBtn = document.getElementById("class-details-btn");
+		const closeModalBtn = document.querySelector(".close-modal1");
+		const deleteClassBtn = document.getElementById("delete-class-btn");
 
+		// Fetch class details when page loads
+		fetchClassDetail(classId)
+			.then(classDetail => {
+				// Update main page header
+				fillDetails(classDetail);
 
-  function fetchClassDetail(classId) {
-    fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to fetch class detail");
-        return res.json();
-      })
-      .then((data) => {
-      
-        document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
-        
-  
-        const studentsData = data.students.map((student) => ({
-          name: student.name,
-          email: student.email,
-          contactNum: student.contact_num,
-          image: DEFAULT_AVATAR,
-          bio: "", 
-          age: "", 
-          photo:student.photo
-        }));
+				document.querySelector(".main-header h1").textContent = `${classDetail.code} - ${classDetail.name}`;
 
-        renderStudents(studentsData);
-      })
-      .catch((err) => {
-        console.error(err);
-        alert("Failed to load class detail");
-      });
-  }
+				// Update student list
+				const studentsData = classDetail.students.map((student) => ({
+					name: student.name,
+					email: student.email,
+					contactNum: student.contact_num,
+					image: DEFAULT_AVATAR,
+					bio: "",
+					age: "",
+					photo: student.photo
+				}));
+				renderStudents(studentsData);
+			})
+			.catch(err => {
+				console.error(err);
+				alert("Failed to load class detail");
+			});
 
-  function renderStudents(data) {
-    const container = document.getElementById("student-container");
-    container.innerHTML = "";
-    data.forEach((student) => {
-      const card = document.createElement("div");
-      card.className = "student-card";
+		// Event listeners for modal
+		classDetailsBtn.addEventListener("click", () => {
+			modal.style.display = "block";
+		});
 
-      card.innerHTML = `
+		closeModalBtn.addEventListener("click", () => {
+			modal.style.display = "none";
+		});
+
+		// Close modal when clicking outside of it
+		window.addEventListener("click", (event) => {
+			if (event.target === modal) {
+				modal.style.display = "none";
+			}
+		});
+
+		deleteClassBtn.addEventListener("click", deleteClass);
+	});
+
+	async function fetchClassDetail(classId) {
+		const response = await fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`);
+		if (!response.ok) throw new Error("Failed to fetch class detail");
+		return await response.json();
+	}
+
+	function fillDetails(classDetail) {
+		document.getElementById("class-title").textContent = classDetail.name;
+		document.getElementById("class-code").textContent = classDetail.code || "N/A";
+		document.getElementById("groups-formed").textContent =
+			`${classDetail.groups_formed || 0} / ${classDetail.total_groups || "?"}`;
+		document.getElementById("min-members").textContent = classDetail.min_group_members || "0";
+		document.getElementById("total-members").textContent = 
+  `${classDetail.students ? classDetail.students.length : (classDetail.current_student_count || 0)} / ${classDetail.max_students || 0}`;
+	}
+
+	function deleteClass() {
+		const username = localStorage.getItem('username');
+		const code = document.getElementById("class-code").textContent;
+
+		if (!username || !code) {
+			alert("Missing username or class code. Cannot delete.");
+			return;
+		}
+
+		if (!confirm("Are you sure you want to delete this class? This action cannot be undone.")) return;
+
+		const payload = { username, code };
+
+		fetch("http://127.0.0.1:8000/classing/delete/", {
+			method: "DELETE",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload)
+		})
+			.then(res => {
+				if (!res.ok) throw new Error("Failed to delete class");
+				if (res.status === 204) return null;
+				return res.json();
+			})
+			.then(() => {
+				localStorage.setItem("toastMessage", "Class deleted successfully!");
+				localStorage.setItem("toastType", "success");
+				window.location.href = "teacher_class.html";
+			})
+			.catch(err => {
+				console.error(err);
+				alert("Failed to delete class.");
+			});
+	}
+
+	function renderStudents(data) {
+		const container = document.getElementById("student-container");
+		container.innerHTML = "";
+		data.forEach((student) => {
+			const card = document.createElement("div");
+			card.className = "student-card";
+
+			card.innerHTML = `
         <div class="profile-card" style="background-image: url('${student.photo}');">
           <div class="profile-overlay">
             <h2>${student.name}${student.age ? ` <span>${student.age} years old</span>` : ""}</h2>
@@ -128,10 +268,9 @@
           </div>
         </div>
       `;
-
-      container.appendChild(card);
-    });
-  }
+			container.appendChild(card);
+		});
+	}
 
 
 
