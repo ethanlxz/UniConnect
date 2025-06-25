@@ -22,7 +22,6 @@
       color: #222;
     }
 
-  
     .nav-item {
       text-align: center;
       margin: 16px 0;
@@ -51,18 +50,6 @@
       padding: 40px 40px 40px 120px;
       overflow-y: auto;
       width: 100%;
-    }
-
-    .main-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .main-nav h1 {
-      font-size: 26px;
-      color: #333;
     }
 
     .nav-progress {
@@ -239,12 +226,17 @@
       text-transform: uppercase;
     }
 
+    .button-group button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .btn-primary {
       background-color: #0077ff;
       color: white;
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover:not(:disabled) {
       background-color: #005fcc;
     }
 
@@ -253,7 +245,7 @@
       color: white;
     }
 
-    .btn-success:hover {
+    .btn-success:hover:not(:disabled) {
       background-color: #218838;
     }
 
@@ -262,7 +254,7 @@
       color: #212529;
     }
 
-    .btn-warning:hover {
+    .btn-warning:hover:not(:disabled) {
       background-color: #e0a800;
     }
 
@@ -271,7 +263,7 @@
       color: white;
     }
 
-    .btn-danger:hover {
+    .btn-danger:hover:not(:disabled) {
       background-color: #c82333;
     }
 
@@ -280,7 +272,7 @@
       color: white;
     }
 
-    .btn-secondary:hover {
+    .btn-secondary:hover:not(:disabled) {
       background-color: #5a6268;
     }
 
@@ -340,7 +332,6 @@
         </a>  
       </div>
     </div>
-  </div>
 
   <div class="main-content">
     <nav class="main-nav">
@@ -359,354 +350,372 @@
     <div id="group-container"></div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-  <script>
-    // Global variables
-    const urlParams = new URLSearchParams(window.location.search);
-    const username = urlParams.get("username") || sessionStorage.getItem("student_username");
-    const classId = urlParams.get("class_id");
+ <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+  // 全局变量
+  const urlParams = new URLSearchParams(window.location.search);
+  const username = (urlParams.get("username") || sessionStorage.getItem("student_username") || "").trim();
+  const classId = urlParams.get("class_id");
+  let classCode = "";
+  const inProcess = new Set();
 
-    // Show toast notification
-    function showToast(message, type = 'info') {
-      const bgColor = type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#0077ff';
-      Toastify({
-        text: message,
-        duration: 3000,
-        gravity: "top",
-        position: "center",
-        style: { background: bgColor }
-      }).showToast();
-    }
+  document.querySelectorAll('button').forEach(b => b.setAttribute('type','button'));
+  console.log('All buttons forced to type=button');
 
-    // Show error message
-    function showError(message) {
-      const errorContainer = document.getElementById("error-container");
-      errorContainer.innerHTML = `<div class="error-message">${message}</div>`;
-    }
-
-    // Show access denied message
-    function showAccessDenied() {
-      const container = document.getElementById("group-container");
-      container.innerHTML = '<div class="access-denied">You don\'t allow to see this page</div>';
-    }
-
-    // Hide loading
-    function hideLoading() {
-      document.getElementById("loading").style.display = 'none';
-    }
-
-    // Check if user is in any group
-    function userHasGroup(finalizedGroups, formingGroups, username) {
-      const allGroups = [...finalizedGroups, ...formingGroups];
-      return allGroups.some(group => {
-        const members = group.members ? group.members.filter(Boolean) : [];
-        return members.includes(username) || group.leader === username;
-      });
-    }
-
-    // Load groups data
-    document.addEventListener("DOMContentLoaded", () => {
-      if (!classId) {
-        hideLoading();
-        showError("Class ID is missing. Please navigate from the classes page.");
-        return;
-      }
-
-      if (!username) {
-        hideLoading();
-        showError("Username is missing. Please log in again.");
-        return;
-      }
-
-      console.log("Loading groups for class:", classId, "user:", username);
-      
-
-      fetch(`http://127.0.0.1:8000/grouping/list/?class_id=${classId}`)
-        .then(res => {
-          if (!res.ok) {
-            throw new Error(`HTTP ${res.status}: ${res.statusText}`);
-          }
-          return res.json();
-        })
-        .then(data => {
-          hideLoading();
-          const finalGroups = data.final_groups || [];
-          const formingGroups = data.temporary_groups || [];
-          
-          // Check if user has access to this page
-          if (!userHasGroup(finalGroups, formingGroups, username)) {
-            showAccessDenied();
-            return;
-          }
-          
-          renderGroupCards(finalGroups, formingGroups, username, data.class_code || '', data.class_name || '');
-        })
-        .catch(err => {
-          hideLoading();
-          console.error("Failed to load groups:", err);
-          showError(`Failed to load group data: ${err.message}`);
-        });
-    });
-
-    // Render group cards
-    function renderGroupCards(finalizedGroups, formingGroups, username, classCode, className) {
-      const container = document.getElementById("group-container");
-      container.innerHTML = "";
-
-      // Fixed Groups Section (Confirmed Groups)
-      if (finalizedGroups.length > 0) {
-        const finalizedHeader = document.createElement("h2");
-        finalizedHeader.className = "section-header";
-        finalizedHeader.textContent = "Fixed Groups";
-        container.appendChild(finalizedHeader);
-
-        const finalizedContainer = document.createElement("div");
-        finalizedContainer.className = "group-section";
-        container.appendChild(finalizedContainer);
-
-        finalizedGroups.forEach(group => {
-          const card = createGroupCard(group, username, classCode, className);
-          finalizedContainer.appendChild(card);
-        });
-      }
-
-      // Temporary Groups Section
-      if (formingGroups.length > 0) {
-        const formingHeader = document.createElement("h2");
-        formingHeader.className = "section-header";
-        formingHeader.textContent = "Temporary Groups";
-        container.appendChild(formingHeader);
-
-        const formingContainer = document.createElement("div");
-        formingContainer.className = "group-section";
-        container.appendChild(formingContainer);
-
-        formingGroups.forEach(group => {
-          const card = createGroupCard(group, username, classCode, className);
-          formingContainer.appendChild(card);
-        });
-      }
-
-      // Show empty state if no groups
-      if (finalizedGroups.length === 0 && formingGroups.length === 0) {
-        container.innerHTML = '<div class="empty-state">No groups found for this class.</div>';
-      }
-    }
-
-    // Create group card
-    function createGroupCard(group, username, classCode, className) {
-      const card = document.createElement("div");
-      card.className = `group-card ${group.group_type || 'temporary'}`;
-      
-      if (group.is_finalized) {
-        card.classList.add('finalized');
-      }
-
-      const members = group.members ? group.members.filter(Boolean) : [];
-      const isMember = members.includes(username);
-      const isLeader = username === group.leader;
-      const isFinalized = group.is_finalized;
-
-      const leaderUsername = group.leader;
-      const otherMembers = members.filter(m => m !== leaderUsername);
-      const memberListHTML = otherMembers.length > 0 
-        ? otherMembers.map(member => `<li>${member}</li>`).join("")
-        : "<li><em>No other members</em></li>";
-
-      // Determine status
-      let statusClass = 'status-forming';
-      let statusText = 'Forming';
-      
-      if (group.group_type === 'fixed') {
-        statusClass = 'status-fixed';
-        statusText = 'Fixed';
-      } else if (isFinalized) {
-        statusClass = 'status-finalized';
-        statusText = 'Finalized';
-      }
-
-      // Generate action buttons
-      let actionHTML = "";
-      
-      if (group.group_type === "temporary") {
-  const tempGroupId = group.id; // 临时组在数据库里其实还是用 group_id 字段，只是我们逻辑上叫它 temp_group_id
-
-  if (isLeader) {
-    if (!isFinalized) {
-      actionHTML += `<button class="btn-success" onclick="finalizeGroup(${group.id})" type="button">Finalize Group</button>`;
-    } else {
-      actionHTML += `<button class="btn-warning" onclick="definalizeGroup(${group.id})" type="button">Definalize Group</button>`;
-      actionHTML += `<button class="btn-primary" onclick="convertToFixed(${group.id})" type="button">Convert to Fixed</button>`;
-    }
-    actionHTML += `<button class="btn-secondary" onclick="changeLeader(${group.id})" type="button">Change Leader</button>`;
+  // 通用工具
+  function showToast(msg, type='info') {
+    const bg = type==='error' ? '#dc3545' : type==='success' ? '#28a745' : '#0077ff';
+    Toastify({ text: msg, duration: 300, gravity:"top", position:"center", style:{ background: bg } }).showToast();
   }
-  console.log("Group object:", group);
 
+  function showError(msg) {
+    document.getElementById("error-container").innerHTML =
+      `<div class="error-message">${msg}</div>`;
+  }
+
+  function hideLoading() {
+    document.getElementById("loading").style.display = 'none';
+  }
+
+  function createButton({ text, cls, action, id, onClick }) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = cls;
+    b.textContent = text;
+    if (action)     b.dataset.action  = action;
+    if (id != null) b.dataset.groupid = id;
+    b.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      onClick();
+    });
+    return b;
+  }
+
+  // 统一的刷新函数
+  async function refreshGroups() {
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/grouping/list/?class_id=${classId}`);
+      if (!res.ok) throw new Error(res.statusText);
+      const data = await res.json();
+        // 保持与初始加载相同的逻辑
+  const allGroups = [...(data.final_groups || []), ...(data.temporary_groups || [])];
+const finalGroups = allGroups.filter(g => g.group_type === 'finalized');
+const tempGroups = allGroups.filter(g => g.group_type === 'temporary');
+
+renderCards(data.final_groups || [], data.temporary_groups || []);
+
+
+
+    } catch (e) {
+      showToast("刷新失败：" + e.message, 'error');
+    }
+    
+
+  }
+
+
+  document.addEventListener('DOMContentLoaded', async () => {
+    if (!classId || !username) {
+      hideLoading();
+      showError("缺少 class_id 或 username");
+      return;
+    }
+    try {
+      const res = await fetch(`http://127.0.0.1:8000/grouping/list/?class_id=${classId}`);
+      if (!res.ok) throw new Error(res.statusText);
+      const data = await res.json();
+      hideLoading();
+      classCode = data.class_code || '';
+      
+      console.log("Initial load data:", data); // 调试日志
+      
+      renderCards(data.final_groups||[], data.temporary_groups||[]);
+    } catch (e) {
+      hideLoading();
+      showError("加载失败: " + e.message);
+    }
+  });
+
+
+
+   function renderCards(finalGroups, tempGroups) {
+  const cont = document.getElementById('group-container');
+  cont.innerHTML = '';
+
+  console.log("Rendering - Fixed groups:", finalGroups);
+  console.log("Rendering - Temp groups:", tempGroups);
+
+  if (finalGroups.length) {
+    cont.append(sectionHeader('Fixed Groups'));
+    const sec = containerDiv();
+   finalGroups.forEach(g => {
+  console.log("Creating fixed card for group:", g);
+  sec.append(createCard(g, true, true));  // ✅ true 表示已 finalized
+});
+
+    cont.append(sec);
+  }
+
+  if (tempGroups.length) {
+    cont.append(sectionHeader('Temporary Groups'));
+    const sec = containerDiv();
+ tempGroups.forEach(g => {
+  console.log("Creating temp card for group:", g);
+  sec.append(createCard(g, false, false));  // ✅ false 表示还没 finalized
+});
+
+    cont.append(sec);
+  }
+
+  if (!finalGroups.length && !tempGroups.length) {
+    cont.innerHTML = '<div class="empty-state">No groups found</div>';
+  }
 }
 
 
-      if (isMember && group.group_type !== "fixed") {
-        actionHTML += `<button class="btn-danger leave-btn" data-groupid="${group.id}" data-classcode="${classId}" type="button">Leave Group</button>`;
-      }
+  function sectionHeader(t) {
+    const h = document.createElement('h2');
+    h.className = 'section-header';
+    h.textContent = t;
+    return h;
+  }
 
-      card.innerHTML = `
-        <div class="group-status ${statusClass}">${statusText}</div>
-        <div class="leader-box">
-          <div class="leader-info">
-            <div class="leader-title">👑 Group Leader</div>
-            <div class="leader-name">${leaderUsername}</div>
-          </div>
-        </div>
-        <div class="group-title">${group.group_label || `Group ${group.group_id}`}</div>
-        <div class="member-list">
-          <h4>Members (${members.length}):</h4>
-          <ol>${memberListHTML}</ol>
-        </div>
-        <div class="button-group">${actionHTML}</div>
-      `;
+  function containerDiv() {
+    const d = document.createElement('div');
+    d.className = 'group-section';
+    return d;
+  }
 
-      return card;
+function createCard(group, isFixed, isFinalized) {
+  const finalized = group.is_finalized === true;
+  const groupId = group.id || group.group_id;
+
+  const card = document.createElement('div');
+  card.className = 'group-card ' + (finalized ? 'finalized' : 'temporary');
+  card.innerHTML = `
+    <div class="group-status ${
+      isFixed
+        ? 'status-fixed'
+        : finalized
+        ? 'status-finalized'
+        : 'status-forming'
+    }">
+      ${ isFixed ? 'Fixed' : (finalized ? 'Finalized' : 'Forming') }
+    </div>
+    <div class="leader-box">
+      <div class="leader-info">
+        <div class="leader-title">👑 Group Leader</div>
+        <div class="leader-name">${group.leader}</div>
+      </div>
+    </div>
+    <div class="group-title">${group.group_label || 'Group ' + group.id}</div>
+    <div class="member-list">
+      <h4>Members (${(group.members||[]).filter(Boolean).length}):</h4>
+      <ol>${
+        (group.members||[]).filter(Boolean).map(m => '<li>' + m + '</li>').join('')
+      }</ol>
+    </div>
+  `;
+
+  const btnGrp = document.createElement('div');
+  btnGrp.className = 'button-group';
+  btnGrp.id = 'button-group-' + group.id;
+
+  const isLeader = username.toLowerCase() === (group.leader || '').toLowerCase();
+  const isMember = (group.members || []).some(m => m.toLowerCase() === username.toLowerCase());
+
+  if (!isFixed) {
+    if (isLeader && !finalized) {
+      btnGrp.append(createButton({
+        text: 'Finalize',
+        cls: 'btn-success',
+        onClick: () => handleFinalize(group.id)
+      }));
     }
 
-    // Event delegation for leave button
-    document.addEventListener("click", function (e) {
-      if (e.target.classList.contains("leave-btn")) {
-        const groupId = e.target.dataset.groupid;
-        const classCode = e.target.dataset.classcode;
-
-        if (!confirm("Are you sure you want to leave this group?")) return;
-
-        fetch("http://127.0.0.1:8000/grouping/leave/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            group_id: parseInt(groupId),
-            username: username,
-            class_code: classId
-          })
+    if (isLeader && finalized) {
+      btnGrp.append(
+        createButton({
+          text: 'Definalize',
+          cls: 'btn-warning',
+          onClick: () => document.dispatchEvent(new CustomEvent('definalize', { detail: group.id }))
+        }),
+        createButton({
+          text: 'Convert',
+          cls: 'btn-primary',
+          onClick: () => document.dispatchEvent(new CustomEvent('convert', { detail: group.id }))
         })
-          .then(res => res.json())
-          .then(data => {
-            showToast(data.detail || "Successfully left the group.", 'success');
-            location.reload();
-          })
-          .catch(err => {
-            console.error(err);
-            showToast("Failed to leave group.", 'error');
-          });
-      }
-    });
+      );
+    }
 
-    // Group action functions
-  window.finalizeGroup = function( temp_group_id) {
-  showToast("Finalizing group...", 'info');
-  fetch("http://127.0.0.1:8000/grouping/finalTG/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-        username: username,
-        class_code: classId,
-        temp_group_id: temp_group_id,
-      
-    })
-  })
-  .then(res => res.json())
-  .then(data => {
-    showToast(data.detail || "Group finalized successfully.", 'success');
-    setTimeout(() => location.reload(), 10000);  // 多等一下
-  })
-  .catch(err => {
-    console.error("Finalize error:", err);
-    showToast("Failed to finalize group.", 'error');
+if (isLeader && group.members) {
+  group.members.forEach(m => {
+     const member = typeof m === 'string' ? { username: m} : m;
+
+    if (member.username && member.username !== username) {
+      const btn = createButton({
+        text: `Make Leader: ${ member.username}`,
+        cls: 'btn-secondary',
+        onClick: () => handleChangeLeader(group.id, member.username)
+      });
+      btnGrp.appendChild(btn);
+    }
   });
 }
 
 
+    if (isMember) {
+      btnGrp.append(createButton({
+        text: 'Leave',
+        cls: 'btn-danger',
+        onClick: () => handleLeave(group.id)
+      }));
+    }
+  }
 
-    function definalizeGroup(tempGroupId) {
-      fetch("http://127.0.0.1:8000/grouping/definalTG/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          class_code: classId,
-          temp_group_id: tempGroupId,
-        })
+  card.append(btnGrp);
+  return card;
+}
+
+  
+async function handleChangeLeader(groupId, newLeaderUsername) {
+  try {
+    const res = await fetch('http://127.0.0.1:8000/grouping/changeLeader/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: username,
+        class_code: classCode,
+        temp_group_id: groupId,
+        new_leader_username: newLeaderUsername
       })
-        .then(res => res.json())
-        .then(data => {
-          showToast(data.detail, 'success');
-          location.reload();
-        })
-        .catch(err => {
-          console.error(err);
-          showToast("Failed to definalize group.", 'error');
-        });
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result.detail || 'Change leader failed');
     }
 
-    function convertToFixed(tempGroupId) {
-      const targetGroupId = prompt("Enter the Fixed Group ID to convert into:");
-      if (!targetGroupId || isNaN(targetGroupId)) {
-        showToast("Please enter a valid group ID.", 'error');
-        return;
+    showToast(result.detail || 'Leader changed successfully!', 'success');
+    refreshGroups();
+
+  } catch (e) {
+    showToast('Change leader failed: ' + e.message, 'error');
+  }
+  console.log("Changing leader...", {
+  username,
+  newLeaderUsername,
+  groupId,
+  classCode
+});
+
+}
+
+
+  async function handleFinalize(id) {
+      if (inProcess.has(id)) return;
+      inProcess.add(id);
+
+      const btn = document.querySelector(`#button-group-${id} .btn-success`);
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Finalizing...';
       }
 
-      fetch("http://127.0.0.1:8000/grouping/api/convert-to-group/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-            username: username,
-            class_code: classId,
-            temp_group_id: tempGroupId,
-            target_group_id: parseInt(targetGroupId)
-        })
-      })
-        .then(res => res.json())
-        .then(data => {
-          showToast(data.detail, 'success');
-          location.reload();
-        })
-        .catch(err => {
-          console.error(err);
-          showToast("Failed to convert group.", 'error');
+      try {
+        const res = await fetch(`http://127.0.0.1:8000/grouping/finalTG/`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username,
+            class_code: classCode,
+            temp_group_id: id
+          })
         });
-    }
+        console.log("Finalize result:", res);
+        if (!res.ok) throw new Error(res.statusText);
+        const result = await res.json();
+        console.log("Finalize result:", result);
 
-    function changeLeader(tempGroupId) {
-      const newLeader = prompt("Enter the new leader's username:");
-      if (!newLeader || newLeader.trim() === '') {
-        showToast("Please enter a valid username.", 'error');
-        return;
+        showToast('Finalized', 'success');
+
+
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        refreshGroups();
+
+
+      } catch (e) {
+        showToast('Finalize failed: ' + e.message, 'error');
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Finalize';
+        }
+      } finally {
+        inProcess.delete(id);
       }
-
-      console.log("Changing leader for group:", tempGroupId, "to:", newLeader.trim());
-
-      fetch("http://127.0.0.1:8000/grouping/changeLeader/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          username: username,
-          class_code: classId,
-          temp_group_id: tempGroupId,
-          new_leader_username: newLeader.trim()
-        })
-      })
-        .then(res => {
-          console.log("Change leader response status:", res.status);
-          return res.json();
-        })
-        .then(data => {
-          console.log("Change leader response data:", data);
-          showToast(data.detail || "Leader changed successfully.", 'success');
-          location.reload();
-        })
-        .catch(err => {
-          console.error("Change leader error:", err);
-          showToast("Failed to change leader.", 'error');
-        });
+      const result = await res.json();
+      console.log("Finalize result:", result);
     }
-  </script>
-</body>
-</html>
+
+
+  function handleLeave(id) {
+    if (!confirm('Confirm to Leave？')) return;
+    fetch(`http://127.0.0.1:8000/grouping/leave/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ group_id: id, username, class_code: classCode, group_type: 'temporary' })
+    })
+    .then(r => r.json())
+    .then(() => {
+      showToast('Left', 'success');
+      refreshGroups(); 
+    })
+    .catch(e => showToast('Leave failed: ' + e.message, 'error'));
+  }
+
+  document.addEventListener('definalize', e => {
+    fetch(`http://127.0.0.1:8000/grouping/definalTG/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, class_code: classCode, temp_group_id: e.detail })
+    })
+    .then(r => r.json())
+    .then(() => {
+      showToast('Definalized', 'success');
+      refreshGroups();
+    })
+    .catch(() => showToast('Failed', 'error'));
+  });
+
+ document.addEventListener('convert', async e => {
+  const tgt = prompt('Fixed ID:');
+  if (!tgt) return;
+
+  try {
+    const res = await fetch(`http://127.0.0.1:8000/grouping/api/convert-to-group/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username,
+        class_code: classCode,
+        temp_group_id: e.detail,
+        target_group_id: Number(tgt)
+      })
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.detail || 'Convert failed');
+    }
+
+    await res.json();
+    showToast('Converted', 'success');
+    refreshGroups();
+  } catch (e) {
+    showToast(e.message || 'Failed', 'error');
+  }
+});
+
+</script>

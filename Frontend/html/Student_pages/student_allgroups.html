@@ -65,17 +65,7 @@
       width: 100%;
     }
 
-    .main-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .main-nav h1 {
-      font-size: 26px;
-      color: #333;
-    }
+    
 
     .nav-progress {
       display: flex;
@@ -111,21 +101,24 @@
     }
 
     .group-card {
-      background: #fff;
+      background: #000000;
       border: 1px solid #ccc;
       border-radius: 12px;
       padding: 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
 
-    .group-card h3 {
+    .group-card h3  {
       font-size: 18px;
       margin-bottom: 10px;
+      color:rgb(255, 255, 255)
     }
-
+   
+  
     .group-card p {
       font-size: 14px;
-      color: #555;
+      color: #111010;
+
     }
   </style>
 </head>
@@ -187,19 +180,18 @@
       const container = document.getElementById("groupsContainer");
       container.innerHTML = "";
 
-      data.groups.forEach(group => {
-        const div = document.createElement("div");
-        div.className = "group-card";
-        div.innerHTML = `
-          <h3>${group.class_code} - ${group.class_name}</h3>
-          <ol>${group.members.map(m => `<li>${m}</li>`).join("")}</ol>
-          <button onclick="leaveGroup('${group.class_code}', ${group.group_id})">Leave</button>
-
-        `;
-        container.appendChild(div);
-      });
+    data.groups.forEach(group => {
+  const div = document.createElement("div");
+  div.className = "group-card";
+  div.innerHTML = `
+    <h3>${group.class_code} - ${group.class_name}</h3>
+    <ol>${group.members.map(m => `<li>${m}</li>`).join("")}</ol>
+    <button onclick="leaveGroup('${group.class_code}', ${group.group_id}, '${group.group_type}')">Leave</button>
+  `;
+  container.appendChild(div);
+});
     })
-    .catch(error => {
+(error => {
       console.error("Fetch error:", error);
       Toastify({
         text: "Failed to load groups.",
@@ -210,8 +202,8 @@
       }).showToast();
     });
 
-  function leaveGroup(classCode, groupId) {
-  console.log("Leaving group", classCode, groupId);
+  function leaveGroup(classCode, groupId, group_type) {
+  console.log("Leaving group", classCode, groupId, group_type);
 
   fetch(`http://127.0.0.1:8000/grouping/leave/`, {
     method: "POST",
@@ -219,7 +211,8 @@
     body: JSON.stringify({
       username: username,
       class_code: classCode,
-      group_id: groupId
+      group_id: groupId,
+      group_type: group_type
     }),
   })
   .then(res => {
@@ -235,7 +228,6 @@
       backgroundColor: "orange"
     }).showToast();
 
-    // 可选：刷新页面或移除该 group 卡片
     setTimeout(() => window.location.reload(), 1000);
   })
   .catch(err => {
@@ -249,5 +241,6 @@
     }).showToast();
   });
 }
+  
 
 </script>
