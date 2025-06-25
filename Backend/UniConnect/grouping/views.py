@@ -224,7 +224,7 @@ class ListGroupsAPIView(APIView):
                 'leader': temp_group.leader.username if temp_group.leader else None,
                 'members': member_names,
                 'member_count': len(members),
-                'is_finalized': False,
+                'is_finalized': temp_group.is_finalized,
             }
 
         data = {
@@ -421,7 +421,13 @@ class ChangeLeaderAPIView(APIView):
         temp_group.leader = new_leader
         temp_group.save()
 
-        return Response({'detail': f'Leader changed to {new_leader.username} successfully.'}, status=200)
+        return Response({
+            'detail': 'Leader changed successfully.',
+            'new_leader': {
+                'username': new_leader.username,
+                'name': new_leader.name
+            }
+        }, status=200)
     
     from django.db import transaction
 from rest_framework.response import Response
