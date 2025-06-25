@@ -197,7 +197,7 @@ class ListGroupsAPIView(APIView):
         def serialize_finalized_group(group, index):
             members = list(group.members.all())
             member_names = [f"{m.username} ({m.name})" if m.name else m.username for m in members]
-            leader_name = group.leader.username if group.leader else "No leader"
+            leader_name = f"{group.leader.username} ({group.leader.name})" if group.leader and group.leader.name else (group.leader.username if group.leader else "No leader")
     
             return {
             'group_type': 'finalized',
@@ -423,10 +423,7 @@ class ChangeLeaderAPIView(APIView):
 
         return Response({
             'detail': 'Leader changed successfully.',
-            'new_leader': {
-                'username': new_leader.username,
-                'name': new_leader.name
-            }
+            'new_leader': f"{new_leader.username} ({new_leader.name})" if new_leader.name else new_leader.username
         }, status=200)
     
     from django.db import transaction
