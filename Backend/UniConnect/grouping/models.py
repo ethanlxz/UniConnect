@@ -37,7 +37,7 @@ class TemporaryGroup(models.Model):
     class_instance = models.ForeignKey(Class, on_delete=models.CASCADE, related_name='temp_groups')
     members = models.ManyToManyField(StudentProfile, related_name='temp_groups', blank=True)
     leader = models.ForeignKey(StudentProfile, null=True, blank=True, on_delete=models.SET_NULL, related_name='led_temp_groups')
-    is_finalized = models.BooleanField(default=False, editable=False)
+    is_finalized = models.BooleanField(default=False)
 
     def current_member_count(self):
         return self.members.count()

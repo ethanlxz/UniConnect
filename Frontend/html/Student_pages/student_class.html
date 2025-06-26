@@ -9,8 +9,84 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
   
 </head>
+<style>
+  * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      display: flex;
+      min-height: 100vh;
+      background-color: #f3f1ee;
+      color: #222;
+    }
+    
+
+   
+
+    .sidebar-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-brand img {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 5px;
+    }
+
+    .sidebar-brand span {
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .nav-item {
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .nav-item a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .nav-item img {
+      width: 32px;
+      height: 32px;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-item img:hover {
+      transform: scale(1.2);
+    }
+
+    .sidebar-avatar {
+      margin-bottom: 15px;
+    }
+
+    .sidebar-avatar img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #aaa;
+    }
+
+   
+    
+</style>
 <body>
-  <div class="sidebar">
+  <body>
+    <div class="sidebar">
       <div class="nav-item">
         <a href="student_class.html">
           <img src="../../image/classes.png" alt="Classes Icon" />
@@ -31,11 +107,14 @@
       </div>
     </div>
   </div>
+  </div>
+
  
   </div>
 
   <div class="main-content">
-    <nav class="main-nav">
+    <nav class="main-nav"> 
+      <div class="nav-brand">
       <h1>Hi, <span id="studentName">Student</span>!</h1>
     </nav>
 

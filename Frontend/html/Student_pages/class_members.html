@@ -17,6 +17,20 @@
 		}
 
 
+ 
+
+    .sidebar-brand {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .sidebar-brand img {
+      width: 36px;
+      height: 36px;
+      margin-bottom: 5px;
+    }
 
 		.sidebar-brand span {
 			font-size: 12px;
@@ -186,6 +200,7 @@
 
 </html>
 
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
 
@@ -378,6 +393,11 @@
 	});
 
 
+ 
+async function fetchPendingRequests(username, classCode) {
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCode}`);
+    if (!response.ok) throw new Error("Failed to fetch pending requests");
 
 	document.querySelector("#leave-class-btn").addEventListener("click", () => {
 		fetch("http://127.0.0.1:8000/classing/leave/", {
