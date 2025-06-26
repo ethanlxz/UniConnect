@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Student Dashboard - UniConnect</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
- <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-    }
 
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>UniConnect</title>
+	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+	<link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Outfit', sans-serif;
+		}
+
+<<<<<<< HEAD
    
     
 * {
@@ -100,264 +102,277 @@
       padding: 40px;
       overflow-y: auto;
     }
+=======
+		body {
+			display: flex;
+			min-height: 100vh;
+			background-color: #f3f1ee;
+			color: #222;
+		}
 
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 40px;
-    }
+		.sidebar-brand {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-bottom: 30px;
+			color: white;
+		}
 
-    .header h2 {
-      font-size: 24px;
-    }
+		.sidebar-brand img {
+			width: 40px;
+			height: 40px;
+			margin-bottom: 6px;
+			color: white;
+		}
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 30px;
-    }
+		.sidebar-brand span {
+			font-size: 14px;
+			font-weight: bold;
+			color: #ffffff;
+		}
 
-    .card {
-      background-color: #000000;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
+		.nav-item img {
+			width: 30px;
+			height: 30px;
+			margin-bottom: 4px;
+			filter: brightness(0) invert(1);
+			/* 图标变白 */
+		}
 
-    .card h4 {
-      margin-bottom: 10px;
-      font-size: 18px;
-    }
 
-    .profile-section {
-      display: flex;
-      gap: 40px;
-      align-items: center;
-    }
+		.nav-item div {
+			font-size: 12px;
+			color: #070707;
+		}
 
-    .profile-pic img {
-      width: 300px;
-      height: 400px;
-      object-fit: cover;
-     
-    }
+		.main-content {
+			flex-grow: 1;
+			padding: 40px;
+			overflow-y: auto;
+		}
+>>>>>>> dd5ff5ad71be94c41ecebea951e13717417b3975
 
-    .profile-info h3 {
-      font-size: 20px;
-      margin-bottom: 8px;
-      color:black;
-    }
+		.header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 40px;
+		}
 
-    .profile-info p {
-      margin-bottom: 4px;
-      color: #000000;
-    }
-  </style>
+		.header h2 {
+			font-size: 24px;
+		}
+
+		.dashboard-grid {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 30px;
+		}
+
+		.card {
+			background-color: #000000;
+			border-radius: 20px;
+			padding: 30px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+		}
+
+		.card h4 {
+			margin-bottom: 10px;
+			font-size: 18px;
+		}
+
+		.profile-section {
+			display: flex;
+			gap: 40px;
+			align-items: center;
+		}
+
+		.profile-pic img {
+			width: 300px;
+			height: 400px;
+			object-fit: cover;
+
+		}
+
+		.profile-info h3 {
+			font-size: 20px;
+			margin-bottom: 8px;
+			color: black;
+		}
+
+		.profile-info p {
+			margin-bottom: 4px;
+			color: #000000;
+		}
+	</style>
 </head>
+
 <body>
-  <!-- Sidebar -->
-  <div class="sidebar">
-      <div class="nav-item">
-        <a href="student_class.html">
-          <img src="../../image/classes.png" alt="Classes Icon" />
-                <div>Class</div>
-        </a>
-      </div>
-      <div class="nav-item">
-        <a href="student_allgroups.html">
-          <img src="../../image/group icon.png" alt="Group Icon" />
-                <div>Group</div>
-        </a>
-      </div>
-      <div class="nav-item">
-        <a href="student_profile.html">
-          <img src="../../image/userprofile.png" alt="Profile Icon" />
-                <div>Profile</div>
-        </a>  
-      </div>
-    </div>
-  </div>
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<div class="nav-item">
+			<a href="student_class.html">
+				<img src="../../image/classes.png" alt="Classes Icon" />
+				<div>Class</div>
+			</a>
+		</div>
+		<div class="nav-item">
+			<a href="student_allgroups.html">
+				<img src="../../image/group icon.png" alt="Group Icon" />
+				<div>Group</div>
+			</a>
+		</div>
+		<div class="nav-item">
+			<a href="student_profile.html">
+				<img src="../../image/userprofile.png" alt="Profile Icon" />
+				<div>Profile</div>
+			</a>
+		</div>
+	</div>
+	</div>
 
 
 
-    <nav class="main-nav">
-      <div class="nav-brand">
-        <h1>UniConnect</h1>
-      </div>
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
-        </div>
-      </div>
-    </nav>
-
-   
+	<nav class="main-nav">
+		<div class="nav-brand">
+			<h1>UniConnect</h1>
+		</div>
+		<div class="nav-progress">
+			<div class="progress-step active">
+				<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
+			</div>
+		</div>
+	</nav>
 
 
-</div>
-
-  <!-- Main Content -->
-  <div class="main-content">
-    <div class="header">
-      <div>
-        <h2 id="greeting">Hi, Student!</h2>
-        <p>Let’s take a look at your profile today</p>
-      </div>
-     
-    </div>
-
-    <div class="dashboard-grid">
-      <div class="card profile-section">
-        <div class="profile-pic">
-          <img id="studentPhoto" alt="Student Photo" />
-        </div>
-        <div class="profile-info">
-       
-        </div>
-      </div>
-
-      <div class="card">
-
-        <h4>Details</h4>
-          <h3 id="studentName">Name:</h3>
-        <p id="studentEmail">email@example.com</p>
-        <p id="studentContact">0123456789</p>
-        <p id="studentBio">I love learning and working in teams.</p>
-        <p id="studentMajor">Computer Science</p>
-      </div>
-    </div>
-  </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const username = localStorage.getItem("username"); // 动态获取用户名
-
-  if (!username) {
-    alert("No username found. Please login first.");
-    return;
-  }
-
-  fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Failed to fetch student profile.");
-      }
-      return response.json();
-    })
-    .then(data => {
-      document.getElementById('studentName').innerText = data.name;
-      document.getElementById('greeting').innerText = `Hi, ${data.name}!`;
-
-      document.getElementById('studentEmail').innerText = data.email;
-      document.getElementById('studentContact').innerText = data.contact_num;
-      document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
-      document.getElementById('studentMajor').innerText = data.major || "No major info.";
-      document.getElementById('studentPhoto').src = data.photo;
-   
 
 
-      console.log(data.photo);
-    })
-    .catch(error => {
-      console.error(error);
-      alert("Unable to load student profile.");
-    });
-});
+	</div>
 
-document.addEventListener('DOMContentLoaded', function () {
-  const username = localStorage.getItem("username");
+	<!-- Main Content -->
+	<div class="main-content">
+		<div class="header">
+			<div>
+				<h2 id="greeting">Hi, Student!</h2>
+				<p>Let’s take a look at your profile today</p>
+			</div>
 
-  if (!username) {
-    alert("No username found. Please login first.");
-    return;
-  }
+		</div>
 
-  // 加载资料
-  fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`)
-    .then(response => {
-      if (!response.ok) throw new Error("Failed to fetch student profile.");
-      return response.json();
-    })
-    .then(data => {
-      document.getElementById('studentName').innerText = data.name;
-      document.getElementById('studentEmail').innerText = data.email;
-      document.getElementById('studentContact').innerText = data.contact_num;
-      document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
-      document.getElementById('studentMajor').innerText = data.major || "No major info.";
-      document.getElementById('studentPhoto').src = data.photo;
+		<div class="dashboard-grid">
+			<div class="card profile-section">
+				<div class="profile-pic">
+					<img id="studentPhoto" alt="Student Photo" />
+				</div>
+				<div class="profile-info">
 
-      // 初始化内联编辑绑定
-      makeEditable('studentName', 'name', data.name);
-      makeEditable('studentEmail', 'email', data.email);
-      makeEditable('studentContact', 'contact_num', data.contact_num);
-      makeEditable('studentBio', 'bio', data.bio);
-      makeEditable('studentMajor', 'major', data.major);
-    })
-    .catch(error => {
-      console.error(error);
-      alert("Unable to load student profile.");
-    });
+				</div>
+			</div>
 
-  // 内联编辑函数
-  function makeEditable(elementId, fieldName, initialValue) {
-    const element = document.getElementById(elementId);
+			<div class="card">
 
-    element.style.cursor = "pointer";
-    element.title = "Click to edit";
+				<h4>Details</h4>
+				<h3 id="studentName">Name:</h3>
+				<p id="studentEmail">email@example.com</p>
+				<p id="studentContact">0123456789</p>
+				<p id="studentBio">I love learning and working in teams.</p>
+				<p id="studentMajor">Computer Science</p>
+			</div>
+		</div>
+	</div>
 
-    element.addEventListener('click', function () {
-      const inputType = fieldName === "bio" ? "textarea" : "input";
-      const input = document.createElement(inputType);
-      input.value = initialValue;
-      input.style.width = "100%";
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			const username = localStorage.getItem("username");
 
-   
-      input.style.fontSize = window.getComputedStyle(element).fontSize;
+			if (!username) {
+				alert("No username found. Please login first.");
+				return;
+			}
 
-      element.replaceWith(input);
-      input.focus();
+			// 加载资料
+			fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`)
+				.then(response => {
+					if (!response.ok) throw new Error("Failed to fetch student profile.");
+					return response.json();
+				})
+				.then(data => {
+					document.getElementById('studentName').innerText = data.name;
+					document.getElementById('studentEmail').innerText = data.email;
+					document.getElementById('studentContact').innerText = data.contact_num;
+					document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
+					document.getElementById('studentMajor').innerText = data.major || "No major info.";
+					document.getElementById('studentPhoto').src = data.photo;
 
-      function save() {
-        const newValue = input.value.trim();
-        if (newValue === "") return alert("Field cannot be empty.");
-        
-        const payload = { [fieldName]: newValue };
+					// 初始化内联编辑绑定
+					makeEditable('studentName', 'name', data.name);
+					makeEditable('studentEmail', 'email', data.email);
+					makeEditable('studentContact', 'contact_num', data.contact_num);
+					makeEditable('studentBio', 'bio', data.bio);
+					makeEditable('studentMajor', 'major', data.major);
+				})
+				.catch(error => {
+					console.error(error);
+					alert("Unable to load student profile.");
+				});
 
-        fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        })
-        .then(res => {
-          if (!res.ok) throw new Error("Update failed.");
-          return res.json();
-        })
-        .then(() => {
-          const newSpan = document.createElement(element.tagName.toLowerCase());
-          newSpan.id = elementId;
-          newSpan.innerText = newValue;
-          input.replaceWith(newSpan);
-          makeEditable(elementId, fieldName, newValue); 
-        })
-        .catch(err => {
-          console.error(err);
-          alert("Failed to update.");
-        });
-      }
+			// 内联编辑函数
+			function makeEditable(elementId, fieldName, initialValue) {
+				const element = document.getElementById(elementId);
 
-      input.addEventListener('blur', save);
-      input.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter') save();
-      });
-    });
-  }
-});
-</script>
+				element.style.cursor = "pointer";
+				element.title = "Click to edit";
+
+				element.addEventListener('click', function () {
+					const inputType = fieldName === "bio" ? "textarea" : "input";
+					const input = document.createElement(inputType);
+					input.value = initialValue;
+					input.style.width = "100%";
+					input.style.fontSize = window.getComputedStyle(element).fontSize;
+
+					element.replaceWith(input);
+					input.focus();
+
+					function save() {
+						const newValue = input.value.trim();
+						if (newValue === "") return alert("Field cannot be empty.");
+
+						// Use FormData instead of JSON
+						const formData = new FormData();
+						formData.append(fieldName, newValue);
+
+						fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`, {
+							method: 'PATCH',
+							body: formData,  // FormData automatically sets Content-Type with boundary
+							// Do NOT manually set 'Content-Type' header
+						})
+							.then(res => {
+								if (!res.ok) throw new Error("Update failed.");
+								return res.json();
+							})
+							.then(() => {
+								const newSpan = document.createElement(element.tagName.toLowerCase());
+								newSpan.id = elementId;
+								newSpan.innerText = newValue;
+								input.replaceWith(newSpan);
+								makeEditable(elementId, fieldName, newValue);
+							})
+							.catch(error => console.error("Error:", error));
+					}
+
+					// Save on Enter (for text inputs) or Blur (when clicking outside)
+					if (inputType === "textarea") {
+						input.addEventListener('blur', save);
+					} else {
+						input.addEventListener('keypress', (e) => {
+							if (e.key === 'Enter') save();
+						});
+						input.addEventListener('blur', save);
+					}
+				});
+			}
+		});
+	</script>
 </body>
+
 </html>

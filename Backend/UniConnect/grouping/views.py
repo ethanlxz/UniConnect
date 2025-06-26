@@ -44,11 +44,17 @@ class SendGroupRequestAPIView(APIView):
         if sender_groups.filter(id__in=receiver_groups.values_list('id', flat=True)).exists():
             return Response({'detail': 'Sender and receiver are already in the same group.'}, status=400)
 
-        # Check if sender or receiver is already in a finalized group
+        # Check if sender or receiver is already in a finalized TemporaryGroup
         if sender_groups.filter(is_finalized=True).exists():
             return Response({'detail': 'Sender is already in a finalized group for this class.'}, status=400)
         if receiver_groups.filter(is_finalized=True).exists():
             return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
+        
+        # Check if sender or receiver is already in a finalized Group (permanent group)
+        if Group.objects.filter(class_instance=class_instance, members=sender).exists():
+            return Response({'detail': 'Sender is already in a fixed group for this class.'}, status=400)
+        if Group.objects.filter(class_instance=class_instance, members=receiver).exists():
+            return Response({'detail': 'Receiver is already in a fixed group for this class.'}, status=400)
 
         #Check for existing request in either direction
         existing_request = GroupRequest.objects.filter(
@@ -95,8 +101,14 @@ class RespondToGroupRequestAPIView(APIView):
             group_request.delete()
             return Response({'detail': 'Request declined.'})
 
+        if Group.objects.filter(class_instance=class_instance, members=sender).exists():
+            return Response({'detail': 'Sender is already in a fixed group for this class.'}, status=400)
         if Group.objects.filter(class_instance=class_instance, members=receiver).exists():
-            return Response({'detail': 'Receiver is already in a finalized group for this class.'}, status=400)
+            return Response({'detail': 'Receiver is already in a fixed group for this class.'}, status=400)
+        if TemporaryGroup.objects.filter(class_instance=class_instance, members=sender, is_finalized=True).exists():
+            return Response({'detail': 'Sender is already in a finalized group.'}, status=400)
+        if TemporaryGroup.objects.filter(class_instance=class_instance, members=receiver, is_finalized=True).exists():
+            return Response({'detail': 'Receiver is already in a finalized group.'}, status=400)
 
         temp_group = TemporaryGroup.objects.filter(class_instance=class_instance, members=sender).first()
 
@@ -185,7 +197,7 @@ class ListGroupsAPIView(APIView):
         def serialize_finalized_group(group, index):
             members = list(group.members.all())
             member_names = [f"{m.username} ({m.name})" if m.name else m.username for m in members]
-            leader_name = group.leader.username if group.leader else "No leader"
+            leader_name = f"{group.leader.username} ({group.leader.name})" if group.leader and group.leader.name else (group.leader.username if group.leader else "No leader")
     
             return {
             'group_type': 'finalized',
@@ -212,7 +224,11 @@ class ListGroupsAPIView(APIView):
                 'leader': temp_group.leader.username if temp_group.leader else None,
                 'members': member_names,
                 'member_count': len(members),
+<<<<<<< HEAD
                 'is_finalized': temp_group.is_finalized
+=======
+                'is_finalized': temp_group.is_finalized,
+>>>>>>> dd5ff5ad71be94c41ecebea951e13717417b3975
             }
 
         data = {
@@ -409,7 +425,10 @@ class ChangeLeaderAPIView(APIView):
         temp_group.leader = new_leader
         temp_group.save()
 
-        return Response({'detail': f'Leader changed to {new_leader.username} successfully.'}, status=200)
+        return Response({
+            'detail': 'Leader changed successfully.',
+            'new_leader': f"{new_leader.username} ({new_leader.name})" if new_leader.name else new_leader.username
+        }, status=200)
     
     from django.db import transaction
 from rest_framework.response import Response
@@ -575,6 +594,10 @@ class SendJoinGroupRequestAPIView(APIView):
 
         if TemporaryGroup.objects.filter(class_instance=class_instance, members=sender).exists():
             return Response({'detail': 'Sender is already in a temporary group.'}, status=400)
+        
+        # Check if sender is in a fixed group
+        if Group.objects.filter(class_instance=class_instance, members=sender).exists():
+            return Response({'detail': 'Sender is already in a fixed group.'}, status=400)
 
         if JoinGroupRequest.objects.filter(sender=sender, receiver=leader).exists():
             return Response({'detail': 'Join request already sent to this group.'}, status=400)

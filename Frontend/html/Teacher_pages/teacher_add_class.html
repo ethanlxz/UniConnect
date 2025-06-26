@@ -2,13 +2,13 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" />
-  <title>Student Home - UniConnect</title>
-  <link rel="stylesheet" href="/Frontend/styles/teacher_add_class.css" />
-  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
-  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+	<meta charset="UTF-8" />
+	<meta name="viewport" />
+	<title>UniConnect</title>
+	<link rel="stylesheet" href="/Frontend/styles/teacher_add_class.css" />
+	<link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
 </head>
 <style>
 	
@@ -68,36 +68,36 @@
 
 </style>
 <body>
-     <!-- Sidebar -->
-  <div class="sidebar">
-  <div class="nav-item active ">
-    <a href="teacher_class.html">
-      <img src="../../image/classes.png" alt="Classes Icon" />
-      <div>Classes</div>
-    </a>
-  </div>
+	<!-- Sidebar -->
+	<div class="sidebar">
+		<div class="nav-item active ">
+			<a href="teacher_class.html">
+				<img src="../../image/classes.png" alt="Classes Icon" />
+				<div>Classes</div>
+			</a>
+		</div>
 
-    <div class="nav-item">
-      <a href="teacher_profile.html">
-      <img src="../../image/profile.png" alt="Profile Icon" />
-      <div>Profile</div>
-      </a>
-    </div>
-  </div>
+		<div class="nav-item">
+			<a href="teacher_profile.html">
+				<img src="../../image/profile.png" alt="Profile Icon" />
+				<div>Profile</div>
+			</a>
+		</div>
+	</div>
 
-   
 
-    <div class="main-content">
-    <nav class="main-nav">
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
-        </div>
-      </div>
-    </nav>
+
+	<div class="main-content">
+		<nav class="main-nav">
+			<div class="nav-brand">
+				<h1>UniConnect.</h1>
+			</div>
+			<div class="nav-progress">
+				<div class="progress-step active">
+					<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
+				</div>
+			</div>
+		</nav>
 		<div class="content-wrapper">
 			<form id="add-class-form">
 				<div class="form-group">
@@ -272,14 +272,10 @@
 				previewModal.classList.remove('active');
 				form.reset();
 
-				console.log("test1");
 				localStorage.setItem("toastMessage", "Class created successfully!");
 				localStorage.setItem("toastType", "success");
 				window.location.href = "teacher_class.html";
 
-
-
-				// showToastAndRedirect(`Class "${className}" created successfully!`, 'success', "teacher_class.html");
 			});
 
 			// Close modal when clicking outside content
@@ -288,19 +284,6 @@
 					previewModal.classList.remove('active');
 				}
 			});
-
-			// Toast notification function
-			function showToast(message, type) {
-				const bgColor = type === 'success' ? '#4caf50' : '#f44336';
-
-				Toastify({
-					text: message,
-					duration: 3000,
-					gravity: "top",
-					position: "right",
-					backgroundColor: bgColor,
-				}).showToast();
-			}
 
 			document.getElementById('back-btn').addEventListener('click', () => {
 				window.history.back();
