@@ -196,33 +196,33 @@ class ListGroupsAPIView(APIView):
 
         def serialize_finalized_group(group, index):
             members = list(group.members.all())
-            member_names = [f"{m.username} ({m.name})" if m.name else m.username for m in members]
-            leader_name = f"{group.leader.username} ({group.leader.name})" if group.leader and group.leader.name else (group.leader.username if group.leader else "No leader")
+            member_usernames = [m.username for m in members]
+            leader_username = group.leader.username if group.leader else "No leader"
     
             return {
-            'group_type': 'finalized',
-            'group_label': f"Group {group.group_id}",
-            'group_id': group.group_id,  # Using the explicit group_id field
-            'class_code': group.class_instance.code if group.class_instance else None,
-            'members': member_names,
-            'member_count': group.current_member_count(),  # Using model method
-            'max_members': group.max_members,
-            'is_full': group.is_full,
-            'leader': leader_name,
-            'leader_id': group.leader.id if group.leader else None,
+                'group_type': 'finalized',
+                'group_label': f"Group {group.group_id}",
+                'group_id': group.group_id,  # Using the explicit group_id field
+                'class_code': group.class_instance.code if group.class_instance else None,
+                'members': member_usernames,
+                'member_count': group.current_member_count(),  # Using model method
+                'max_members': group.max_members,
+                'is_full': group.is_full,
+                'leader': leader_username,
+                'leader_id': group.leader.id if group.leader else None,
             }
 
         def serialize_temp_group(temp_group, index):
             members = list(temp_group.members.all())
-            member_names = [m.name for m in members]
-            while len(member_names) < min_members:
-                member_names.append(None)
+            member_usernames = [m.username for m in members]
+            while len(member_usernames) < min_members:
+                member_usernames.append(None)
             return {
                 'group_type': 'temporary',
                 'group_label': f"Temp Group {index + 1}",
                 'id': temp_group.id,
                 'leader': temp_group.leader.username if temp_group.leader else None,
-                'members': member_names,
+                'members': member_usernames,
                 'member_count': len(members),
                 'is_finalized': temp_group.is_finalized,
             }
