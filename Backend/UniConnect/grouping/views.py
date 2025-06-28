@@ -196,33 +196,33 @@ class ListGroupsAPIView(APIView):
 
         def serialize_finalized_group(group, index):
             members = list(group.members.all())
-            member_names = [f"{m.username} ({m.name})" if m.name else m.username for m in members]
-            leader_name = f"{group.leader.username} ({group.leader.name})" if group.leader and group.leader.name else (group.leader.username if group.leader else "No leader")
+            member_usernames = [m.username for m in members]
+            leader_username = group.leader.username if group.leader else "No leader"
     
             return {
-            'group_type': 'finalized',
-            'group_label': f"Group {group.group_id}",
-            'group_id': group.group_id,  # Using the explicit group_id field
-            'class_code': group.class_instance.code if group.class_instance else None,
-            'members': member_names,
-            'member_count': group.current_member_count(),  # Using model method
-            'max_members': group.max_members,
-            'is_full': group.is_full,
-            'leader': leader_name,
-            'leader_id': group.leader.id if group.leader else None,
+                'group_type': 'finalized',
+                'group_label': f"Group {group.group_id}",
+                'group_id': group.group_id,  # Using the explicit group_id field
+                'class_code': group.class_instance.code if group.class_instance else None,
+                'members': member_usernames,
+                'member_count': group.current_member_count(),  # Using model method
+                'max_members': group.max_members,
+                'is_full': group.is_full,
+                'leader': leader_username,
+                'leader_id': group.leader.id if group.leader else None,
             }
 
         def serialize_temp_group(temp_group, index):
             members = list(temp_group.members.all())
-            member_names = [m.name for m in members]
-            while len(member_names) < min_members:
-                member_names.append(None)
+            member_usernames = [m.username for m in members]
+            while len(member_usernames) < min_members:
+                member_usernames.append(None)
             return {
                 'group_type': 'temporary',
                 'group_label': f"Temp Group {index + 1}",
                 'id': temp_group.id,
                 'leader': temp_group.leader.username if temp_group.leader else None,
-                'members': member_names,
+                'members': member_usernames,
                 'member_count': len(members),
                 'is_finalized': temp_group.is_finalized
             }
@@ -400,9 +400,12 @@ class ChangeLeaderAPIView(APIView):
         class_code = request.data.get('class_code')
         temp_group_id = request.data.get('temp_group_id')
         new_leader_username = request.data.get('new_leader_username')
+        new_leader_name = request.data.get('new_leader_name')
 
-        if not all([username, class_code, temp_group_id, new_leader_username]):
-            return Response({'detail': 'username, class_code, temp_group_id, and new_leader_username are required.'}, status=400)
+        if not all([username, class_code, temp_group_id, new_leader_username, new_leader_name]):
+            return Response({
+                'detail': 'username, class_code, temp_group_id, new_leader_username, and new_leader_name are required.'
+            }, status=400)
 
         try:
             current_leader = StudentProfile.objects.get(username=username)
@@ -418,13 +421,17 @@ class ChangeLeaderAPIView(APIView):
         if new_leader not in temp_group.members.all():
             return Response({'detail': 'New leader must be a member of the group.'}, status=400)
 
+        if new_leader.name != new_leader_name:
+            return Response({'detail': 'Provided name does not match the new leader\'s actual name.'}, status=400)
+
         temp_group.leader = new_leader
         temp_group.save()
 
         return Response({
             'detail': 'Leader changed successfully.',
-            'new_leader': f"{new_leader.username} ({new_leader.name})" if new_leader.name else new_leader.username
+            'new_leader': f"{new_leader.username} ({new_leader.name})"
         }, status=200)
+
     
     from django.db import transaction
 from rest_framework.response import Response

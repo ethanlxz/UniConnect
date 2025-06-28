@@ -330,12 +330,12 @@ class LecturerProfileView(APIView):
             'email': lecturer.email,
             'contact_num': lecturer.contact_num,
             'major': lecturer.major,
-            'photo': request.build_absolute_uri(lecturer.profile_image.url) if lecturer.profile_image else None,
+            'photo': request.build_absolute_uri(lecturer.profile_image.url) if lecturer.profile_image else None
         }
 
         return Response(data, status=200)
     
-    def put(self, request, username):
+    def patch(self, request, username):
         username = request.data.get('username')
         if not username:
             return Response({'detail': 'Username is required in the request body.'}, status=400)
@@ -360,8 +360,8 @@ class LecturerProfileView(APIView):
             'name': lecturer.name,
             'email': lecturer.email,
             'contact_num': lecturer.contact_num,
-            'photo': request.build_absolute_uri(lecturer.profile_image.url) if lecturer.profile_image else None,
             'major': lecturer.major,
+            'photo': request.build_absolute_uri(lecturer.profile_image.url) if lecturer.profile_image else None
         }
 
         return Response(updated_data, status=200)

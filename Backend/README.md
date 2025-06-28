@@ -156,7 +156,7 @@ Success Response:
 }
 ```
 
-Endpoint: PUT /api/lecturer/profile/LEC001/
+Endpoint: PATCH /api/lecturer/profile/LEC001/
 Payload:
 
 ```json
@@ -714,7 +714,8 @@ Payload:
   "username": "alexxx",
   "class_code": "HLHYCP",
   "temp_group_id": 7,
-  "new_leader_username": "raelll"
+  "new_leader_username": "raelll",
+  "new_leader_name": "rael"
 }
 ```
 
@@ -722,7 +723,8 @@ Success Response:
 
 ```json
 {
-    "detail": "Leader changed to raelll successfully."
+  "detail": "Leader changed successfully.",
+  "new_leader": "raelll (rael)"
 }
 ```
 
