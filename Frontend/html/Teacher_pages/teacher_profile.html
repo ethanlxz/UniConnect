@@ -122,30 +122,24 @@
                 <p id="teacherMajor"></p>
             </div>
         </div>
+        
       </div>
     </div>
      <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
      <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
 
-     <script>
+  <script>
 document.addEventListener('DOMContentLoaded', function () {
-  const username = localStorage.getItem("username"); // 动态获取用户名
+  const username = localStorage.getItem("username");
 
   if (!username) {
     alert("No username found. Please login first.");
     return;
   }
 
-  fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    }
-  })
+  fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`)
     .then(response => {
-      if (!response.ok) {
-        throw new Error("Failed to fetch student profile.");
-      }
+      if (!response.ok) throw new Error("Failed to fetch teacher profile.");
       return response.json();
     })
     .then(data => {
@@ -156,14 +150,76 @@ document.addEventListener('DOMContentLoaded', function () {
       document.getElementById('teacherMajor').innerText = data.major || "No major info.";
       document.getElementById('teacherPhoto').src = data.photo;
 
-      console.log(data.photo);
+      makeEditable('teacherName', 'name', data.name);
+      makeEditable('teacherEmail', 'email', data.email);
+      makeEditable('teacherContact', 'contact_num', data.contact_num);
+      makeEditable('teacherBio', 'bio', data.bio);
+      makeEditable('teacherMajor', 'major', data.major);
     })
     .catch(error => {
       console.error(error);
-      alert("Unable to load lecturer profile.");
+      alert("Unable to load teacher profile.");
     });
 });
-</script>
-</body>
-</html>
 
+// 单独定义函数，不写在 DOMContentLoaded 回调里面
+function makeEditable(elementId, fieldName, initialValue) {
+  const element = document.getElementById(elementId);
+  const username = localStorage.getItem("username");
+
+  element.style.cursor = "pointer";
+  element.title = "Click to edit";
+
+  element.addEventListener('click', function () {
+    const inputType = fieldName === "bio" ? "textarea" : "input";
+    const input = document.createElement(inputType);
+    input.value = initialValue;
+    input.style.width = "100%";
+    input.style.fontSize = window.getComputedStyle(element).fontSize;
+
+    element.replaceWith(input);
+    input.focus();
+
+    function save() {
+      const newValue = input.value.trim();
+      if (newValue === "") return alert("Field cannot be empty.");
+
+      const formData = new FormData();
+      formData.append("username", username); // 必须加
+      formData.append(fieldName, newValue);
+
+      fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`, {
+        method: 'PATCH',
+        body: formData
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Update failed.");
+        return res.json();
+      })
+      .then(() => {
+        const newSpan = document.createElement(element.tagName.toLowerCase());
+        newSpan.id = elementId;
+        newSpan.innerText = newValue;
+        input.replaceWith(newSpan);
+        makeEditable(elementId, fieldName, newValue);
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Update failed.");
+      });
+    }
+
+    if (inputType === "textarea") {
+      input.addEventListener("blur", save);
+    } else {
+      input.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          save();
+        }
+      });
+      input.addEventListener("blur", save);
+    }
+  });
+}
+</script>
