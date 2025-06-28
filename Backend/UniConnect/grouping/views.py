@@ -224,11 +224,7 @@ class ListGroupsAPIView(APIView):
                 'leader': temp_group.leader.username if temp_group.leader else None,
                 'members': member_names,
                 'member_count': len(members),
-<<<<<<< HEAD
                 'is_finalized': temp_group.is_finalized
-=======
-                'is_finalized': temp_group.is_finalized,
->>>>>>> dd5ff5ad71be94c41ecebea951e13717417b3975
             }
 
         data = {
