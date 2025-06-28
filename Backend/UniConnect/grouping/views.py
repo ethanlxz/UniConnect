@@ -402,7 +402,7 @@ class ChangeLeaderAPIView(APIView):
         new_leader_username = request.data.get('new_leader_username')
         new_leader_name = request.data.get('new_leader_name')
 
-        if not all([username, class_code, temp_group_id, new_leader_username, new_leader_name]):
+        if not all([username, class_code, temp_group_id, new_leader_username]):
             return Response({
                 'detail': 'username, class_code, temp_group_id, new_leader_username, and new_leader_name are required.'
             }, status=400)
@@ -421,15 +421,14 @@ class ChangeLeaderAPIView(APIView):
         if new_leader not in temp_group.members.all():
             return Response({'detail': 'New leader must be a member of the group.'}, status=400)
 
-        if new_leader.name != new_leader_name:
-            return Response({'detail': 'Provided name does not match the new leader\'s actual name.'}, status=400)
+    
 
         temp_group.leader = new_leader
         temp_group.save()
 
         return Response({
             'detail': 'Leader changed successfully.',
-            'new_leader': f"{new_leader.username} ({new_leader.name})"
+            'new_leader': f"{new_leader.username} )"
         }, status=200)
 
     

@@ -192,10 +192,11 @@
   </div>
 
   <div class="controls">
-    <select id="sort-select">
-      <option value="name">Sort by Name</option>
-      <option value="age">Sort by Age</option>
-    </select>
+   <select id="sort-select">
+  <option value="default">Default Order</option>
+  <option value="name">Sort by Name</option>
+  <option value="joinedgroup">Sort by Joined Group</option>
+</select>
 
     <input type="text" id="search-input" placeholder="Search by name..." />
   </div>
@@ -216,6 +217,7 @@ const username = params.get("username");
 
 let classCodeFromAPI = "";
 let currentGroupMembers = [];
+let allStudentsData = [];
 let pendingSentRequests = [];
 
 if (!classId) {
@@ -337,12 +339,14 @@ async function fetchClassDetail(classId) {
       })
     );
 
+    allStudentsData = studentsData; 
     renderStudents(studentsData);
   } catch (err) {
     console.error(err);
     alert("Failed to load class detail");
   }
 }
+
 
 async function fetchGroupAndRequests() {
   try {
@@ -361,7 +365,29 @@ async function fetchGroupAndRequests() {
   } catch (err) {
     console.error("Error fetching group/request data:", err);
   }
+  
 }
+
+document.getElementById("sort-select").addEventListener("change", function(e) {
+  const sortBy = e.target.value;
+
+  let sortedData = [...allStudentsData];
+
+  if (sortBy === "name") {
+    sortedData.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === "joinedgroup") {
+    sortedData.sort((a, b) => {
+      const aInGroup = currentGroupMembers.includes(a.username);
+      const bInGroup = currentGroupMembers.includes(b.username);
+      return aInGroup - bInGroup;
+    });
+  } else if (sortBy === "default") {
+    sortedData = [...allStudentsData];
+  }
+
+  renderStudents(sortedData);
+});
+
 
 function renderStudents(data) {
   const container = document.getElementById("student-container");
@@ -405,7 +431,6 @@ function renderStudents(data) {
   });
 }
 document.addEventListener("click", async function (e) {
-  // ✅ 处理接受请求
   if (e.target.classList.contains("accept-btn")) {
     const requestId = e.target.dataset.id;
     const classCode = e.target.dataset.class;
@@ -579,5 +604,86 @@ if (e.target.classList.contains("send-request-btn")) {
 
 });
 
+document.getElementById("leave-class-btn").addEventListener("click", async function () {
+  if (!classCodeFromAPI) {
+    alert("Class code is not loaded yet.");
+    return;
+  }
+  if (!username) {
+    alert("Username is missing.");
+    return;
+  }
+
+  if (!confirm(`Are you sure you want to leave the class ${classCodeFromAPI}?`)) {
+    return;
+  }
+
+  try {
+    const res = await fetch("http://127.0.0.1:8000/classing/leave/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        code: classCodeFromAPI,
+        username: username
+      })
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      Toastify({
+        text: result.detail || "Successfully left the class.",
+        duration: 3000,
+        gravity: "top",
+        position: "right",
+        backgroundColor: "#4CAF50"
+      }).showToast();
+
+      setTimeout(() => {
+        window.location.href = "student_class.html";
+      }, 1500);
+
+    } else {
+      throw new Error(result.detail || "Failed to leave the class.");
+    }
+  } catch (err) {
+    Toastify({
+      text: "Error: " + err.message,
+      duration: 3000,
+      gravity: "top",
+      position: "right",
+      backgroundColor: "#f44336"
+    }).showToast();
+  }
+});
+
+const searchInput = document.getElementById("search-input");
+const sortSelect = document.getElementById("sort-select");
+
+function filterAndSortStudents() {
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  const sortBy = sortSelect.value;
+
+
+  let filteredData = allStudentsData.filter(student => 
+    student.name.toLowerCase().includes(searchTerm)
+  );
+
+  if (sortBy === "name") {
+    filteredData.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === "joinedgroup") {
+    filteredData.sort((a, b) => {
+      const aInGroup = currentGroupMembers.includes(a.username);
+      const bInGroup = currentGroupMembers.includes(b.username);
+      return aInGroup - bInGroup;
+    });
+  } 
+  renderStudents(filteredData);
+}
+
+searchInput.addEventListener("input", filterAndSortStudents);
+sortSelect.addEventListener("change", filterAndSortStudents);
 
 </script>
