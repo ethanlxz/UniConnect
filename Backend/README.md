@@ -156,7 +156,7 @@ Success Response:
 }
 ```
 
-Endpoint: PUT /api/lecturer/profile/LEC001/
+Endpoint: PATCH /api/lecturer/profile/LEC001/
 Payload:
 
 ```json
