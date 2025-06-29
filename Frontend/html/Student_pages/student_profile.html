@@ -87,6 +87,8 @@
       border: 2px solid #aaa;
     }
 
+
+
     .main-content {
       flex-grow: 1;
       padding: 40px 40px 40px 120px;
@@ -261,7 +263,10 @@
 		<div class="dashboard-grid">
 			<div class="card profile-section">
 				<div class="profile-pic">
-					<img id="studentPhoto" alt="Student Photo" />
+					<input type="file" id="photoInput" accept="image/*" style="display: none;" />
+					<img id="studentPhoto" alt="Student Photo" style="cursor: pointer;" />
+
+
 				</div>
 				<div class="profile-info">
 
@@ -281,35 +286,73 @@
 	</div>
 
 	<script>
-		document.addEventListener('DOMContentLoaded', function () {
-			const username = localStorage.getItem("username");
+	document.addEventListener('DOMContentLoaded', function () {
+	const username = localStorage.getItem("username");
 
-			if (!username) {
-				alert("No username found. Please login first.");
-				return;
-			}
+	if (!username) {
+		alert("No username found. Please login first.");
+		return;
+	}
 
-			// 加载资料
+	const photo = document.getElementById("studentPhoto");
+	const photoInput = document.getElementById("photoInput");
+
+	// 允许头像被点击
+	photo.style.cursor = "pointer";
+
+	// 点击头像时选择图片
+	photo.addEventListener("click", () => {
+		photoInput.click();
+	});
+
+	// 选中图片后上传
+	photoInput.addEventListener("change", function () {
+		const file = photoInput.files[0];
+		if (!file) return;
+
+		const formData = new FormData();
+		formData.append("photo", file);
+
+		fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`, {
+			method: 'PATCH',
+			body: formData
+		})
+			.then(res => {
+				if (!res.ok) throw new Error("Upload failed");
+				return res.json();
+			})
+			.then(data => {
+				photo.src = data.photo;
+				alert("Photo updated!");
+			})
+			.catch(err => {
+				console.error(err);
+				alert("Failed to upload photo");
+			});
+	});
+
+
 			fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`)
 				.then(response => {
 					if (!response.ok) throw new Error("Failed to fetch student profile.");
 					return response.json();
 				})
 				.then(data => {
-					document.getElementById('studentName').innerText = data.name;
-					document.getElementById('studentEmail').innerText = data.email;
-					document.getElementById('studentContact').innerText = data.contact_num;
-					document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
-					document.getElementById('studentMajor').innerText = data.major || "No major info.";
-					document.getElementById('studentPhoto').src = data.photo;
+	document.getElementById('studentName').innerText = data.name;
+	document.getElementById('studentEmail').innerText = data.email;
+	document.getElementById('studentContact').innerText = data.contact_num;
+	document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
+	document.getElementById('studentMajor').innerText = data.major || "No major info.";
+	document.getElementById('studentPhoto').src = data.photo ;
+	
+	makeEditable('studentName', 'name', data.name);
+	makeEditable('studentEmail', 'email', data.email);
+	makeEditable('studentContact', 'contact_num', data.contact_num);
+	makeEditable('studentBio', 'bio', data.bio);
+	makeEditable('studentMajor', 'major', data.major);
 
-					// 初始化内联编辑绑定
-					makeEditable('studentName', 'name', data.name);
-					makeEditable('studentEmail', 'email', data.email);
-					makeEditable('studentContact', 'contact_num', data.contact_num);
-					makeEditable('studentBio', 'bio', data.bio);
-					makeEditable('studentMajor', 'major', data.major);
-				})
+})
+
 				.catch(error => {
 					console.error(error);
 					alert("Unable to load student profile.");
