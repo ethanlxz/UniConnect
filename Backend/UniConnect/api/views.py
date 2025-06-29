@@ -336,10 +336,6 @@ class LecturerProfileView(APIView):
         return Response(data, status=200)
     
     def patch(self, request, username):
-        username = request.data.get('username')
-        if not username:
-            return Response({'detail': 'Username is required in the request body.'}, status=400)
-
         try:
             lecturer = LecturerProfile.objects.get(username=username)
         except LecturerProfile.DoesNotExist:
