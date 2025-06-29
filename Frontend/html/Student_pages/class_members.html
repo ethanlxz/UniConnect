@@ -214,6 +214,8 @@ const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
 const params = new URLSearchParams(window.location.search);
 const classId = params.get("class_id");
 const username = params.get("username");
+let currentMode = "default"; 
+
 
 let classCodeFromAPI = "";
 let currentGroupMembers = [];
@@ -234,7 +236,53 @@ document.getElementById("group-request-select").addEventListener("change", funct
     fetchClassDetail(classId); // 切换回默认 student 列表
   }
 });
+document.getElementById("group-request-select").addEventListener("change", function (e) {
+  const value = e.target.value.toLowerCase();
 
+  if (value === "pending") {
+    currentMode = "pending";
+    document.getElementById("sort-select").style.display = "none";
+    document.getElementById("search-input").style.display = "none";
+
+    fetchPendingRequests(username, classCodeFromAPI);
+  } else {
+    currentMode = "default";
+    document.getElementById("sort-select").style.display = "inline-block";
+    document.getElementById("search-input").style.display = "inline-block";
+    fetchClassDetail(classId);
+  }
+});
+
+function filterAndSortStudents() {
+  if (currentMode !== "default") return;  // ❌ 如果是 pending 模式，直接返回
+
+  const searchTerm = searchInput.value.trim().toLowerCase();
+  const sortBy = sortSelect.value;
+
+  let filteredData = allStudentsData.filter(student => 
+    student.name.toLowerCase().includes(searchTerm)
+  );
+
+  if (sortBy === "name") {
+    filteredData.sort((a, b) => a.name.localeCompare(b.name));
+  } else if (sortBy === "joinedgroup") {
+    filteredData.sort((a, b) => {
+      const aInGroup = currentGroupMembers.includes(a.username);
+      const bInGroup = currentGroupMembers.includes(b.username);
+      return aInGroup - bInGroup;
+    });
+  }
+
+  renderStudents(filteredData);
+}
+
+if (currentMode === "pending") {
+  searchInput.disabled = true;
+  sortSelect.disabled = true;
+} else {
+  searchInput.disabled = false;
+  sortSelect.disabled = false;
+}
 
  
 async function fetchPendingRequests(username, classCode) {
