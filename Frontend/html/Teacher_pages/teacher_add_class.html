@@ -214,6 +214,16 @@
 					return;
 				}
 
+				if (totalStudents > 100) {
+					showToast('Students cannot be more than 100', 'error')
+					return;
+				}
+
+				if (groupSize > 10) {
+					showToast('Group Size cannot be more than 10', 'error')
+					return;
+				}
+
 				summaryStudents.textContent = totalStudents;
 				summaryPerGroup.textContent = groupSize;
 

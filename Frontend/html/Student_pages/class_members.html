@@ -534,8 +534,10 @@
 				const card = document.createElement("div");
 				card.className = "student-card";
 				card.innerHTML = `
-             <div class="profile-card" style="background-image: url('${req.sender_image || DEFAULT_AVATAR}'); position: relative;">
-          <div class="profile-overlay">
+             
+				<div class="profile-card" style="background-image: url('${req.photo || DEFAULT_AVATAR}'); position: relative;">
+            <div class="view-detail-icon" data-username="${req.sender_username}" title="View Details">👁️</div>
+					<div class="profile-overlay">
             <h2>${req.sender_name}</h2>
             <p>${req.sender_email}</p>
             <button class="accept-btn" data-id="${req.request_id}" data-class="${req.class_code}">Accept</button>
