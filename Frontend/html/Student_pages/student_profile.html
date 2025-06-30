@@ -245,7 +245,7 @@
 				<p id="studentContact">0123456789</p>
 				<p id="studentBio">I love learning and working in teams.</p>
 				<p id="studentMajor">Computer Science</p>
-				<p id="studentInstagramLink">ig link haven't post yet</p>
+				<p id="studentInstagramLink">null</p>
 			</div>
 		</div>
 	</div>
@@ -309,14 +309,14 @@
 	document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
 	document.getElementById('studentMajor').innerText = data.major || "No major info.";
 	document.getElementById('studentPhoto').src = data.photo ;
-	document.getElementById('studentInstagramLink').alt = data.instagram_link;
+	document.getElementById('studentInstagramLink').innerText = data.instagram_id;
 	
 	makeEditable('studentName', 'name', data.name);
 	makeEditable('studentEmail', 'email', data.email);
 	makeEditable('studentContact', 'contact_num', data.contact_num);
 	makeEditable('studentBio', 'bio', data.bio);
 	makeEditable('studentMajor', 'major', data.major);
-	makeEditable('studentInstagramLink','instagram_link', data.instagram_link);
+	makeEditable('studentInstagramLink','instagram_id', data.instagram_id);
 
 })
 
