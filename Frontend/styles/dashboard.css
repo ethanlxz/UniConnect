@@ -706,6 +706,21 @@ h2 {
 	background-color: #ff1f4b;
 }
 
+.join-request-btn {
+	background-color: #000000;
+	border: none;
+	padding: 0.6rem 1.2rem;
+	border-radius: 30px;
+	color: white;
+	font-weight: 600;
+	width: 100%;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.join-request-btn:hover {
+	background-color: #ff1f4b;
+}
 .profile-wrapper {
 	margin-left: 120px;
 	justify-content: center;
