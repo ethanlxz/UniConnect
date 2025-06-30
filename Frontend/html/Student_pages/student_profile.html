@@ -111,40 +111,6 @@
 			color: #222;
 		}
 
-		.sidebar-brand {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			margin-bottom: 30px;
-			color: white;
-		}
-
-		.sidebar-brand img {
-			width: 40px;
-			height: 40px;
-			margin-bottom: 6px;
-			color: white;
-		}
-
-		.sidebar-brand span {
-			font-size: 14px;
-			font-weight: bold;
-			color: #ffffff;
-		}
-
-		.nav-item img {
-			width: 30px;
-			height: 30px;
-			margin-bottom: 4px;
-			filter: brightness(0) invert(1);
-			/* 图标变白 */
-		}
-
-
-		.nav-item div {
-			font-size: 12px;
-			color: #070707;
-		}
 
 		.main-content {
 			flex-grow: 1;
@@ -209,46 +175,44 @@
 </head>
 
 <body>
-	<!-- Sidebar -->
 	<div class="sidebar">
-		<div class="nav-item">
-			<a href="student_class.html">
-				<img src="../../image/classes.png" alt="Classes Icon" />
-				<div>Class</div>
-			</a>
-		</div>
-		<div class="nav-item">
-			<a href="student_allgroups.html">
-				<img src="../../image/group icon.png" alt="Group Icon" />
-				<div>Group</div>
-			</a>
-		</div>
-		<div class="nav-item">
-			<a href="student_profile.html">
-				<img src="../../image/userprofile.png" alt="Profile Icon" />
-				<div>Profile</div>
-			</a>
-		</div>
-	</div>
-	</div>
+      <div class="nav-item">
+        <a href="student_class.html">
+          <img src="../../image/classes.png" alt="Classes Icon" />
+                <div>Class</div>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="student_allgroups.html">
+          <img src="../../image/group icon.png" alt="Group Icon" />
+                <div>Group</div>
+        </a>
+      </div>
+      <div class="nav-item">
+        <a href="student_profile.html">
+          <img src="../../image/userprofile.png" alt="Profile Icon" />
+                <div>Profile</div>
+        </a>  
+      </div>
+    </div>
+  </div>
+  </div>
+      
+    <nav class="main-nav"> 
+      <div class="nav-brand">
+        <h1>UniConnect.</h1>
+      </div>
+      <div class="nav-progress">
+  <div class="progress-step dropdown">
+    <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
 
-
-
-	<nav class="main-nav">
-		<div class="nav-brand">
-			<h1>UniConnect</h1>
-		</div>
-		<div class="nav-progress">
-			<div class="progress-step active">
-				<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
-			</div>
-		</div>
+    <div class="dropdown-menu">
+      <a href="teacher_dashboard.html" class="dropdown-item">Back to Dashboard</a>
+      <a href="#" class="dropdown-item" id="logout-btn">Logout</a>
+    </div>
+  </div>
 	</nav>
-
-
-
-
-	</div>
+	
 
 	<!-- Main Content -->
 	<div class="main-content">
@@ -281,6 +245,7 @@
 				<p id="studentContact">0123456789</p>
 				<p id="studentBio">I love learning and working in teams.</p>
 				<p id="studentMajor">Computer Science</p>
+				<p id="studentInstagramLink">ig link haven't post yet</p>
 			</div>
 		</div>
 	</div>
@@ -311,7 +276,7 @@
 		if (!file) return;
 
 		const formData = new FormData();
-		formData.append("photo", file);
+		formData.append("profile_image", file);
 
 		fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`, {
 			method: 'PATCH',
@@ -344,12 +309,14 @@
 	document.getElementById('studentBio').innerText = data.bio || "No bio yet.";
 	document.getElementById('studentMajor').innerText = data.major || "No major info.";
 	document.getElementById('studentPhoto').src = data.photo ;
+	document.getElementById('studentInstagramLink').alt = data.instagram_link;
 	
 	makeEditable('studentName', 'name', data.name);
 	makeEditable('studentEmail', 'email', data.email);
 	makeEditable('studentContact', 'contact_num', data.contact_num);
 	makeEditable('studentBio', 'bio', data.bio);
 	makeEditable('studentMajor', 'major', data.major);
+	makeEditable('studentInstagramLink','instagram_link', data.instagram_link);
 
 })
 
@@ -414,6 +381,14 @@
 				});
 			}
 		});
+		document.getElementById("logout-btn").addEventListener("click", function (e) {
+  e.preventDefault();
+  if (confirm("Are you sure you want to logout?")) {
+    localStorage.clear(); // 可选
+    window.location.href = "../index.html";
+  }
+});
+
 	</script>
 </body>
 

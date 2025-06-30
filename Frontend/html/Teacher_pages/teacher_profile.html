@@ -7,79 +7,78 @@
   <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
   <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
- 
 </head>
+
 <style>
-  
-    .sidebar-brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 10px;
-    }
+  .sidebar-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
+  }
 
-    .sidebar-brand img {
-      width: 36px;
-      height: 36px;
-      margin-bottom: 5px;
-    }
+  .sidebar-brand img {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 5px;
+  }
 
-    .sidebar-brand span {
-      font-size: 12px;
-      font-weight: bold;
-      color: #333;
-    }
+  .sidebar-brand span {
+    font-size: 12px;
+    font-weight: bold;
+    color: #333;
+  }
 
-    .nav-item {
-      text-align: center;
-      margin: 16px 0;
-    }
+  .nav-item {
+    text-align: center;
+    margin: 16px 0;
+  }
 
-    .nav-item a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-    }
+  .nav-item a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+  }
 
-    .nav-item img {
-      width: 32px;
-      height: 32px;
-      transition: transform 0.3s ease;
-    }
+  .nav-item img {
+    width: 32px;
+    height: 32px;
+    transition: transform 0.3s ease;
+  }
 
-    .nav-item img:hover {
-      transform: scale(1.2);
-    }
+  .nav-item img:hover {
+    transform: scale(1.2);
+  }
 
-    .sidebar-avatar {
-      margin-bottom: 15px;
-    }
+  .sidebar-avatar {
+    margin-bottom: 15px;
+  }
 
-    .sidebar-avatar img {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #aaa;
-    }
-
+  .sidebar-avatar img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #aaa;
+  }
 </style>
+
 <body>
-    <!-- Sidebar -->
+  <!-- Sidebar -->
   <div class="sidebar">
-  <div class="nav-item active ">
-    <a href="teacher_class.html">
-      <img src="../../image/classes.png" alt="Classes Icon" />
-      <div>Classes</div>
-    </a>
-  </div>
+    <div class="nav-item active">
+      <a href="teacher_class.html">
+        <img src="../../image/classes.png" alt="Classes Icon" />
+        <div>Classes</div>
+      </a>
+    </div>
 
     <div class="nav-item">
       <a href="teacher_profile.html">
-      <img src="../../image/userprofile.png" alt="Profile Icon" />
-      <div>Profile</div>
+        <img src="../../image/userprofile.png" alt="Profile Icon" />
+        <div>Profile</div>
       </a>
     </div>
   </div>
@@ -90,136 +89,201 @@
         <h1>UniConnect.</h1>
       </div>
       <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon">
+        <div class="progress-step dropdown">
+          <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
+          <div class="dropdown-menu">
+            <a href="teacher_dashboard.html" class="dropdown-item">Back to Dashboard</a>
+            <a href="#" class="dropdown-item" id="logout-btn">Logout</a>
+          </div>
         </div>
       </div>
     </nav>
 
     <div class="textContent">
-        <h2>My Profile</h2>
+      <h2>My Profile</h2>
     </div>
 
-   <div class='Container-Profile'>
+    <div class='Container-Profile'>
       <div class='profile'>
         <div class='profile-pic'>
-          <img id="teacherPhoto"  alt="teacher Photo" />
+          <img id="teacherPhoto" alt="teacher Photo" />
         </div>
         <div class='profile-info'>
-            <div class='profile-name'>
-                <h2 id="teacherName"></h2>
-            </div>
-            <div class='profile-email'>
-                <h4 id="teacherEmail"></h4>
-            </div>
-            <div class='profile-contact_num'>
-                <h4 id="teacherContact"></h4>
-            </div>
-            <div class='profile-bio'>
-                <p id="teacherBio"></p>
-            </div>
-            <div class='profile-major'>
-                <p id="teacherMajor"></p>
-            </div>
+          <div class='profile-name'>
+            <h2 id="teacherName"></h2>
+          </div>
+          <div class='profile-email'>
+            <h4 id="teacherEmail"></h4>
+          </div>
+          <div class='profile-contact_num'>
+            <h4 id="teacherContact"></h4>
+          </div>
+          <div class='profile-bio'>
+            <p id="teacherBio"></p>
+          </div>
+          <div class='profile-major'>
+            <p id="teacherMajor"></p>
+          </div>
         </div>
-        
       </div>
     </div>
-     <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-     <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
 
-  <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const username = localStorage.getItem("username");
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const username = localStorage.getItem("username");
 
-  if (!username) {
-    alert("No username found. Please login first.");
-    return;
-  }
-
-  fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`)
-    .then(response => {
-      if (!response.ok) throw new Error("Failed to fetch teacher profile.");
-      return response.json();
-    })
-    .then(data => {
-      document.getElementById('teacherName').innerText = data.name;
-      document.getElementById('teacherEmail').innerText = data.email;
-      document.getElementById('teacherContact').innerText = data.contact_num;
-      document.getElementById('teacherBio').innerText = data.bio || "No bio yet.";
-      document.getElementById('teacherMajor').innerText = data.major || "No major info.";
-      document.getElementById('teacherPhoto').src = data.photo;
-
-      makeEditable('teacherName', 'name', data.name);
-      makeEditable('teacherEmail', 'email', data.email);
-      makeEditable('teacherContact', 'contact_num', data.contact_num);
-      makeEditable('teacherBio', 'bio', data.bio);
-      makeEditable('teacherMajor', 'major', data.major);
-    })
-    .catch(error => {
-      console.error(error);
-      alert("Unable to load teacher profile.");
-    });
-});
-
-// 单独定义函数，不写在 DOMContentLoaded 回调里面
-function makeEditable(elementId, fieldName, initialValue) {
-  const element = document.getElementById(elementId);
-  const username = localStorage.getItem("username");
-
-  element.style.cursor = "pointer";
-  element.title = "Click to edit";
-
-  element.addEventListener('click', function () {
-    const inputType = fieldName === "bio" ? "textarea" : "input";
-    const input = document.createElement(inputType);
-    input.value = initialValue;
-    input.style.width = "100%";
-    input.style.fontSize = window.getComputedStyle(element).fontSize;
-
-    element.replaceWith(input);
-    input.focus();
-
-    function save() {
-      const newValue = input.value.trim();
-      if (newValue === "") return alert("Field cannot be empty.");
-
-      const formData = new FormData();
-      formData.append("username", username); // 必须加
-      formData.append(fieldName, newValue);
-
-      fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`, {
-        method: 'PATCH',
-        body: formData
-      })
-      .then(res => {
-        if (!res.ok) throw new Error("Update failed.");
-        return res.json();
-      })
-      .then(() => {
-        const newSpan = document.createElement(element.tagName.toLowerCase());
-        newSpan.id = elementId;
-        newSpan.innerText = newValue;
-        input.replaceWith(newSpan);
-        makeEditable(elementId, fieldName, newValue);
-      })
-      .catch(error => {
-        console.error("Error:", error);
-        alert("Update failed.");
-      });
-    }
-
-    if (inputType === "textarea") {
-      input.addEventListener("blur", save);
-    } else {
-      input.addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          save();
+        if (!username) {
+          alert("No username found. Please login first.");
+          return;
         }
+
+        fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`)
+          .then(response => {
+            if (!response.ok) throw new Error("Failed to fetch teacher profile.");
+            return response.json();
+          })
+          .then(data => {
+            document.getElementById('teacherName').innerText = data.name;
+            document.getElementById('teacherEmail').innerText = data.email;
+            document.getElementById('teacherContact').innerText = data.contact_num;
+            document.getElementById('teacherBio').innerHTML = data.bio?.replace(/\n/g, "<br/>") || "No bio yet.";
+            document.getElementById('teacherMajor').innerText = data.major || "No major info.";
+            document.getElementById('teacherPhoto').src = data.photo;
+
+            makeEditable('teacherName', 'name', data.name);
+            makeEditable('teacherEmail', 'email', data.email);
+            makeEditable('teacherContact', 'contact_num', data.contact_num);
+            makeEditable('teacherBio', 'bio', data.bio);
+            makeEditable('teacherMajor', 'major', data.major);
+
+            enablePhotoUpload(username);
+          })
+          .catch(error => {
+            console.error(error);
+            alert("Unable to load teacher profile.");
+          });
+
+        document.getElementById("logout-btn").addEventListener("click", function (e) {
+          e.preventDefault();
+          if (confirm("Are you sure you want to logout?")) {
+            localStorage.clear();
+            window.location.href = "../index.html";
+          }
+        });
       });
-      input.addEventListener("blur", save);
-    }
-  });
-}
-</script>
+
+      function makeEditable(elementId, fieldName, initialValue) {
+        const element = document.getElementById(elementId);
+        const username = localStorage.getItem("username");
+
+        element.style.cursor = "pointer";
+        element.title = "Click to edit";
+
+        element.addEventListener('click', function () {
+          const inputType = fieldName === "bio" ? "textarea" : "input";
+          const input = document.createElement(inputType);
+          input.value = initialValue;
+          input.style.width = "100%";
+          input.style.fontSize = window.getComputedStyle(element).fontSize;
+
+          const parent = element.parentNode;
+          parent.replaceChild(input, element);
+          input.focus();
+
+          function save() {
+            const newValue = input.value.trim();
+            if (newValue === "") return alert("Field cannot be empty.");
+
+            const formData = new FormData();
+            formData.append("username", username);
+            formData.append(fieldName, newValue);
+
+            fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`, {
+              method: 'PATCH',
+              body: formData
+            })
+              .then(res => {
+                if (!res.ok) throw new Error("Update failed.");
+                return res.json();
+              })
+              .then(() => {
+                const newElem = document.createElement(element.tagName.toLowerCase());
+                newElem.id = elementId;
+                if (fieldName === "bio") {
+                  newElem.innerHTML = newValue.replace(/\n/g, "<br/>");
+                } else {
+                  newElem.innerText = newValue;
+                }
+                parent.replaceChild(newElem, input);
+                makeEditable(elementId, fieldName, newValue);
+
+                Toastify({
+                  text: "Profile updated",
+                  duration: 2000,
+                  gravity: "top",
+                  position: "right",
+                  backgroundColor: "#4CAF50"
+                }).showToast();
+              })
+              .catch(error => {
+                console.error("Error:", error);
+                alert("Update failed.");
+              });
+          }
+
+          if (inputType === "textarea") {
+            input.addEventListener("blur", save);
+          } else {
+            input.addEventListener("keypress", function (e) {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                save();
+              }
+            });
+            input.addEventListener("blur", save);
+          }
+        });
+      }
+
+      function enablePhotoUpload(username) {
+        const photoElem = document.getElementById("teacherPhoto");
+        photoElem.style.cursor = "pointer";
+        photoElem.title = "Click to change photo";
+
+        photoElem.addEventListener("click", () => {
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = "image/*";
+          input.click();
+
+          input.onchange = () => {
+            const file = input.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append("username", username);
+            formData.append("profile_image", file);
+
+            fetch(`http://127.0.0.1:8000/api/lecturer/profile/${encodeURIComponent(username)}/`, {
+              method: "PATCH",
+              body: formData,
+            })
+              .then(res => res.json())
+              .then(data => {
+                photoElem.src = data.photo;
+                Toastify({
+                  text: "Photo updated",
+                  duration: 2000,
+                  gravity: "top",
+                  position: "right",
+                  backgroundColor: "#2196F3"
+                }).showToast();
+              })
+              .catch(err => alert("Failed to upload photo"));
+          };
+        });
+      }
+    </script>
+</body>
+</html>

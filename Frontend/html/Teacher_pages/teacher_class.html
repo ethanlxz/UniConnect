@@ -91,11 +91,16 @@
 				<h1>UniConnect.</h1>
 			</div>
 			<div class="nav-progress">
-				<div class="progress-step active">
-					<img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon">
-				</div>
-			</div>
-		</nav>
+  <div class="progress-step dropdown">
+    <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
+
+    <div class="dropdown-menu">
+      <a href="teacher_dashboard.html" class="dropdown-item">Back to Dashboard</a>
+      <a href="#" class="dropdown-item" id="logout-btn">Logout</a>
+    </div>
+  </div>
+</div>
+</nav>
 
 	 
 		<div class="container">
@@ -144,6 +149,14 @@
 						card.style.display = title.includes(searchTerm) ? "flex" : "none";
 					});
 				});
+				document.getElementById("logout-btn").addEventListener("click", function (e) {
+					e.preventDefault();
+					if (confirm("Are you sure you want to logout?")) {
+						 localStorage.clear();
+						 window.location.href = "../index.html";
+						}
+					});
+
 
 
 				function sortCourses() {
@@ -186,7 +199,7 @@
   card.className = "class-card";
   card.style.display = "flex";
   card.addEventListener("click", function () {
-    window.location.href = `teacher_group.html?username=${username}&class_id=${cls.id}`;
+    window.location.href = `teacher_class_member.html?username=${username}&class_id=${cls.id}`;
   });
   card.innerHTML = `
     <div class="class-code">${cls.code || "No Code"}</div>

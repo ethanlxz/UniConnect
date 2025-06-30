@@ -61,7 +61,6 @@
 		.progress-step {
 			width: 40px;
 			height: 40px;
-			background-color: #0077ff;
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
@@ -337,10 +336,16 @@
         <h1>UniConnect.</h1>
       </div>
       <div class="nav-progress">
-        <div class="progress-step active">
-          <img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon">
-        </div>
-      </div>
+  <div class="progress-step dropdown">
+    <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
+
+    <div class="dropdown-menu">
+      <a href="teacher_dashboard.html" class="dropdown-item">Back to Dashboard</a>
+      <a href="#" class="dropdown-item" id="logout-btn">Logout</a>
+    </div>
+  </div>
+</div>
+
     </nav>
 
 
@@ -517,4 +522,11 @@
   `;
 			return card;
 		}
+        document.getElementById("logout-btn").addEventListener("click", function (e) {
+  e.preventDefault();
+  if (confirm("Are you sure you want to logout?")) {
+    localStorage.clear(); // 可选，清除本地数据
+    window.location.href = "../index.html";
+  }
+});
 	</script>

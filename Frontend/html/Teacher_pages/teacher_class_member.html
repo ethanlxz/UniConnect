@@ -124,6 +124,42 @@
 	#delete-class-btn:hover {
 		background-color: #c0392b;
 	}
+	.dropdown {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.dropdown-menu {
+  display: none;
+  margin-top: 50px;
+  position: absolute;
+  z-index:100000;
+  right: 0;
+  background-color: #fff;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+  z-index: 999;
+  border-radius: 6px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.dropdown-menu a {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
 </style>
 
 <body>
@@ -151,10 +187,17 @@
 				<h1>UniConnect.</h1>
 			</div>
 			<div class="nav-progress">
-				<div class="progress-step active">
-					<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
-				</div>
-			</div>
+  <div class="progress-step dropdown">
+    <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
+
+    <div class="dropdown-menu">
+      <a href="teacher_dashboard.html" class="dropdown-item">Back to Dashboard</a>
+      <a href="../index.html" class="dropdown-item" id="logout-btn">Logout</a>
+    </div>
+  </div>
+</div>
+
+		</nav>
 		</nav>
 		<div class="main-header">
 			<h1>CPT4214 - FYP</h1>
@@ -166,8 +209,9 @@
 		<div class="controls">
 			<button id="class-details-btn" class="button small-btn">Class Details</button>
 			<select id="sort-select">
+				<option value="default">Sort by Default</option>
 				<option value="name">Sort by Name</option>
-				<option value="age">Sort by Age</option>
+				<option value="Joinedgroup">Sort by Grouping</option>
 			</select>
 
 			<input type="text" id="search-input" placeholder="Search by name..." />
@@ -196,21 +240,29 @@
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
-	
 	const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
 	const params = new URLSearchParams(window.location.search);
 	const classId = params.get("class_id");
 
-	document.getElementById("search-input").addEventListener("input", function () {
-		const searchTerm = this.value.toLowerCase();
-		const cards = document.querySelectorAll(".student-card");
+	let allStudentsData = [];
+	let currentGroupMembers = [];
+	let classCodeFromAPI = "";
+	const username = localStorage.getItem("username");
 
-		cards.forEach((card) => {
-			const studentName = card.querySelector("h2").innerText.toLowerCase();
-			card.style.display = studentName.includes(searchTerm) ? "block" : "none";
-		});
-	});
+	const sortSelect = document.getElementById("sort-select");
+	const searchInput = document.getElementById("search-input");
+
+	searchInput.addEventListener("input", filterAndSortStudents);
+	sortSelect.addEventListener("change", filterAndSortStudents);
+	document.getElementById("logout-btn").addEventListener("click", function (e) {
+  e.preventDefault();
+  if (confirm("Are you sure you want to logout?")) {
+    localStorage.clear(); 
+    window.location.href = "../index.html";
+  }
+});
 
 	document.addEventListener("DOMContentLoaded", () => {
 		if (!classId) {
@@ -218,70 +270,72 @@
 			return;
 		}
 
-		// Get the modal elements
 		const modal = document.getElementById("class-details-modal");
 		const classDetailsBtn = document.getElementById("class-details-btn");
 		const closeModalBtn = document.querySelector(".close-modal1");
 		const deleteClassBtn = document.getElementById("delete-class-btn");
 
-		// Fetch class details when page loads
-		fetchClassDetail(classId)
-			.then(classDetail => {
-				// Update main page header
-				fillDetails(classDetail);
-
-				document.querySelector(".main-header h1").textContent = `${classDetail.code} - ${classDetail.name}`;
-
-				// Update student list
-				const studentsData = classDetail.students.map((student) => ({
-					name: student.name,
-					email: student.email,
-					contactNum: student.contact_num,
-					image: DEFAULT_AVATAR,
-					bio: "",
-					age: "",
-					photo: student.photo
-				}));
-				renderStudents(studentsData);
-			})
-			.catch(err => {
-				console.error(err);
-				alert("Failed to load class detail");
-			});
-
-		// Event listeners for modal
-		classDetailsBtn.addEventListener("click", () => {
-			modal.style.display = "block";
-		});
-
-		closeModalBtn.addEventListener("click", () => {
-			modal.style.display = "none";
-		});
-
-		// Close modal when clicking outside of it
+		classDetailsBtn.addEventListener("click", () => modal.style.display = "block");
+		closeModalBtn.addEventListener("click", () => modal.style.display = "none");
 		window.addEventListener("click", (event) => {
-			if (event.target === modal) {
-				modal.style.display = "none";
-			}
+			if (event.target === modal) modal.style.display = "none";
 		});
-
 		deleteClassBtn.addEventListener("click", deleteClass);
+
+		fetchClassDetail(classId);
 	});
 
 	async function fetchClassDetail(classId) {
-		const response = await fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`);
-		if (!response.ok) throw new Error("Failed to fetch class detail");
-		return await response.json();
+		try {
+			const res = await fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`);
+			if (!res.ok) throw new Error("Failed to fetch class detail");
+
+			const data = await res.json();
+			classCodeFromAPI = data.code;
+			document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
+			fillDetails(data);
+
+			const studentsData = await Promise.all(data.students
+				.filter(student => student.username !== username)
+				.map(async (student) => {
+					try {
+						const res = await fetch(`http://127.0.0.1:8000/api/student/profile/${student.username}/`);
+						const profile = res.ok ? await res.json() : {};
+						return {
+							username: student.username,
+							name: profile.name || student.name,
+							email: profile.email || student.email,
+							bio: profile.bio || "",
+							image: profile.photo || DEFAULT_AVATAR, // ✅ fixed
+							age: "",
+						};
+					} catch (e) {
+						return {
+							username: student.username,
+							name: student.name,
+							email: student.email,
+							bio: "No bio available",
+							image: DEFAULT_AVATAR,
+							age: "",
+						};
+					}
+				})
+			);
+
+			allStudentsData = studentsData;
+			renderStudents(allStudentsData);
+		} catch (err) {
+			console.error(err);
+			alert("Failed to load class detail");
+		}
 	}
 
 	function fillDetails(classDetail) {
 		document.getElementById("class-title").textContent = classDetail.name;
 		document.getElementById("class-code").textContent = classDetail.code || "N/A";
-		document.getElementById("groups-formed").textContent =
-			`${classDetail.groups_formed || 0} / ${classDetail.total_groups || "?"}`;
+		document.getElementById("groups-formed").textContent = `${classDetail.groups_formed || 0} / ${classDetail.total_groups || "?"}`;
 		document.getElementById("min-members").textContent = classDetail.min_group_members || "0";
-		document.getElementById("total-members").textContent = 
-  `${classDetail.students ? classDetail.students.length : (classDetail.current_student_count || 0)} / ${classDetail.max_students || 0}`;
+		document.getElementById("total-members").textContent = `${classDetail.students ? classDetail.students.length : (classDetail.current_student_count || 0)} / ${classDetail.max_students || 0}`;
 	}
 
 	function deleteClass() {
@@ -318,28 +372,52 @@
 			});
 	}
 
+	function filterAndSortStudents() {
+		const searchTerm = searchInput.value.trim().toLowerCase();
+		const sortBy = sortSelect.value;
+
+		let filteredData = allStudentsData.filter(student =>
+			student.name.toLowerCase().includes(searchTerm)
+		);
+
+		if (sortBy === "name") {
+			filteredData.sort((a, b) => a.name.localeCompare(b.name));
+		} else if (sortBy === "Joinedgroup") {
+			// 你可以根据 group_members 实际情况处理排序
+			filteredData.sort((a, b) => {
+				const aInGroup = currentGroupMembers.includes(a.username);
+				const bInGroup = currentGroupMembers.includes(b.username);
+				return aInGroup - bInGroup;
+			});
+		} else if (sortBy === "default") {
+			filteredData = [...allStudentsData]; // restore default
+		}
+
+		renderStudents(filteredData);
+	}
+
 	function renderStudents(data) {
 		const container = document.getElementById("student-container");
 		container.innerHTML = "";
+
 		data.forEach((student) => {
 			const card = document.createElement("div");
 			card.className = "student-card";
+			card.dataset.username = student.username;
 
 			card.innerHTML = `
-        <div class="profile-card" style="background-image: url('${student.photo}');">
-          <div class="profile-overlay">
-            <h2>${student.name}${student.age ? ` <span>${student.age} years old</span>` : ""}</h2>
-            <p class="bio">${student.bio || ""}</p>
-            <p class="student-location"><img src="/Frontend/image/location.png" class="icon" /> ${student.email}</p>
+				<div class="profile-card" style="background-image: url('${student.image || DEFAULT_AVATAR}');">
+					<div class="profile-overlay">
+						<h2>${student.name}${student.age ? ` <span>${student.age} years old</span>` : ""}</h2>
+						<p class="bio">${student.bio || "No bio provided"}</p>
+						<p class="student-location">
+							${student.email}
+						</p>
+					</div>
+				</div>
+			`;
 
-          </div>
-        </div>
-      `;
 			container.appendChild(card);
 		});
 	}
-
-
-
-
 </script>
