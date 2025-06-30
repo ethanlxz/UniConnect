@@ -296,6 +296,8 @@ class StudentProfileView(APIView):
             student.instagram_id = instagram_id
 
         if 'profile_image' in request.FILES:
+            if student.profile_image.name != 'student_profile_image/default.jpg':
+                student.profile_image.delete(save=False)  # remove old image from storage
             student.profile_image = request.FILES['profile_image']
 
         student.save()
@@ -347,6 +349,8 @@ class LecturerProfileView(APIView):
         lecturer.major = request.data.get('major', lecturer.major)
 
         if 'profile_image' in request.FILES:
+            if lecturer.profile_image.name != 'lecturer_profile_image/default.jpg':
+                lecturer.profile_image.delete(save=False)
             lecturer.profile_image = request.FILES['profile_image']
 
         lecturer.save()
