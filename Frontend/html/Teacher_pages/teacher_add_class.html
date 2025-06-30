@@ -3,15 +3,16 @@
 
 <head>
 	<meta charset="UTF-8" />
-	<meta name="viewport" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>UniConnect</title>
-	<link rel="stylesheet" href="/Frontend/styles/teacher_add_class.css" />
 	<link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+	<link rel="stylesheet" href="/Frontend/styles/teacher_add_class.css" />
 	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
 	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+
 </head>
 <style>
-	
+  
     .sidebar-brand {
       display: flex;
       flex-direction: column;
@@ -70,22 +71,20 @@
 <body>
 	<!-- Sidebar -->
 	<div class="sidebar">
-		<div class="nav-item active ">
+		<div class="nav-item ">
 			<a href="teacher_class.html">
 				<img src="../../image/classes.png" alt="Classes Icon" />
 				<div>Classes</div>
 			</a>
-		</div>
 
+		</div>
 		<div class="nav-item">
 			<a href="teacher_profile.html">
-				<img src="../../image/profile.png" alt="Profile Icon" />
+				<img src="../../image/userprofile.png" alt="Profile Icon" />
 				<div>Profile</div>
 			</a>
 		</div>
 	</div>
-
-
 
 	<div class="main-content">
 		<nav class="main-nav">
@@ -93,11 +92,18 @@
 				<h1>UniConnect.</h1>
 			</div>
 			<div class="nav-progress">
-				<div class="progress-step active">
-					<img src="/Frontend/image/profile.png" alt="Profile Icon" class="step-icon" />
-				</div>
-			</div>
-		</nav>
+  <div class="progress-step dropdown">
+    <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
+
+    <div class="dropdown-menu">
+      <a href="teacher_dashboard.html" class="dropdown-item">Back to Dashboard</a>
+      <a href="#" class="dropdown-item" id="logout-btn">Logout</a>
+    </div>
+  </div>
+  </div></nav>
+
+
+<div class="main-content"> 
 		<div class="content-wrapper">
 			<form id="add-class-form">
 				<div class="form-group">
@@ -175,6 +181,14 @@
 					this.classList.add('selected');
 				});
 			});
+			document.getElementById("logout-btn").addEventListener("click", function (e) {
+				e.preventDefault();
+				 if (confirm("Are you sure you want to logout?")) {
+					localStorage.clear(); 
+					window.location.href = "../index.html";
+  }
+});
+
 
 			// Form submission handler
 			form.addEventListener('submit', function (e) {
