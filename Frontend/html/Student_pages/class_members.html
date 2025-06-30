@@ -1,307 +1,312 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Teacher Home - UniConnect</title>
-  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
-  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-    }
-    
-    body {
-      display: flex;
-      min-height: 100vh;
-      background-color: #f3f1ee;
-      color: #222;
-    }
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>UniConnect</title>
+	<link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+	<style>
+		* {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+			font-family: 'Outfit', sans-serif;
+		}
+
+		body {
+			display: flex;
+			min-height: 100vh;
+			background-color: #f3f1ee;
+			color: #222;
+		}
 
 
- 
 
-    .sidebar-brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 10px;
-    }
 
-    .sidebar-brand img {
-      width: 36px;
-      height: 36px;
-      margin-bottom: 5px;
-    }
+		.sidebar-brand {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			margin-bottom: 10px;
+		}
 
-    .sidebar-brand span {
-      font-size: 12px;
-      font-weight: bold;
-      color: #333;
-    }
+		.sidebar-brand img {
+			width: 36px;
+			height: 36px;
+			margin-bottom: 5px;
+		}
 
-    .nav-item {
-      text-align: center;
-      margin: 16px 0;
-    }
+		.sidebar-brand span {
+			font-size: 12px;
+			font-weight: bold;
+			color: #333;
+		}
 
-    .nav-item a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-    }
+		.nav-item {
+			text-align: center;
+			margin: 16px 0;
+		}
 
-    .nav-item img {
-      width: 32px;
-      height: 32px;
-      transition: transform 0.3s ease;
-    }
+		.nav-item a {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-decoration: none;
+			color: inherit;
+		}
 
-    .nav-item img:hover {
-      transform: scale(1.2);
-    }
+		.nav-item img {
+			width: 32px;
+			height: 32px;
+			transition: transform 0.3s ease;
+		}
 
-    .sidebar-avatar {
-      margin-bottom: 15px;
-    }
+		.nav-item img:hover {
+			transform: scale(1.2);
+		}
 
-    .sidebar-avatar img {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #aaa;
-    }
+		.sidebar-avatar {
+			margin-bottom: 15px;
+		}
 
-    .main-content {
-      flex-grow: 1;
-      padding: 40px 40px 40px 120px;
-      overflow-y: auto;
-      width: 100%;
-    }
+		.sidebar-avatar img {
+			width: 42px;
+			height: 42px;
+			border-radius: 50%;
+			object-fit: cover;
+			border: 2px solid #aaa;
+		}
 
-   
+		.main-content {
+			flex-grow: 1;
+			padding: 40px 40px 40px 120px;
+			overflow-y: auto;
+			width: 100%;
+		}
 
-    .nav-progress {
-      display: flex;
-      gap: 12px;
-    }
 
-    .progress-step {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
 
-    .progress-step img {
-      width: 20px;
-      height: 20px;
-    }
+		.nav-progress {
+			display: flex;
+			gap: 12px;
+		}
 
-    .container h2 {
-      font-size: 22px;
-      margin-bottom: 20px;
-    }
+		.progress-step {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		}
 
-    .group-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
+		.progress-step img {
+			width: 20px;
+			height: 20px;
+		}
 
-    .group-card {
-      background: #fff;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
+		.container h2 {
+			font-size: 22px;
+			margin-bottom: 20px;
+		}
 
-    .group-card h3 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
+		.group-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+			gap: 20px;
+			margin-top: 20px;
+		}
 
-    .group-card p {
-      font-size: 14px;
-      color: #555;
-    }
-    .view-detail-icon {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  font-size: 18px;
-  background: rgba(255,255,255,0.8);
-  padding: 4px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-.accept-btn,
-.reject-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  cursor: pointer;
-  margin: 6px 4px 0 0;
-  transition: background-color 0.3s, transform 0.2s;
-}
+		.group-card {
+			background: #fff;
+			border: 1px solid #ccc;
+			border-radius: 12px;
+			padding: 20px;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+		}
 
-/* ✅ 接受按钮样式 */
-.accept-btn {
-  background-color: #4CAF50;
-  color: white;
-}
+		.group-card h3 {
+			font-size: 18px;
+			margin-bottom: 10px;
+		}
 
-.accept-btn:hover {
-  background-color: #45a049;
-  transform: scale(1.05);
-}
+		.group-card p {
+			font-size: 14px;
+			color: #555;
+		}
 
-/* ❌ 拒绝按钮样式 */
-.reject-btn {
-  background-color: #f44336;
-  color: white;
-}
+		.view-detail-icon {
+			position: absolute;
+			top: 6px;
+			right: 6px;
+			font-size: 18px;
+			background: rgba(255, 255, 255, 0.8);
+			padding: 4px;
+			border-radius: 6px;
+			cursor: pointer;
+		}
 
-.reject-btn:hover {
-  background-color: #d32f2f;
-  transform: scale(1.05);
-}
+		.accept-btn,
+		.reject-btn {
+			padding: 8px 16px;
+			border: none;
+			border-radius: 8px;
+			font-size: 14px;
+			cursor: pointer;
+			margin: 6px 4px 0 0;
+			transition: background-color 0.3s, transform 0.2s;
+		}
 
-  </style>
+		/* ✅ 接受按钮样式 */
+		.accept-btn {
+			background-color: #4CAF50;
+			color: white;
+		}
+
+		.accept-btn:hover {
+			background-color: #45a049;
+			transform: scale(1.05);
+		}
+
+		/* ❌ 拒绝按钮样式 */
+		.reject-btn {
+			background-color: #f44336;
+			color: white;
+		}
+
+		.reject-btn:hover {
+			background-color: #d32f2f;
+			transform: scale(1.05);
+		}
+	</style>
 </head>
+
 <body>
- <body>
-    <div class="sidebar">
-      <div class="nav-item">
-        <a href="student_class.html">
-          <img src="../../image/classes.png" alt="Classes Icon" />
-                <div>Class</div>
-        </a>
-      </div>
-      <div class="nav-item">
-        <a href="student_allgroups.html">
-          <img src="../../image/group icon.png" alt="Group Icon" />
-                <div>Group</div>
-        </a>
-      </div>
-      <div class="nav-item">
-        <a href="student_profile.html">
-          <img src="../../image/userprofile.png" alt="Profile Icon" />
-                <div>Profile</div>
-        </a>  
-      </div>
-    </div>
-  </div>
-  </div>
-      <div class="main-content">
-    <nav class="main-nav"> 
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-  <div class="progress-step dropdown">
-    <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
 
-    <div class="dropdown-menu">
-      <a href="student_dashboard.html" class="dropdown-item">Back to Dashboard</a>
-      <a href="#" class="dropdown-item" id="logout-btn">Logout</a>
-    </div>
-  </div>
-</div>
+	<body>
+		<div class="sidebar">
+			<div class="nav-item">
+				<a href="student_class.html">
+					<img src="../../image/classes.png" alt="Classes Icon" />
+					<div>Class</div>
+				</a>
+			</div>
+			<div class="nav-item">
+				<a href="student_allgroups.html">
+					<img src="../../image/group icon.png" alt="Group Icon" />
+					<div>Group</div>
+				</a>
+			</div>
+			<div class="nav-item">
+				<a href="student_profile.html">
+					<img src="../../image/userprofile.png" alt="Profile Icon" />
+					<div>Profile</div>
+				</a>
+			</div>
+		</div>
+		</div>
+		</div>
+		<div class="main-content">
+			<nav class="main-nav">
+				<div class="nav-brand">
+					<h1>UniConnect.</h1>
+				</div>
+				<div class="nav-progress">
+					<div class="progress-step dropdown">
+						<img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
 
-    </nav>
-<div class="main-header">
-    <h1>CPT4214 - FYP</h1>
-    <div>
-      <button class="button leave-btn" id="leave-class-btn">Leave Class</button>
-     <select class="button group-btn" id="group-request-select">
-  <option value="default">Group Request</option>
-  <option value="pending">Pending</option>
-</select>
+						<div class="dropdown-menu">
+							<a href="student_dashboard.html" class="dropdown-item">Back to Dashboard</a>
+							<a href="#" class="dropdown-item" id="logout-btn">Logout</a>
+						</div>
+					</div>
+				</div>
 
-    </div>
-  </div>
+			</nav>
+			<div class="main-header">
+				<h1>CPT4214 - FYP</h1>
+				<div>
+					<button class="button leave-btn" id="leave-class-btn">Leave Class</button>
+					<select class="button group-btn" id="group-request-select">
+						<option value="default">Group Request</option>
+						<option value="pending">Pending</option>
+					</select>
 
-  <div class="controls">
-   <select id="sort-select">
-  <option value="default">Default Order</option>
-  <option value="name">Sort by Name</option>
-  <option value="joinedgroup">Sort by Joined Group</option>
-</select>
+				</div>
+			</div>
 
-    <input type="text" id="search-input" placeholder="Search by name..." />
-  </div>
+			<div class="controls">
+				<select id="sort-select">
+					<option value="default">Default Order</option>
+					<option value="name">Sort by Name</option>
+					<option value="joinedgroup">Sort by Joined Group</option>
+				</select>
 
-    <div id="student-container" class="student-grid">
-      
-      
-      
-</div>
-  </div>
-</body>
+				<input type="text" id="search-input" placeholder="Search by name..." />
+			</div>
+
+			<div id="student-container" class="student-grid">
+
+
+
+			</div>
+		</div>
+	</body>
+
 </html>
 
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-  const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
-  const params = new URLSearchParams(window.location.search);
-  const classId = params.get("class_id");
-  const username = params.get("username");
-  let currentMode = "default";
-  let classCodeFromAPI = "";
-  let currentGroupMembers = [];
-  let allStudentsData = [];
-  let pendingSentRequests = [];
+	document.addEventListener("DOMContentLoaded", function () {
+		const DEFAULT_AVATAR = "/Frontend/image/default_avatar.png";
+		const params = new URLSearchParams(window.location.search);
+		const classId = params.get("class_id");
+		const username = params.get("username");
+		let currentMode = "default";
+		let classCodeFromAPI = "";
+		let currentGroupMembers = [];
+		let allStudentsData = [];
+		let pendingSentRequests = [];
 
-  const searchInput = document.getElementById("search-input");
-  const sortSelect = document.getElementById("sort-select");
+		const searchInput = document.getElementById("search-input");
+		const sortSelect = document.getElementById("sort-select");
 
-  // ✅ 绑定监听器后执行初始状态控制
-  if (currentMode === "pending") {
-    searchInput.disabled = true;
-    sortSelect.disabled = true;
-  } else {
-    searchInput.disabled = false;
-    sortSelect.disabled = false;
-  }
+		// ✅ 绑定监听器后执行初始状态控制
+		if (currentMode === "pending") {
+			searchInput.disabled = true;
+			sortSelect.disabled = true;
+		} else {
+			searchInput.disabled = false;
+			sortSelect.disabled = false;
+		}
 
-  searchInput.addEventListener("input", filterAndSortStudents);
-  sortSelect.addEventListener("change", filterAndSortStudents);
+		searchInput.addEventListener("input", filterAndSortStudents);
+		sortSelect.addEventListener("change", filterAndSortStudents);
 
-  document.getElementById("sort-select").addEventListener("change", function (e) {
-    const sortBy = e.target.value;
-    let sortedData = [...allStudentsData];
-    if (sortBy === "name") {
-      sortedData.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === "joinedgroup") {
-      sortedData.sort((a, b) => {
-        const aInGroup = currentGroupMembers.includes(a.username);
-        const bInGroup = currentGroupMembers.includes(b.username);
-        return aInGroup - bInGroup;
-      });
-    } else if (sortBy === "default") {
-      sortedData = [...allStudentsData];
-    }
-    renderStudents(sortedData);
-  });
-  // ✅ 自动创建 Student Modal（插入到页面底部）
-(function createStudentModal() {
-  const modalHTML = `
+		document.getElementById("sort-select").addEventListener("change", function (e) {
+			const sortBy = e.target.value;
+			let sortedData = [...allStudentsData];
+			if (sortBy === "name") {
+				sortedData.sort((a, b) => a.name.localeCompare(b.name));
+			} else if (sortBy === "joinedgroup") {
+				sortedData.sort((a, b) => {
+					const aInGroup = currentGroupMembers.includes(a.username);
+					const bInGroup = currentGroupMembers.includes(b.username);
+					return aInGroup - bInGroup;
+				});
+			} else if (sortBy === "default") {
+				sortedData = [...allStudentsData];
+			}
+			renderStudents(sortedData);
+		});
+		// ✅ 自动创建 Student Modal（插入到页面底部）
+		(function createStudentModal() {
+			const modalHTML = `
     <div id="student-modal" style="
       position: fixed;
       top: 0; left: 0;
@@ -337,198 +342,198 @@ document.addEventListener("DOMContentLoaded", function () {
       </div>
     </div>
   `;
-  document.body.insertAdjacentHTML("beforeend", modalHTML);
-})();
+			document.body.insertAdjacentHTML("beforeend", modalHTML);
+		})();
 
 
-  document.getElementById("group-request-select").addEventListener("change", function (e) {
-    const value = e.target.value.toLowerCase();
-    if (value === "pending") {
-      currentMode = "pending";
-      sortSelect.style.display = "none";
-      searchInput.style.display = "none";
-      fetchPendingRequests(username, classCodeFromAPI);
-    } else {
-      currentMode = "default";
-      sortSelect.style.display = "inline-block";
-      searchInput.style.display = "inline-block";
-      fetchClassDetail(classId);
-    }
-  });
+		document.getElementById("group-request-select").addEventListener("change", function (e) {
+			const value = e.target.value.toLowerCase();
+			if (value === "pending") {
+				currentMode = "pending";
+				sortSelect.style.display = "none";
+				searchInput.style.display = "none";
+				fetchPendingRequests(username, classCodeFromAPI);
+			} else {
+				currentMode = "default";
+				sortSelect.style.display = "inline-block";
+				searchInput.style.display = "inline-block";
+				fetchClassDetail(classId);
+			}
+		});
 
-  // 🔧 修复 Leave Class 按钮事件
-  document.getElementById("leave-class-btn").addEventListener("click", async function () {
-    if (!classCodeFromAPI) {
-      alert("Class code is not loaded yet.");
-      return;
-    }
-    if (!username) {
-      alert("Username is missing.");
-      return;
-    }
+		// 🔧 修复 Leave Class 按钮事件
+		document.getElementById("leave-class-btn").addEventListener("click", async function () {
+			if (!classCodeFromAPI) {
+				alert("Class code is not loaded yet.");
+				return;
+			}
+			if (!username) {
+				alert("Username is missing.");
+				return;
+			}
 
-    if (!confirm(`Are you sure you want to leave the class ${classCodeFromAPI}?`)) {
-      return;
-    }
+			if (!confirm(`Are you sure you want to leave the class ${classCodeFromAPI}?`)) {
+				return;
+			}
 
-    try {
-      const res = await fetch("http://127.0.0.1:8000/classing/leave/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: classCodeFromAPI, username: username })
-      });
+			try {
+				const res = await fetch("http://127.0.0.1:8000/classing/leave/", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ code: classCodeFromAPI, username: username })
+				});
 
-      const result = await res.json();
-      const detailText = result.detail || "";
+				const result = await res.json();
+				const detailText = result.detail || "";
 
-      console.log("✅ Leave class response:", result);
+				console.log("✅ Leave class response:", result);
 
-      if (res.ok || detailText.includes("left") || detailText.includes("already")) {
-        Toastify({
-          text: detailText || "Successfully left the class.",
-          duration: 2000,
-          gravity: "top",
-          position: "right",
-          backgroundColor: "#4CAF50",
-          stopOnFocus: true
-        }).showToast();
+				if (res.ok || detailText.includes("left") || detailText.includes("already")) {
+					Toastify({
+						text: detailText || "Successfully left the class.",
+						duration: 2000,
+						gravity: "top",
+						position: "right",
+						backgroundColor: "#4CAF50",
+						stopOnFocus: true
+					}).showToast();
 
-        // ✅ 等待 Toast 展示后再跳转
-        setTimeout(() => {
-          window.location.href = "student_class.html";
-        }, 2200);
-      } else {
-        throw new Error(detailText || "Failed to leave the class.");
-      }
-    } catch (error) {
-      console.error("❌ Error leaving class:", error);
-      Toastify({
-        text: "Failed to leave the class.",
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        backgroundColor: "#F44336"
-      }).showToast();
-    }
-  });
+					// ✅ 等待 Toast 展示后再跳转
+					setTimeout(() => {
+						window.location.href = "student_class.html";
+					}, 2200);
+				} else {
+					throw new Error(detailText || "Failed to leave the class.");
+				}
+			} catch (error) {
+				console.error("❌ Error leaving class:", error);
+				Toastify({
+					text: "Failed to leave the class.",
+					duration: 3000,
+					gravity: "top",
+					position: "right",
+					backgroundColor: "#F44336"
+				}).showToast();
+			}
+		});
 
-  // 🔧 修复 fetchClassDetail 函数
-  async function fetchClassDetail(classId) {
-    try {
-      const res = await fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`);
-      if (!res.ok) throw new Error("Failed to fetch class detail");
+		// 🔧 修复 fetchClassDetail 函数
+		async function fetchClassDetail(classId) {
+			try {
+				const res = await fetch(`http://127.0.0.1:8000/classing/detail/?class_id=${classId}`);
+				if (!res.ok) throw new Error("Failed to fetch class detail");
 
-      const data = await res.json();
-      classCodeFromAPI = data.code;
-      document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
+				const data = await res.json();
+				classCodeFromAPI = data.code;
+				document.querySelector(".main-header h1").textContent = `${data.code} - ${data.name}`;
 
-      await fetchGroupAndRequests();
+				await fetchGroupAndRequests();
 
-      const studentsData = await Promise.all(data.students
-        .filter(student => student.username !== username)
-        .map(async (student) => {
-          const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${student.username}/`);
-          const profile = profileRes.ok ? await profileRes.json() : {};
+				const studentsData = await Promise.all(data.students
+					.filter(student => student.username !== username)
+					.map(async (student) => {
+						const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${student.username}/`);
+						const profile = profileRes.ok ? await profileRes.json() : {};
 
-          const groupInfoRes = await fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${student.username}`);
-          let group_info = null;
-          if (groupInfoRes.ok) {
-            const groupData = await groupInfoRes.json();
-            const group = groupData.groups.find(g => g.class_code === classCodeFromAPI);
-            group_info = group || null;
-          }
+						const groupInfoRes = await fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${student.username}`);
+						let group_info = null;
+						if (groupInfoRes.ok) {
+							const groupData = await groupInfoRes.json();
+							const group = groupData.groups.find(g => g.class_code === classCodeFromAPI);
+							group_info = group || null;
+						}
 
-          return {
-            username: student.username,
-            name: profile.name || student.name,
-            email: profile.email || student.email,
-            contactNum: profile.contact_num || "",
-            gender: profile.gender || "",
-            major: profile.major || "",
-            instagram: profile.instagram_id || "",
-            bio: profile.bio || "",
-            image: profile.photo || DEFAULT_AVATAR,
-            age: "",
-            group_info: group_info
-          };
-        })
-      );
+						return {
+							username: student.username,
+							name: profile.name || student.name,
+							email: profile.email || student.email,
+							contactNum: profile.contact_num || "",
+							gender: profile.gender || "",
+							major: profile.major || "",
+							instagram: profile.instagram_id || "",
+							bio: profile.bio || "",
+							image: profile.photo || DEFAULT_AVATAR,
+							age: "",
+							group_info: group_info
+						};
+					})
+				);
 
-      allStudentsData = studentsData; 
-      renderStudents(studentsData);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to load class detail");
-    }
-  }
+				allStudentsData = studentsData;
+				renderStudents(studentsData);
+			} catch (err) {
+				console.error(err);
+				alert("Failed to load class detail");
+			}
+		}
 
-  async function fetchGroupAndRequests() {
-    try {
-      const groupsRes = await fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${username}`);
-      if (groupsRes.ok) {
-        const groupData = await groupsRes.json();
-        const classGroup = groupData.groups.find(group => group.class_code === classCodeFromAPI);
-        currentGroupMembers = classGroup ? classGroup.members : [];
-      }
+		async function fetchGroupAndRequests() {
+			try {
+				const groupsRes = await fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${username}`);
+				if (groupsRes.ok) {
+					const groupData = await groupsRes.json();
+					const classGroup = groupData.groups.find(group => group.class_code === classCodeFromAPI);
+					currentGroupMembers = classGroup ? classGroup.members : [];
+				}
 
-      const requestsRes = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCodeFromAPI}`);
-      if (requestsRes.ok) {
-        const requestList = await requestsRes.json();
-        pendingSentRequests = requestList.map(req => req.receiver_username);
-      }
-    } catch (err) {
-      console.error("Error fetching group/request data:", err);
-    }
-  }
+				const requestsRes = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCodeFromAPI}`);
+				if (requestsRes.ok) {
+					const requestList = await requestsRes.json();
+					pendingSentRequests = requestList.map(req => req.receiver_username);
+				}
+			} catch (err) {
+				console.error("Error fetching group/request data:", err);
+			}
+		}
 
-  async function fetchPendingRequests(username, classCode) {
-    try {
-      const response = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCode}`);
-      if (!response.ok) throw new Error("Failed to fetch pending requests");
+		async function fetchPendingRequests(username, classCode) {
+			try {
+				const response = await fetch(`http://127.0.0.1:8000/grouping/requests?username=${username}&class_code=${classCode}`);
+				if (!response.ok) throw new Error("Failed to fetch pending requests");
 
-      const requests = await response.json();
+				const requests = await response.json();
 
-  const detailedRequests = await Promise.all(
-  requests.map(async (req) => {
-    const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${req.sender_username}/`);
-    const profile = profileRes.ok ? await profileRes.json() : {};
-    return {
-      request_id: req.request_id,
-      sender_username: req.sender_username,
-      sender_name: profile.name || req.sender_username,
-      sender_email: profile.email || "Not Provided",
-      class_code: classCode,
-      photo: profile.photo || DEFAULT_AVATAR
-    };
-  })
-);
+				const detailedRequests = await Promise.all(
+					requests.map(async (req) => {
+						const profileRes = await fetch(`http://127.0.0.1:8000/api/student/profile/${req.sender_username}/`);
+						const profile = profileRes.ok ? await profileRes.json() : {};
+						return {
+							request_id: req.request_id,
+							sender_username: req.sender_username,
+							sender_name: profile.name || req.sender_username,
+							sender_email: profile.email || "Not Provided",
+							class_code: classCode,
+							photo: profile.photo || DEFAULT_AVATAR
+						};
+					})
+				);
 
-      renderPendingRequests(detailedRequests);
-    } catch (error) {
-      console.error("Error fetching pending requests:", error);
-      Toastify({
-        text: "Failed to load pending requests.",
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        backgroundColor: "#f44336"
-      }).showToast();
-    }
-  }
+				renderPendingRequests(detailedRequests);
+			} catch (error) {
+				console.error("Error fetching pending requests:", error);
+				Toastify({
+					text: "Failed to load pending requests.",
+					duration: 3000,
+					gravity: "top",
+					position: "right",
+					backgroundColor: "#f44336"
+				}).showToast();
+			}
+		}
 
-  function renderPendingRequests(requests) {
-    const container = document.getElementById("student-container");
-    container.innerHTML = "";
+		function renderPendingRequests(requests) {
+			const container = document.getElementById("student-container");
+			container.innerHTML = "";
 
-    if (requests.length === 0) {
-      container.innerHTML = "<p>No pending requests.</p>";
-      return;
-    }
+			if (requests.length === 0) {
+				container.innerHTML = "<p>No pending requests.</p>";
+				return;
+			}
 
-    requests.forEach(req => {
-      const card = document.createElement("div");
-      card.className = "student-card";
-      card.innerHTML = `
+			requests.forEach(req => {
+				const card = document.createElement("div");
+				card.className = "student-card";
+				card.innerHTML = `
              <div class="profile-card" style="background-image: url('${req.sender_image || DEFAULT_AVATAR}'); position: relative;">
           <div class="profile-overlay">
             <h2>${req.sender_name}</h2>
@@ -538,61 +543,61 @@ document.addEventListener("DOMContentLoaded", function () {
           </div>
         </div>
       `;
-      container.appendChild(card);
-    });
-  }
+				container.appendChild(card);
+			});
+		}
 
-  function filterAndSortStudents() { 
-    const searchTerm = searchInput.value.trim().toLowerCase();
-    const sortBy = sortSelect.value;
+		function filterAndSortStudents() {
+			const searchTerm = searchInput.value.trim().toLowerCase();
+			const sortBy = sortSelect.value;
 
-    let filteredData = allStudentsData.filter(student => 
-      student.name.toLowerCase().includes(searchTerm)
-    );
+			let filteredData = allStudentsData.filter(student =>
+				student.name.toLowerCase().includes(searchTerm)
+			);
 
-    if (sortBy === "name") {
-      filteredData.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortBy === "joinedgroup") {
-      filteredData.sort((a, b) => {
-        const aInGroup = currentGroupMembers.includes(a.username);
-        const bInGroup = currentGroupMembers.includes(b.username);
-        return aInGroup - bInGroup;
-      });
-    }
+			if (sortBy === "name") {
+				filteredData.sort((a, b) => a.name.localeCompare(b.name));
+			} else if (sortBy === "joinedgroup") {
+				filteredData.sort((a, b) => {
+					const aInGroup = currentGroupMembers.includes(a.username);
+					const bInGroup = currentGroupMembers.includes(b.username);
+					return aInGroup - bInGroup;
+				});
+			}
 
-    renderStudents(filteredData);
-  }
+			renderStudents(filteredData);
+		}
 
-  function renderStudents(data) {
-    const container = document.getElementById("student-container");
-    container.innerHTML = "";
+		function renderStudents(data) {
+			const container = document.getElementById("student-container");
+			container.innerHTML = "";
 
-    data.forEach((student) => {
-      const card = document.createElement("div");
-      card.className = "student-card";
-      card.dataset.username = student.username;
+			data.forEach((student) => {
+				const card = document.createElement("div");
+				card.className = "student-card";
+				card.dataset.username = student.username;
 
-      const isGroupmate = currentGroupMembers.includes(student.username);
-      const hasPendingRequest = pendingSentRequests.includes(student.username);
+				const isGroupmate = currentGroupMembers.includes(student.username);
+				const hasPendingRequest = pendingSentRequests.includes(student.username);
 
-      let buttonHTML = "";
-      const studentGroup = student.group_info;
-      if (isGroupmate) {
-        buttonHTML = `<span class="in-group-label">✔ In Group</span>`;
-      } else if (studentGroup) {
-        const groupType = studentGroup.group_type.toLowerCase();
-        if (groupType === "finalized" || groupType === "fixed") {
-          buttonHTML = `<span class="in-group-label">❌ Cannot be invited</span>`;
-        } else if (groupType === "temporary") {
-          buttonHTML = `<button class="join-request-btn" data-target="${student.username}">📩 Request to Join</button>`;
-        }
-      } else if (hasPendingRequest) {
-        buttonHTML = `<span class="pending-label">⏳ Pending</span>`;
-      } else {
-        buttonHTML = `<button class="send-request-btn">➕ Invite</button>`;
-      }
-const detailBtn = `<div class="view-detail-icon" data-username="${student.username}" title="View Details">👁️</div>`;
-      card.innerHTML = `
+				let buttonHTML = "";
+				const studentGroup = student.group_info;
+				if (isGroupmate) {
+					buttonHTML = `<span class="in-group-label">✔ In Group</span>`;
+				} else if (studentGroup) {
+					const groupType = studentGroup.group_type.toLowerCase();
+					if (groupType === "finalized" || groupType === "fixed") {
+						buttonHTML = `<span class="in-group-label">❌ Cannot be invited</span>`;
+					} else if (groupType === "temporary") {
+						buttonHTML = `<button class="join-request-btn" data-target="${student.username}">📩 Request to Join</button>`;
+					}
+				} else if (hasPendingRequest) {
+					buttonHTML = `<span class="pending-label">⏳ Pending</span>`;
+				} else {
+					buttonHTML = `<button class="send-request-btn">➕ Invite</button>`;
+				}
+				const detailBtn = `<div class="view-detail-icon" data-username="${student.username}" title="View Details">👁️</div>`;
+				card.innerHTML = `
       <div class="profile-card" style="background-image: url('${student.image || DEFAULT_AVATAR}'); position: relative;">
     ${detailBtn}
           <div class="profile-overlay">
@@ -602,230 +607,230 @@ const detailBtn = `<div class="view-detail-icon" data-username="${student.userna
         </div>
       `;
 
-      container.appendChild(card);
-    });
-  }
-
-  
-  document.addEventListener("click", async function (e) {
-    
-    if (e.target.classList.contains("accept-btn")) {
-      const requestId = e.target.dataset.id;
-      const classCode = e.target.dataset.class;
-
-      try {
-        const res = await fetch("http://127.0.0.1:8000/grouping/respond/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            request_id: parseInt(requestId),
-            class_code: classCode,
-            current_username: username,
-            action: true // 接受
-          })
-        });
-
-        const result = await res.json();
-        if (res.ok) {
-          Toastify({
-            text: result.detail || "Request accepted.",
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#4CAF50"
-          }).showToast();
-          fetchPendingRequests(username, classCodeFromAPI); // 重新刷新请求列表
-        } else {
-          throw new Error(result.detail || "Accept failed.");
-        }
-      } catch (err) {
-        Toastify({
-          text: "Accept failed: " + err.message,
-          duration: 3000,
-          gravity: "top",
-          position: "right",
-          backgroundColor: "#f44336"
-        }).showToast();
-      }
-    }
-
-    // ❌ 处理拒绝请求
-    if (e.target.classList.contains("reject-btn")) {
-      const requestId = e.target.dataset.id;
-      const classCode = e.target.dataset.class;
-
-      try {
-        const res = await fetch("http://127.0.0.1:8000/grouping/respond/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            request_id: parseInt(requestId),
-            class_code: classCode,
-            current_username: username,
-            action: false // 拒绝
-          })
-        });
-
-        const result = await res.json();
-        if (res.ok) {
-          Toastify({
-            text: result.detail || "Request rejected.",
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#FF5722"
-          }).showToast();
-          fetchPendingRequests(username, classCodeFromAPI); // 重新刷新请求列表
-        } else {
-          throw new Error(result.detail || "Reject failed.");
-        }
-      } catch (err) {
-        Toastify({
-          text: "Reject failed: " + err.message,
-          duration: 3000,
-          gravity: "top",
-          position: "right",
-          backgroundColor: "#f44336"
-        }).showToast();
-      }
-    }
-    
-    // 📩 处理加入请求
-    if (e.target.classList.contains("join-request-btn")) {
-      const targetUsername = e.target.dataset.target;
-
-      try {
-        const response = await fetch("http://127.0.0.1:8000/grouping/sendJoinRequest/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            sender_username: username,
-            target_username: targetUsername,
-            class_code: classCodeFromAPI
-          }),
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          Toastify({
-            text: result.detail || "Join request sent successfully.",
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#2196F3"
-          }).showToast();
-          fetchClassDetail(classId);
-        } else {
-          throw new Error(result.detail || "Error sending join request.");
-        }
-      } catch (error) {
-        Toastify({
-          text: "Join request failed: " + error.message,
-          duration: 3000,
-          gravity: "top",
-          position: "right",
-          backgroundColor: "#f44336"
-        }).showToast();
-      }
-    }
-
-    // ➕ 处理发送邀请
-    if (e.target.classList.contains("send-request-btn")) {
-      const card = e.target.closest(".student-card");
-      const targetUsername = card?.dataset.username;
-
-      if (!targetUsername) {
-        console.error("Target username not found");
-        return;
-      }
-
-      try {
-        const res = await fetch("http://127.0.0.1:8000/grouping/send/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            class_code: classCodeFromAPI,
-            sender_username: username,
-            receiver_username: targetUsername
-          })
-        });
-
-        const response = await res;
-const result = await response.json();
+				container.appendChild(card);
+			});
+		}
 
 
-        if (res.ok) {
-          Toastify({
-            text: result.detail || "Invite sent successfully!",
-            duration: 3000,
-            gravity: "top",
-            position: "right",
-            backgroundColor: "#2196F3"
-          }).showToast();
-          fetchClassDetail(classId); // 更新界面状态
-        } else {
-          throw new Error(result.detail || "Invite failed.");
-        }
-      } catch (err) {
-        console.error("Invite error:", err);
-        Toastify({
-          text: "Invite failed: " + err.message,
-          duration: 3000,
-          gravity: "top",
-          position: "right",
-          backgroundColor: "#f44336"
-        }).showToast();
-      }
-    }
-  });
+		document.addEventListener("click", async function (e) {
 
-  if (currentMode === "pending") {
-    searchInput.disabled = true;
-    sortSelect.disabled = true;
-  } else {
-    searchInput.disabled = false;
-    sortSelect.disabled = false;
-  }
+			if (e.target.classList.contains("accept-btn")) {
+				const requestId = e.target.dataset.id;
+				const classCode = e.target.dataset.class;
 
-  if (!classId) {
-    alert("No class ID provided in URL.");
-  } else {
-    fetchClassDetail(classId);
-  }
-});
-document.getElementById("logout-btn").addEventListener("click", function (e) {
-  e.preventDefault();
-  if (confirm("Are you sure you want to logout?")) {
-    localStorage.clear(); // 可选，清除本地数据
-    window.location.href = "../index.html";
-  }
-});
+				try {
+					const res = await fetch("http://127.0.0.1:8000/grouping/respond/", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify({
+							request_id: parseInt(requestId),
+							class_code: classCode,
+							current_username: username,
+							action: true // 接受
+						})
+					});
 
-document.addEventListener("click", async function (e) {
-  // 👁️ 打开详情 modal
-  if (e.target.classList.contains("view-detail-icon")) {
-    const username = e.target.dataset.username;
-    if (!username) return;
+					const result = await res.json();
+					if (res.ok) {
+						Toastify({
+							text: result.detail || "Request accepted.",
+							duration: 3000,
+							gravity: "top",
+							position: "right",
+							backgroundColor: "#4CAF50"
+						}).showToast();
+						fetchPendingRequests(username, classCodeFromAPI); // 重新刷新请求列表
+					} else {
+						throw new Error(result.detail || "Accept failed.");
+					}
+				} catch (err) {
+					Toastify({
+						text: "Accept failed: " + err.message,
+						duration: 3000,
+						gravity: "top",
+						position: "right",
+						backgroundColor: "#f44336"
+					}).showToast();
+				}
+			}
 
-    try {
-      const res = await fetch(`http://127.0.0.1:8000/api/student/profile/${username}/`);
-      if (!res.ok) throw new Error("Failed to fetch profile");
+			// ❌ 处理拒绝请求
+			if (e.target.classList.contains("reject-btn")) {
+				const requestId = e.target.dataset.id;
+				const classCode = e.target.dataset.class;
 
-      const student = await res.json();
+				try {
+					const res = await fetch("http://127.0.0.1:8000/grouping/respond/", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify({
+							request_id: parseInt(requestId),
+							class_code: classCode,
+							current_username: username,
+							action: false // 拒绝
+						})
+					});
 
-      const safe = (val) => val || "-";
-      const modal = document.getElementById("student-modal");
-      const detailsDiv = document.getElementById("modal-details");
+					const result = await res.json();
+					if (res.ok) {
+						Toastify({
+							text: result.detail || "Request rejected.",
+							duration: 3000,
+							gravity: "top",
+							position: "right",
+							backgroundColor: "#FF5722"
+						}).showToast();
+						fetchPendingRequests(username, classCodeFromAPI); // 重新刷新请求列表
+					} else {
+						throw new Error(result.detail || "Reject failed.");
+					}
+				} catch (err) {
+					Toastify({
+						text: "Reject failed: " + err.message,
+						duration: 3000,
+						gravity: "top",
+						position: "right",
+						backgroundColor: "#f44336"
+					}).showToast();
+				}
+			}
 
-      detailsDiv.innerHTML = `
+			// 📩 处理加入请求
+			if (e.target.classList.contains("join-request-btn")) {
+				const targetUsername = e.target.dataset.target;
+
+				try {
+					const response = await fetch("http://127.0.0.1:8000/grouping/sendJoinRequest/", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							sender_username: username,
+							target_username: targetUsername,
+							class_code: classCodeFromAPI
+						}),
+					});
+
+					const result = await response.json();
+					if (response.ok) {
+						Toastify({
+							text: result.detail || "Join request sent successfully.",
+							duration: 3000,
+							gravity: "top",
+							position: "right",
+							backgroundColor: "#2196F3"
+						}).showToast();
+						fetchClassDetail(classId);
+					} else {
+						throw new Error(result.detail || "Error sending join request.");
+					}
+				} catch (error) {
+					Toastify({
+						text: "Join request failed: " + error.message,
+						duration: 3000,
+						gravity: "top",
+						position: "right",
+						backgroundColor: "#f44336"
+					}).showToast();
+				}
+			}
+
+			// ➕ 处理发送邀请
+			if (e.target.classList.contains("send-request-btn")) {
+				const card = e.target.closest(".student-card");
+				const targetUsername = card?.dataset.username;
+
+				if (!targetUsername) {
+					console.error("Target username not found");
+					return;
+				}
+
+				try {
+					const res = await fetch("http://127.0.0.1:8000/grouping/send/", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify({
+							class_code: classCodeFromAPI,
+							sender_username: username,
+							receiver_username: targetUsername
+						})
+					});
+
+					const response = await res;
+					const result = await response.json();
+
+
+					if (res.ok) {
+						Toastify({
+							text: result.detail || "Invite sent successfully!",
+							duration: 3000,
+							gravity: "top",
+							position: "right",
+							backgroundColor: "#2196F3"
+						}).showToast();
+						fetchClassDetail(classId); // 更新界面状态
+					} else {
+						throw new Error(result.detail || "Invite failed.");
+					}
+				} catch (err) {
+					console.error("Invite error:", err);
+					Toastify({
+						text: "Invite failed: " + err.message,
+						duration: 3000,
+						gravity: "top",
+						position: "right",
+						backgroundColor: "#f44336"
+					}).showToast();
+				}
+			}
+		});
+
+		if (currentMode === "pending") {
+			searchInput.disabled = true;
+			sortSelect.disabled = true;
+		} else {
+			searchInput.disabled = false;
+			sortSelect.disabled = false;
+		}
+
+		if (!classId) {
+			alert("No class ID provided in URL.");
+		} else {
+			fetchClassDetail(classId);
+		}
+	});
+	document.getElementById("logout-btn").addEventListener("click", function (e) {
+		e.preventDefault();
+		if (confirm("Are you sure you want to logout?")) {
+			localStorage.clear(); // 可选，清除本地数据
+			window.location.href = "../index.html";
+		}
+	});
+
+	document.addEventListener("click", async function (e) {
+		// 👁️ 打开详情 modal
+		if (e.target.classList.contains("view-detail-icon")) {
+			const username = e.target.dataset.username;
+			if (!username) return;
+
+			try {
+				const res = await fetch(`http://127.0.0.1:8000/api/student/profile/${username}/`);
+				if (!res.ok) throw new Error("Failed to fetch profile");
+
+				const student = await res.json();
+
+				const safe = (val) => val || "-";
+				const modal = document.getElementById("student-modal");
+				const detailsDiv = document.getElementById("modal-details");
+
+				detailsDiv.innerHTML = `
         <div style="text-align:center;">
           <img src="${safe(student.photo)}" style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);" />
           <h2 style="margin-bottom: 6px;">${safe(student.name)}</h2>
@@ -839,23 +844,23 @@ document.addEventListener("click", async function (e) {
         <p><strong>Bio:</strong> ${safe(student.bio)}</p>
       `;
 
-      modal.style.display = "flex";
-    } catch (err) {
-      console.error("❌ Failed to load student profile:", err);
-      Toastify({
-        text: "Failed to load student profile",
-        duration: 3000,
-        gravity: "top",
-        position: "right",
-        backgroundColor: "#f44336"
-      }).showToast();
-    }
-  }
+				modal.style.display = "flex";
+			} catch (err) {
+				console.error("❌ Failed to load student profile:", err);
+				Toastify({
+					text: "Failed to load student profile",
+					duration: 3000,
+					gravity: "top",
+					position: "right",
+					backgroundColor: "#f44336"
+				}).showToast();
+			}
+		}
 
-  // ❌ 关闭 modal
-  if (e.target.classList.contains("close-btn") || e.target.id === "student-modal") {
-    document.getElementById("student-modal").style.display = "none";
-  }
-});
+		// ❌ 关闭 modal
+		if (e.target.classList.contains("close-btn") || e.target.id === "student-modal") {
+			document.getElementById("student-modal").style.display = "none";
+		}
+	});
 
 </script>

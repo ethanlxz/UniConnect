@@ -204,7 +204,7 @@
   card.innerHTML = `
     <div class="class-code">${cls.code || "No Code"}</div>
     <div class="class-name">${cls.name}</div>
-    <button onclick="window.location.href='teacher_group.html?username=${username}&class_id=${cls.id}'">Groups</button>
+    <button onclick="event.stopPropagation(); window.location.href='./teacher_group.html?username=${username}&class_id=${cls.id}'">Groups</button>
   `;
   classGrid.appendChild(card);
 });

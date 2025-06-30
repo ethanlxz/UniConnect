@@ -1,227 +1,228 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Student Home - UniConnect</title>
-  <link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
-  <link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
-  
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>UniConnect</title>
+	<link rel="stylesheet" href="/Frontend/styles/dashboard.css" />
+	<link href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css" rel="stylesheet" />
+	<link href="https://fonts.googleapis.com/css2?family=Outfit&display=swap" rel="stylesheet" />
+
 </head>
 <style>
-  * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Outfit', sans-serif;
-    }
+	* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+		font-family: 'Outfit', sans-serif;
+	}
 
-    body {
-      display: flex;
-      min-height: 100vh;
-      background-color: #f3f1ee;
-      color: #222;
-    }
-    
+	body {
+		display: flex;
+		min-height: 100vh;
+		background-color: #f3f1ee;
+		color: #222;
+	}
 
-   
 
-    .sidebar-brand {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 10px;
-    }
 
-    .sidebar-brand img {
-      width: 36px;
-      height: 36px;
-      margin-bottom: 5px;
-    }
 
-    .sidebar-brand span {
-      font-size: 12px;
-      font-weight: bold;
-      color: #333;
-    }
+	.sidebar-brand {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin-bottom: 10px;
+	}
 
-    .nav-item {
-      text-align: center;
-      margin: 16px 0;
-    }
+	.sidebar-brand img {
+		width: 36px;
+		height: 36px;
+		margin-bottom: 5px;
+	}
 
-    .nav-item a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: inherit;
-    }
+	.sidebar-brand span {
+		font-size: 12px;
+		font-weight: bold;
+		color: #333;
+	}
 
-    .nav-item img {
-      width: 32px;
-      height: 32px;
-      transition: transform 0.3s ease;
-    }
+	.nav-item {
+		text-align: center;
+		margin: 16px 0;
+	}
 
-    .nav-item img:hover {
-      transform: scale(1.2);
-    }
+	.nav-item a {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-decoration: none;
+		color: inherit;
+	}
 
-    .sidebar-avatar {
-      margin-bottom: 15px;
-    }
+	.nav-item img {
+		width: 32px;
+		height: 32px;
+		transition: transform 0.3s ease;
+	}
 
-    .sidebar-avatar img {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #aaa;
-    }
+	.nav-item img:hover {
+		transform: scale(1.2);
+	}
 
-   
-    
+	.sidebar-avatar {
+		margin-bottom: 15px;
+	}
+
+	.sidebar-avatar img {
+		width: 42px;
+		height: 42px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 2px solid #aaa;
+	}
 </style>
+
 <body>
-  <body>
-    <div class="sidebar">
-      <div class="nav-item">
-        <a href="student_class.html">
-          <img src="../../image/classes.png" alt="Classes Icon" />
-                <div>Class</div>
-        </a>
-      </div>
-      <div class="nav-item">
-        <a href="student_allgroups.html">
-          <img src="../../image/group icon.png" alt="Group Icon" />
-                <div>Group</div>
-        </a>
-      </div>
-      <div class="nav-item">
-        <a href="student_profile.html">
-          <img src="../../image/userprofile.png" alt="Profile Icon" />
-                <div>Profile</div>
-        </a>  
-      </div>
-    </div>
-  </div>
-  </div>
-    <nav class="main-nav"> 
-      <div class="nav-brand">
-        <h1>UniConnect.</h1>
-      </div>
-      <div class="nav-progress">
-  <div class="progress-step dropdown">
-    <img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
 
-    <div class="dropdown-menu">
-      <a href="student_dashboard.html" class="dropdown-item">Back to Dashboard</a>
-      <a href="#" class="dropdown-item" id="logout-btn">Logout</a>
-    </div>
-</div>
-    </nav>
+	<body>
+		<div class="sidebar">
+			<div class="nav-item">
+				<a href="student_class.html">
+					<img src="../../image/classes.png" alt="Classes Icon" />
+					<div>Class</div>
+				</a>
+			</div>
+			<div class="nav-item">
+				<a href="student_allgroups.html">
+					<img src="../../image/group icon.png" alt="Group Icon" />
+					<div>Group</div>
+				</a>
+			</div>
+			<div class="nav-item">
+				<a href="student_profile.html">
+					<img src="../../image/userprofile.png" alt="Profile Icon" />
+					<div>Profile</div>
+				</a>
+			</div>
+		</div>
+		</div>
+		</div>
+		<nav class="main-nav">
+			<div class="nav-brand">
+				<h1>UniConnect.</h1>
+			</div>
+			<div class="nav-progress">
+				<div class="progress-step dropdown">
+					<img src="../../image/userprofile.png" alt="Profile Icon" class="step-icon dropdown-toggle" />
 
-  <div class="main-content">
-    <nav class="main-nav"> 
-      <div class="nav-brand">
-      <h1>Hi, <span id="studentName">Student</span>!</h1>
-    </nav>
+					<div class="dropdown-menu">
+						<a href="student_dashboard.html" class="dropdown-item">Back to Dashboard</a>
+						<a href="#" class="dropdown-item" id="logout-btn">Logout</a>
+					</div>
+				</div>
+		</nav>
 
-    <div class="container">
-      <h2>My Classes</h2>
-      <div class="actions">
-        <input type="text" id="search-input" placeholder="Search for a class" />
-        <button id="search-button">Search</button>
-        <button class="sort" onclick="sortCourses()">Sort by course name</button>
-        <a href="../Student_pages/join_class.html" class="join" id="joinBtn">Join</a>
-      </div>
+		<div class="main-content">
+			<nav class="main-nav">
+				<div class="nav-brand">
+					<h1>Hi, <span id="studentName">Student</span>!</h1>
+			</nav>
 
-      <div id="classGrid"></div>
-    </div>
-  </div>
+			<div class="container">
+				<h2>My Classes</h2>
+				<div class="actions">
+					<input type="text" id="search-input" placeholder="Search for a class" />
+					<button id="search-button">Search</button>
+					<button class="sort" onclick="sortCourses()">Sort by course name</button>
+					<a href="../Student_pages/join_class.html" class="join" id="joinBtn">Join</a>
+				</div>
 
-  <script>
-    const username = localStorage.getItem("username");
-    const classGrid = document.getElementById("classGrid");
+				<div id="classGrid"></div>
+			</div>
+		</div>
 
-    document.getElementById("search-input").addEventListener("input", function () {
-      const searchTerm = this.value.toLowerCase();
-      const cards = document.querySelectorAll(".class-card");
-      cards.forEach((card) => {
-        const title = card.querySelector(".class-name").innerText.toLowerCase();
-        card.style.display = title.includes(searchTerm) ? "flex" : "none";
-      });
-    });
+		<script>
+			const username = localStorage.getItem("username");
+			const classGrid = document.getElementById("classGrid");
 
-    function sortCourses() {
-      const cards = Array.from(classGrid.children);
-      cards.sort((a, b) => {
-        const nameA = a.querySelector(".class-name").innerText.toUpperCase();
-        const nameB = b.querySelector(".class-name").innerText.toUpperCase();
-        return nameA.localeCompare(nameB);
-      });
-      classGrid.innerHTML = "";
-      cards.forEach((card) => classGrid.appendChild(card));
-    }
+			document.getElementById("search-input").addEventListener("input", function () {
+				const searchTerm = this.value.toLowerCase();
+				const cards = document.querySelectorAll(".class-card");
+				cards.forEach((card) => {
+					const title = card.querySelector(".class-name").innerText.toLowerCase();
+					card.style.display = title.includes(searchTerm) ? "flex" : "none";
+				});
+			});
 
-    function loadClasses() {
-      fetch("http://127.0.0.1:8000/classing/student/classes/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: username }),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          classGrid.innerHTML = "";
+			function sortCourses() {
+				const cards = Array.from(classGrid.children);
+				cards.sort((a, b) => {
+					const nameA = a.querySelector(".class-name").innerText.toUpperCase();
+					const nameB = b.querySelector(".class-name").innerText.toUpperCase();
+					return nameA.localeCompare(nameB);
+				});
+				classGrid.innerHTML = "";
+				cards.forEach((card) => classGrid.appendChild(card));
+			}
 
-          data.forEach((cls) => {
-            const card = document.createElement("div");
-            card.className = "class-card";
+			function loadClasses() {
+				fetch("http://127.0.0.1:8000/classing/student/classes/", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ username: username }),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						classGrid.innerHTML = "";
 
-            card.addEventListener("click", function () {
-              window.location.href = `../Student_pages/class_members.html?username=${username}&class_id=${cls.id}`;
-            });
+						data.forEach((cls) => {
+							const card = document.createElement("div");
+							card.className = "class-card";
 
-            card.innerHTML = `
+							card.addEventListener("click", function () {
+								window.location.href = `../Student_pages/class_members.html?username=${username}&class_id=${cls.id}`;
+							});
+
+							card.innerHTML = `
               <div class="class-code">${cls.code}</div>
               <div class="class-name">${cls.name}</div>
             `;
 
-            const groupBtn = document.createElement("button");
-            groupBtn.textContent = "Groups";
-            groupBtn.addEventListener("click", function (event) {
-              event.stopPropagation();
-              window.location.href = `../Student_pages/student_group.html?username=${username}&class_id=${cls.id}`;
-            });
+							const groupBtn = document.createElement("button");
+							groupBtn.textContent = "Groups";
+							groupBtn.addEventListener("click", function (event) {
+								event.stopPropagation();
+								window.location.href = `../Student_pages/student_group.html?username=${username}&class_id=${cls.id}`;
+							});
 
-            card.appendChild(groupBtn);
-            classGrid.appendChild(card);
-          });
-        })
-        .catch((error) => {
-          console.error("Failed to load student classes:", error);
-        });
-    }
+							card.appendChild(groupBtn);
+							classGrid.appendChild(card);
+						});
+					})
+					.catch((error) => {
+						console.error("Failed to load student classes:", error);
+					});
+			}
 
-    loadClasses();
+			loadClasses();
 
-    fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById("studentName").innerText = data.name;
-      })
-      .catch(error => console.error("Failed to load profile data:", error));
+			fetch(`http://127.0.0.1:8000/api/student/profile/${encodeURIComponent(username)}/`)
+				.then(response => response.json())
+				.then(data => {
+					document.getElementById("studentName").innerText = data.name;
+				})
+				.catch(error => console.error("Failed to load profile data:", error));
 
-      document.getElementById("logout-btn").addEventListener("click", function (e) {
-  e.preventDefault();
-  if (confirm("Are you sure you want to logout?")) {
-    localStorage.clear(); // 可选
-    window.location.href = "../index.html";
-  }
-});
+			document.getElementById("logout-btn").addEventListener("click", function (e) {
+				e.preventDefault();
+				if (confirm("Are you sure you want to logout?")) {
+					localStorage.clear(); // 可选
+					window.location.href = "../index.html";
+				}
+			});
 
-  </script>
-</body>
+		</script>
+	</body>
+
 </html>

@@ -443,7 +443,7 @@ const username = (rawUsername ? rawUsername : "").trim();
 			console.log("Rendering - Temp groups:", tempGroups);
 
 			if (finalGroups.length) {
-				cont.append(sectionHeader('Fixed Groups'));
+				cont.append(sectionHeader('Confirmed Groups'));
 				const sec = containerDiv();
 				finalGroups.forEach(g => {
 					console.log("Creating fixed card for group:", g);
