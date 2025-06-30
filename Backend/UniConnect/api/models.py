@@ -15,7 +15,7 @@ class StudentProfile(models.Model):
     major = models.CharField(max_length=50)
     profile_image = models.ImageField(upload_to='student_profile_image/', default='student_profile_image/default.jpg')
     bio = models.TextField(max_length=200, default='Bio loading… please wait.')
-    instagram_id = models.CharField(max_length=100, blank=True, null=True)
+    instagram_id = models.CharField(max_length=100, default='@instagram_id')
 
     def __str__(self):
         return self.username
