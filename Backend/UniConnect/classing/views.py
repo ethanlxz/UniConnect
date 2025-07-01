@@ -209,6 +209,16 @@ class ClassDetailAPIView(APIView):
             class_instance = Class.objects.get(class_id=class_id)
         except Class.DoesNotExist:
             return Response({'detail': 'Class not found.'}, status=404)
+        
+        min_members = class_instance.min_group_members
+        total_fixed_groups = class_instance.group
+
+        # Get all fixed groups for the class
+        fixed_groups = Group.objects.filter(class_instance=class_instance)
+
+        # Count only the fixed groups that meet or exceed the minimum member requirement
+        formed_fixed_groups = sum(1 for g in fixed_groups if g.members.count() >= min_members)
+
 
         data = {
             'class_id': class_instance.class_id,
@@ -218,6 +228,7 @@ class ClassDetailAPIView(APIView):
             'current_student_count': class_instance.current_student_count(),
             'group': class_instance.group,
             'min_group_members': class_instance.min_group_members,
+            'group_formed': f"{formed_fixed_groups}/{total_fixed_groups}",
             'lecturer': {
                 'id': class_instance.lecturer.id,
                 'username': class_instance.lecturer.username,
