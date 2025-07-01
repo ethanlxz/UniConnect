@@ -178,36 +178,33 @@
 <script>
 
   const username = localStorage.getItem("username");  
-
-
- fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${encodeURIComponent(username)}`)
-
-    .then(res => res.json())
-    .then(data => {
-      const container = document.getElementById("groupsContainer");
-      container.innerHTML = "";
+fetch(`http://127.0.0.1:8000/grouping/myGroups/?username=${encodeURIComponent(username)}`)
+  .then(res => res.json())
+  .then(data => {
+    const container = document.getElementById("groupsContainer");
+    container.innerHTML = "";
 
     data.groups.forEach(group => {
-  const div = document.createElement("div");
-  div.className = "group-card";
-  div.innerHTML = `
-    <h3>${group.class_code} - ${group.class_name}</h3>
-    <ol>${group.members.map(m => `<li>${m}</li>`).join("")}</ol>
-    <button onclick="leaveGroup('${group.class_code}', ${group.group_id}, '${group.group_type}')">Leave</button>
-  `;
-  container.appendChild(div);
-});
-    })
-(error => {
-      console.error("Fetch error:", error);
-      Toastify({
-        text: "Failed to load groups.",
-        duration: 3000,
-        gravity: "top",
-        position: "center",
-        backgroundColor: "red"
-      }).showToast();
+      const div = document.createElement("div");
+      div.className = "group-card";
+      div.innerHTML = `
+        <h3>${group.class_code} - ${group.class_name}</h3>
+        <ol>${group.members.map(m => `<li>${m}</li>`).join("")}</ol>
+        <button onclick="leaveGroup('${group.class_code}', ${group.group_id}, '${group.group_type}')">Leave</button>
+      `;
+      container.appendChild(div);
     });
+  })
+  .catch(error => {
+    console.error("Fetch error:", error);
+    Toastify({
+      text: "Failed to load groups.",
+      duration: 3000,
+      gravity: "top",
+      position: "center",
+      backgroundColor: "red"
+    }).showToast();
+  });
 
   function leaveGroup(classCode, groupId, group_type) {
   console.log("Leaving group", classCode, groupId, group_type);
@@ -235,7 +232,10 @@
       backgroundColor: "orange"
     }).showToast();
 
-    setTimeout(() => window.location.reload(), 1000);
+   
+  window.location.href = "student_class.html";
+
+
   })
   .catch(err => {
     console.error(err);
