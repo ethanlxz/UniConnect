@@ -398,10 +398,9 @@
 						stopOnFocus: true
 					}).showToast();
 
-					// ✅ 等待 Toast 展示后再跳转
 					setTimeout(() => {
 						window.location.href = "student_class.html";
-					}, 2200);
+					}, 0);
 				} else {
 					throw new Error(detailText || "Failed to leave the class.");
 				}
