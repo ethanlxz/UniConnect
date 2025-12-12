@@ -6,6 +6,7 @@
 <h1 align="center">UniConnect 🎓</h1>
 
 <p align="center"><strong>Easy Assignment Group Finder Platform for University Students</strong></p>
+<p align="center"><strong>(Final Year Project for MMU Diploma in IT)</strong></p>
 
 <p align="center">UniConnect is a university-focused group assignment and collaboration platform designed to simplify how students form teams and manage project work. It lets students explore rich peer profiles, create or join suitable groups, and coordinate tasks seamlessly. At the same time, lecturers gain powerful tools to create classes, oversee group progress, and manage assignments through an integrated, easy-to-use admin interface.</p>
 
